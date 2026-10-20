@@ -1,5 +1,5 @@
 site_name: "Amazon RDS"
-site_url: "https://rgcenteno.github.io/ABDAN-UD4-RDS/"
+# site_url: "https://rgcenteno.github.io/ABDAN-UD4-RDS/"
 theme:
   name: material
   locale: "es"
@@ -17,6 +17,7 @@ theme:
         icon: material/brightness-4
         name: Cambiar a modo light
 nav:
+    - Inicio: "index.md"
     - Creación de sistema RDS:
         - Configuración inicial, credenciales: "Crear-RDS-01.md"
         - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
