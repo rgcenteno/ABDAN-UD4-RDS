@@ -1,10 +1,10 @@
-site_name: "Manual básico de supervisión"
+site_name: "Amazon RDS"
+site_url: "https://rgcenteno.github.io/ABDAN-UD4-RDS/"
 theme:
   name: material
   locale: "es"
   features:
     - navigation.expand
-  user_color_mode_toggle: true
   palette: 
     # Palette toggle for light mode
     - scheme: default
