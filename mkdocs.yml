@@ -23,3 +23,6 @@ nav:
         - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
         - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
         - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
+    - Prácticas:
+        -DynamoDB: "Practica-DynamoDB.md"
+        -Solución: "Practica-DynamoDB-solucion.md"
