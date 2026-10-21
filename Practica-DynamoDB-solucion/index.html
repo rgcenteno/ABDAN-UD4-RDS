@@ -1,0 +1,1492 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Practica-DynamoDB/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>-Solución - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#solucion-paso-a-paso-consola-aws" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              -Solución
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo light"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo light" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -Solución
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-1-grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 1. Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-2-endpoint-de-dynamodb-en-la-subred-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 2. Endpoint de DynamoDB en la subred privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-3-tabla-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 3. Tabla DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-4-instancia-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 4. Instancia cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 5. Trabajar con DynamoDB a través del endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 5. Trabajar con DynamoDB a través del endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#50-conectarse-a-la-ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.0 Conectarse a la EC2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-preparar-la-cli-y-las-variables-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Preparar la CLI y las variables del endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-comprobar-la-resolucion-dns-y-el-puerto-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Comprobar la resolución DNS y el puerto 443
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-listar-y-describir-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Listar y describir tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-insertar-dos-productos-put-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Insertar dos productos (put-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-leer-un-producto-por-su-clave-completa-get-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Leer un producto por su clave completa (get-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-consultar-todos-los-portatiles-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Consultar todos los portátiles (query)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-restar-stock-solo-si-hay-suficiente-update-item-condicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Restar stock solo si hay suficiente (update-item condicional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-productos-de-mas-de-300-scan-con-filtro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Productos de más de 300 € (scan con filtro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-borrar-un-periferico-delete-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Borrar un periférico (delete-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atajo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atajo opcional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-6-hacer-la-tabla-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 6. Hacer la tabla privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-7-preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 7. Preguntas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 7. Preguntas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas-de-reflexion-con-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas de reflexión (con solución)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-1-grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 1. Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-2-endpoint-de-dynamodb-en-la-subred-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 2. Endpoint de DynamoDB en la subred privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-3-tabla-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 3. Tabla DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-4-instancia-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 4. Instancia cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 5. Trabajar con DynamoDB a través del endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 5. Trabajar con DynamoDB a través del endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#50-conectarse-a-la-ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.0 Conectarse a la EC2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-preparar-la-cli-y-las-variables-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Preparar la CLI y las variables del endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-comprobar-la-resolucion-dns-y-el-puerto-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Comprobar la resolución DNS y el puerto 443
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-listar-y-describir-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Listar y describir tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-insertar-dos-productos-put-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Insertar dos productos (put-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-leer-un-producto-por-su-clave-completa-get-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Leer un producto por su clave completa (get-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-consultar-todos-los-portatiles-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Consultar todos los portátiles (query)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-restar-stock-solo-si-hay-suficiente-update-item-condicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Restar stock solo si hay suficiente (update-item condicional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-productos-de-mas-de-300-scan-con-filtro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Productos de más de 300 € (scan con filtro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-borrar-un-periferico-delete-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Borrar un periférico (delete-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atajo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atajo opcional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-6-hacer-la-tabla-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 6. Hacer la tabla privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-7-preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 7. Preguntas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 7. Preguntas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas-de-reflexion-con-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas de reflexión (con solución)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="solucion-paso-a-paso-consola-aws">Solución paso a paso (consola AWS)</h1>
+<h2 id="tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc">Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)</h2>
+<ol>
+<li>Descarga el fichero <a href="https://rgcenteno.github.io/ABDAN-PracticasUD3/#script-que-crea-vpc-con-subred-publica-y-subred-privada">inicializar-entorno.sh</a>.</li>
+<li>Inicia el Learner Lab y abre la consola. Comprueba arriba a la derecha que la región es <strong>N. Virginia (us-east-1)</strong>.</li>
+<li>Abre <strong>CloudShell</strong> (icono <code>&gt;_</code> de la barra superior). En <em>Actions → Upload file</em> sube <code>inicializar-entorno.sh</code>.</li>
+<li>Ejecuta:</li>
+</ol>
+<pre><code class="language-bash">chmod +x inicializar-entorno.sh
+./inicializar-entorno.sh
+</code></pre>
+<ol>
+<li>Tarda 2-3 minutos porque espera al NAT Gateway. Copia el resumen final a un fichero de notas.</li>
+<li>En <strong>VPC → Your VPCs</strong> verifica <code>LabVPC</code> (10.0.0.0/16). En <strong>Subnets</strong>, <code>PublicSubnet</code> y <code>PrivateSubnet</code> en la misma AZ. En <strong>Route tables</strong>, la pública tiene <code>0.0.0.0/0 → igw-…</code> y la privada <code>0.0.0.0/0 → nat-…</code>.</li>
+</ol>
+<blockquote>
+<p>Nota: el script asigna IP pública automática en <code>PublicSubnet</code>. El NAT Gateway no es necesario para esta práctica (el endpoint no lo usa), pero se mantiene porque forma parte del entorno base. Recuerda que tiene coste por hora.</p>
+</blockquote>
+<h2 id="tarea-1-grupos-de-seguridad">Tarea 1. Grupos de seguridad</h2>
+<p><strong>SG-EC2-Publica</strong></p>
+<ol>
+<li><strong>VPC → Security groups → Create security group</strong>.</li>
+<li><em>Security group name</em>: <code>SG-EC2-Publica</code>. <em>Description</em>: <code>SSH a la EC2 cliente</code>. <em>VPC</em>: <code>LabVPC</code>.</li>
+<li><em>Inbound rules → Add rule</em>: Type <strong>SSH</strong>, Source <strong>My IP</strong>.</li>
+<li><em>Add rule</em>: Type <strong>SSH</strong>, Source <strong>Custom</strong> y escribe <code>com.amazonaws.us-east-1.ec2-instance-connect</code> (es una <em>prefix list</em> gestionada por AWS; permite conectarse desde el navegador).</li>
+<li><em>Outbound rules</em>: deja la regla por defecto (todo el tráfico). <strong>Create security group</strong>.</li>
+</ol>
+<p><strong>SG-Endpoint-DynamoDB</strong></p>
+<ol>
+<li><strong>Create security group</strong>. Nombre <code>SG-Endpoint-DynamoDB</code>, descripción <code>HTTPS desde la EC2 al endpoint</code>, VPC <code>LabVPC</code>.</li>
+<li><em>Inbound rules → Add rule</em>: Type <strong>HTTPS</strong> (TCP 443), Source <strong>Custom</strong> y selecciona <code>SG-EC2-Publica</code> (empieza a escribir <code>sg-</code> y elige por nombre).</li>
+<li><strong>Create security group</strong>.</li>
+</ol>
+<p>Referenciar un grupo de seguridad como origen, en lugar de un CIDR, hace que solo las instancias con ese grupo puedan hablar con el endpoint.</p>
+<h2 id="tarea-2-endpoint-de-dynamodb-en-la-subred-privada">Tarea 2. Endpoint de DynamoDB en la subred privada</h2>
+<ol>
+<li><strong>VPC → PrivateLink and Lattice → Endpoints → Create endpoint</strong>.</li>
+<li><em>Name tag</em>: <code>vpce-dynamodb-privado</code>. <em>Type</em> (o <em>Service category</em>): <strong>AWS services</strong>.</li>
+<li>En el buscador de servicios escribe <code>dynamodb</code>. Aparecen dos filas con el mismo nombre <code>com.amazonaws.us-east-1.dynamodb</code>: elige la de <strong>Type = Interface</strong> (la otra es <em>Gateway</em>).</li>
+<li><em>VPC</em>: <code>LabVPC</code>.</li>
+<li><em>Additional settings</em>: deja <strong>desmarcado</strong> <em>Enable DNS name</em>. DynamoDB no admite DNS privado en endpoints de interfaz; se accede con el nombre DNS propio del endpoint (<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/privatelink-interface-endpoints.html">documentación AWS</a>).</li>
+<li><em>Subnets</em>: marca la AZ donde está la red y elige <strong>PrivateSubnet</strong>. <em>IP address type</em>: IPv4.</li>
+<li><em>Security groups</em>: marca solo <code>SG-Endpoint-DynamoDB</code>.</li>
+<li><em>Policy</em>: <strong>Full access</strong> (la restricción la haremos en la tabla, tarea 6).</li>
+<li><strong>Create endpoint</strong> y espera a que el estado pase de <em>Pending</em> a <strong>Available</strong> (1-2 minutos).</li>
+<li>En la pestaña <strong>Details</strong>, anota el <em>Endpoint ID</em> (<code>vpce-0abc…</code>) y el <strong>primer nombre DNS</strong> (el regional, sin letra de zona), con este formato: <code>vpce-0abc123def456-xyz789.dynamodb.us-east-1.vpce.amazonaws.com</code>. Si aparece con <code>*.</code> delante, quítalo.</li>
+<li>En la pestaña <strong>Subnets</strong> verás la ENI y su IP privada, por ejemplo <code>10.0.2.57</code>. Esa es la "presencia" de DynamoDB en la subred privada.</li>
+</ol>
+<h2 id="tarea-3-tabla-dynamodb">Tarea 3. Tabla DynamoDB</h2>
+<ol>
+<li>Abre <strong>DynamoDB → Tables → Create table</strong>.</li>
+<li><em>Table name</em>: <code>Productos</code>.</li>
+<li><em>Partition key</em>: <code>categoria</code>, tipo <strong>String</strong>.</li>
+<li><em>Sort key</em>: <code>id_producto</code>, tipo <strong>String</strong>.</li>
+<li><em>Table settings</em>: <strong>Customize settings</strong> → <em>Read/write capacity settings</em>: <strong>On-demand</strong>. Deja el resto por defecto.</li>
+<li><strong>Create table</strong> y espera al estado <strong>Active</strong>.</li>
+<li>Ve a <strong>Explore items</strong> → selecciona <code>Productos</code> → <strong>Create item</strong>.</li>
+<li>Pulsa <strong>JSON view</strong> con <em>View DynamoDB JSON</em> desactivado, pega el primer elemento y <strong>Create item</strong>. Repite con los otros dos:</li>
+</ol>
+<pre><code class="language-json">{&quot;categoria&quot;: &quot;Portatiles&quot;, &quot;id_producto&quot;: &quot;P-001&quot;, &quot;nombre&quot;: &quot;Portátil 14\&quot; i5&quot;, &quot;precio&quot;: 749, &quot;stock&quot;: 10}
+</code></pre>
+<pre><code class="language-json">{&quot;categoria&quot;: &quot;Portatiles&quot;, &quot;id_producto&quot;: &quot;P-002&quot;, &quot;nombre&quot;: &quot;Portátil 16\&quot; i7&quot;, &quot;precio&quot;: 1099, &quot;stock&quot;: 4}
+</code></pre>
+<pre><code class="language-json">{&quot;categoria&quot;: &quot;Monitores&quot;, &quot;id_producto&quot;: &quot;M-001&quot;, &quot;nombre&quot;: &quot;Monitor 27\&quot; QHD&quot;, &quot;precio&quot;: 289, &quot;stock&quot;: 25}
+</code></pre>
+<p>Alternativa sin JSON: en <em>Form</em>, rellena las claves y usa <strong>Add new attribute</strong> para <code>nombre</code> (String), <code>precio</code> (Number) y <code>stock</code> (Number).</p>
+<ol>
+<li>Comprueba en <em>Explore items</em> que hay 3 elementos.</li>
+</ol>
+<h2 id="tarea-4-instancia-cliente">Tarea 4. Instancia cliente</h2>
+<ol>
+<li><strong>EC2 → Instances → Launch instances</strong>.</li>
+<li><em>Name</em>: <code>EC2-Cliente-DynamoDB</code>. <em>AMI</em>: <strong>Amazon Linux 2023</strong>. <em>Instance type</em>: <code>t3.micro</code>. <em>Key pair</em>: <code>vockey</code>.</li>
+<li><em>Network settings → Edit</em>: VPC <code>LabVPC</code>, Subnet <code>PublicSubnet</code>, <em>Auto-assign public IP</em> <strong>Enable</strong>. <em>Firewall</em>: <strong>Select existing security group</strong> → <code>SG-EC2-Publica</code>.</li>
+<li><em>Advanced details → IAM instance profile</em>: <code>LabInstanceProfile</code>. Sin este rol la EC2 no tiene credenciales para llamar a DynamoDB.</li>
+<li><strong>Launch instance</strong> y espera a <em>Running</em> con <em>Status check</em> 2/2.</li>
+</ol>
+<blockquote>
+<p>En una cuenta propia (fuera del Learner Lab) habría que crear antes un rol IAM para EC2 con la política <code>AmazonDynamoDBFullAccess</code> o, mejor, una política limitada a la tabla <code>Productos</code>.</p>
+</blockquote>
+<h2 id="tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint">Tarea 5. Trabajar con DynamoDB a través del endpoint</h2>
+<p>Todos los comandos de esta tarea se ejecutan <strong>dentro de la EC2</strong> con la AWS CLI v2, que ya viene instalada en Amazon Linux 2023. Las credenciales las proporciona el rol <code>LabRole</code> a través de <code>LabInstanceProfile</code>, así que no hay que ejecutar <code>aws configure</code> con claves.</p>
+<h3 id="50-conectarse-a-la-ec2">5.0 Conectarse a la EC2</h3>
+<p><strong>Opción A, desde el navegador:</strong> selecciona la instancia → <strong>Connect → EC2 Instance Connect → Connect</strong>.</p>
+<p><strong>Opción B, por SSH desde tu equipo:</strong> en el Learner Lab, <em>AWS Details → Download PEM</em> descarga <code>labsuser.pem</code> (la clave privada de <code>vockey</code>). Obtén la IP pública desde CloudShell y conéctate:</p>
+<pre><code class="language-bash"> En CloudShell: IP pública de la instancia por su etiqueta Name
+aws ec2 describe-instances \
+  --filters &quot;Name=tag:Name,Values=EC2-Cliente-DynamoDB&quot; &quot;Name=instance-state-name,Values=running&quot; \
+  --query 'Reservations[].Instances[].PublicIpAddress' --output text
+</code></pre>
+<pre><code class="language-bash"> En tu equipo (Linux, macOS o PowerShell de Windows)
+chmod 400 labsuser.pem
+ssh -i labsuser.pem ec2-user@&lt;IP_PUBLICA&gt;
+</code></pre>
+<p>La regla SSH desde <em>My IP</em> de <code>SG-EC2-Publica</code> es la que permite esta conexión.</p>
+<h3 id="51-preparar-la-cli-y-las-variables-del-endpoint">5.1 Preparar la CLI y las variables del endpoint</h3>
+<pre><code class="language-bash">aws configure set region us-east-1    región por defecto
+aws configure set output json         formato de salida por defecto
+aws sts get-caller-identity           ¿con qué identidad trabajo?
+</code></pre>
+<p>Salida esperada (el ARN debe contener <code>assumed-role/LabRole</code>):</p>
+<pre><code class="language-json">{
+    &quot;UserId&quot;: &quot;AROA...:i-0123456789abcdef0&quot;,
+    &quot;Account&quot;: &quot;123456789012&quot;,
+    &quot;Arn&quot;: &quot;arn:aws:sts::123456789012:assumed-role/LabRole/i-0123456789abcdef0&quot;
+}
+</code></pre>
+<p>En lugar de copiar a mano el nombre DNS del endpoint, se puede obtener con la CLI:</p>
+<pre><code class="language-bash"> ID del endpoint a partir de su etiqueta Name
+VPCE_ID=$(aws ec2 describe-vpc-endpoints \
+  --filters &quot;Name=tag:Name,Values=vpce-dynamodb-privado&quot; \
+  --query 'VpcEndpoints[0].VpcEndpointId' --output text)
+
+ Primer nombre DNS = el regional (se quita un posible &quot;*.&quot; inicial)
+VPCE_DNS=$(aws ec2 describe-vpc-endpoints --vpc-endpoint-ids $VPCE_ID \
+  --query 'VpcEndpoints[0].DnsEntries[0].DnsName' --output text)
+VPCE_DNS=${VPCE_DNS#\*.}
+
+EP=&quot;https://$VPCE_DNS&quot;
+echo $VPCE_ID; echo $EP
+
+ Guardar las variables para próximas sesiones
+echo &quot;export VPCE_ID=$VPCE_ID VPCE_DNS=$VPCE_DNS EP=$EP&quot; &gt;&gt; ~/.bashrc
+</code></pre>
+<p>Si <code>describe-vpc-endpoints</code> devuelve <code>None</code> o un error de permisos, asigna las variables a mano con los valores anotados en la tarea 2: <code>VPCE_DNS="vpce-...dynamodb.us-east-1.vpce.amazonaws.com"</code>.</p>
+<h3 id="52-comprobar-la-resolucion-dns-y-el-puerto-443">5.2 Comprobar la resolución DNS y el puerto 443</h3>
+<pre><code class="language-bash">getent hosts $VPCE_DNS
+</code></pre>
+<p>Salida esperada: una IP de la subred privada, la misma que viste en la pestaña <em>Subnets</em> del endpoint.</p>
+<pre><code class="language-text">10.0.2.57       vpce-0abc123def456-xyz789.dynamodb.us-east-1.vpce.amazonaws.com
+</code></pre>
+<p>Comprueba además que el grupo de seguridad del endpoint deja pasar HTTPS (sin instalar nada, con la redirección <code>/dev/tcp</code> de bash):</p>
+<pre><code class="language-bash">timeout 5 bash -c &quot;&lt;/dev/tcp/$VPCE_DNS/443&quot; &amp;&amp; echo &quot;Puerto 443 accesible&quot; || echo &quot;Sin conexión: revisa SG-Endpoint-DynamoDB&quot;
+</code></pre>
+<h3 id="53-listar-y-describir-tablas">5.3 Listar y describir tablas</h3>
+<p>El parámetro <code>--endpoint-url</code> hace que la CLI envíe la petición al endpoint privado en vez de al endpoint público <code>dynamodb.us-east-1.amazonaws.com</code>.</p>
+<pre><code class="language-bash">aws dynamodb list-tables --endpoint-url $EP
+</code></pre>
+<pre><code class="language-json">{
+    &quot;TableNames&quot;: [
+        &quot;Productos&quot;
+    ]
+}
+</code></pre>
+<pre><code class="language-bash">aws dynamodb describe-table --endpoint-url $EP --table-name Productos \
+  --query 'Table.{Estado:TableStatus,Claves:KeySchema,Modo:BillingModeSummary.BillingMode}'
+</code></pre>
+<p>Debe mostrar <code>ACTIVE</code>, la clave <code>categoria</code> como <code>HASH</code> (partición), <code>id_producto</code> como <code>RANGE</code> (ordenación) y el modo <code>PAY_PER_REQUEST</code> (bajo demanda). La opción <code>--query</code> usa JMESPath para filtrar la respuesta.</p>
+<h3 id="54-insertar-dos-productos-put-item">5.4 Insertar dos productos (<code>put-item</code>)</h3>
+<p>La CLI usa el formato <em>DynamoDB JSON</em>: cada valor indica su tipo (<code>S</code> = String, <code>N</code> = Number). Los números van entre comillas, como texto.</p>
+<pre><code class="language-bash">aws dynamodb put-item --endpoint-url $EP --table-name Productos \
+  --item '{
+    &quot;categoria&quot;:   {&quot;S&quot;: &quot;Perifericos&quot;},
+    &quot;id_producto&quot;: {&quot;S&quot;: &quot;PE-001&quot;},
+    &quot;nombre&quot;:      {&quot;S&quot;: &quot;Teclado mecanico&quot;},
+    &quot;precio&quot;:      {&quot;N&quot;: &quot;79.90&quot;},
+    &quot;stock&quot;:       {&quot;N&quot;: &quot;15&quot;}
+  }' \
+  --condition-expression &quot;attribute_not_exists(id_producto)&quot;
+
+aws dynamodb put-item --endpoint-url $EP --table-name Productos \
+  --item '{
+    &quot;categoria&quot;:   {&quot;S&quot;: &quot;Perifericos&quot;},
+    &quot;id_producto&quot;: {&quot;S&quot;: &quot;PE-002&quot;},
+    &quot;nombre&quot;:      {&quot;S&quot;: &quot;Raton inalambrico&quot;},
+    &quot;precio&quot;:      {&quot;N&quot;: &quot;24.50&quot;},
+    &quot;stock&quot;:       {&quot;N&quot;: &quot;40&quot;}
+  }' \
+  --condition-expression &quot;attribute_not_exists(id_producto)&quot;
+</code></pre>
+<p>Si todo va bien, <code>put-item</code> no muestra nada. <code>put-item</code> sobrescribe un elemento con la misma clave; la condición <code>attribute_not_exists</code> lo evita. Si repites el comando, obtendrás <code>ConditionalCheckFailedException</code>.</p>
+<p><strong>Alternativa: varios elementos a la vez con <code>batch-write-item</code></strong> (hasta 25 por llamada), leyendo un fichero:</p>
+<pre><code class="language-bash">cat &gt; perifericos.json &lt;&lt; 'EOF'
+{
+  &quot;Productos&quot;: [
+    {&quot;PutRequest&quot;: {&quot;Item&quot;: {&quot;categoria&quot;: {&quot;S&quot;: &quot;Perifericos&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;PE-003&quot;}, &quot;nombre&quot;: {&quot;S&quot;: &quot;Webcam Full HD&quot;}, &quot;precio&quot;: {&quot;N&quot;: &quot;49.00&quot;}, &quot;stock&quot;: {&quot;N&quot;: &quot;8&quot;}}}}
+  ]
+}
+EOF
+
+aws dynamodb batch-write-item --endpoint-url $EP --request-items file://perifericos.json
+</code></pre>
+<p>Salida esperada: <code>{"UnprocessedItems": {}}</code>, es decir, ningún elemento pendiente. (Este elemento extra es opcional; los resultados de abajo suponen que <strong>no</strong> lo has insertado.)</p>
+<h3 id="55-leer-un-producto-por-su-clave-completa-get-item">5.5 Leer un producto por su clave completa (<code>get-item</code>)</h3>
+<p><code>get-item</code> necesita la clave primaria completa: partición <strong>y</strong> ordenación.</p>
+<pre><code class="language-bash">aws dynamodb get-item --endpoint-url $EP --table-name Productos \
+  --key '{&quot;categoria&quot;: {&quot;S&quot;: &quot;Portatiles&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;P-001&quot;}}' \
+  --consistent-read
+</code></pre>
+<pre><code class="language-json">{
+    &quot;Item&quot;: {
+        &quot;categoria&quot;: {&quot;S&quot;: &quot;Portatiles&quot;},
+        &quot;id_producto&quot;: {&quot;S&quot;: &quot;P-001&quot;},
+        &quot;nombre&quot;: {&quot;S&quot;: &quot;Portátil 14\&quot; i5&quot;},
+        &quot;precio&quot;: {&quot;N&quot;: &quot;749&quot;},
+        &quot;stock&quot;: {&quot;N&quot;: &quot;10&quot;}
+    }
+}
+</code></pre>
+<p><code>--consistent-read</code> fuerza una lectura fuertemente consistente (devuelve siempre el último dato escrito). Para traer solo algunos atributos, añade <code>--projection-expression "nombre, precio"</code>.</p>
+<h3 id="56-consultar-todos-los-portatiles-query">5.6 Consultar todos los portátiles (<code>query</code>)</h3>
+<p><code>query</code> lee únicamente los elementos de una partición. La condición sobre la clave usa marcadores (<code>:c</code>) cuyos valores se pasan aparte:</p>
+<pre><code class="language-bash">aws dynamodb query --endpoint-url $EP --table-name Productos \
+  --key-condition-expression &quot;categoria = :c&quot; \
+  --expression-attribute-values '{&quot;:c&quot;: {&quot;S&quot;: &quot;Portatiles&quot;}}' \
+  --projection-expression &quot;id_producto, nombre, precio, stock&quot; \
+  --output table
+</code></pre>
+<p>Devuelve P-001 y P-002, con <code>Count = 2</code> y <code>ScannedCount = 2</code>: solo se han leído los elementos de esa partición. Variantes útiles:</p>
+<pre><code class="language-bash"> Solo contar
+aws dynamodb query --endpoint-url $EP --table-name Productos \
+  --key-condition-expression &quot;categoria = :c&quot; \
+  --expression-attribute-values '{&quot;:c&quot;: {&quot;S&quot;: &quot;Portatiles&quot;}}' --select COUNT
+
+ Condición sobre la clave de ordenación: periféricos cuyo id empieza por &quot;PE-&quot;
+aws dynamodb query --endpoint-url $EP --table-name Productos \
+  --key-condition-expression &quot;categoria = :c AND begins_with(id_producto, :p)&quot; \
+  --expression-attribute-values '{&quot;:c&quot;: {&quot;S&quot;: &quot;Perifericos&quot;}, &quot;:p&quot;: {&quot;S&quot;: &quot;PE-&quot;}}'
+</code></pre>
+<h3 id="57-restar-stock-solo-si-hay-suficiente-update-item-condicional">5.7 Restar stock solo si hay suficiente (<code>update-item</code> condicional)</h3>
+<pre><code class="language-bash">aws dynamodb update-item --endpoint-url $EP --table-name Productos \
+  --key '{&quot;categoria&quot;: {&quot;S&quot;: &quot;Portatiles&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;P-002&quot;}}' \
+  --update-expression &quot;SET stock = stock - :n&quot; \
+  --condition-expression &quot;stock &gt;= :n&quot; \
+  --expression-attribute-values '{&quot;:n&quot;: {&quot;N&quot;: &quot;2&quot;}}' \
+  --return-values UPDATED_NEW
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Ejecución</th>
+<th>Stock antes</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.ª</td>
+<td>4</td>
+<td><code>{"Attributes": {"stock": {"N": "2"}}}</code></td>
+</tr>
+<tr>
+<td>2.ª</td>
+<td>2</td>
+<td><code>{"Attributes": {"stock": {"N": "0"}}}</code></td>
+</tr>
+<tr>
+<td>3.ª</td>
+<td>0</td>
+<td><code>ConditionalCheckFailedException</code>: la condición no se cumple y el elemento no cambia</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>--update-expression</code> describe el cambio (<code>SET</code>, <code>REMOVE</code>, <code>ADD</code>).</li>
+<li><code>--condition-expression</code> hace la escritura atómica y condicional: evita vender stock que no existe.</li>
+<li><code>--return-values UPDATED_NEW</code> devuelve solo los atributos modificados, con su nuevo valor.</li>
+</ul>
+<p>Para dejar el stock en 4 y que los resultados siguientes coincidan:</p>
+<pre><code class="language-bash">aws dynamodb update-item --endpoint-url $EP --table-name Productos \
+  --key '{&quot;categoria&quot;: {&quot;S&quot;: &quot;Portatiles&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;P-002&quot;}}' \
+  --update-expression &quot;SET stock = :s&quot; \
+  --expression-attribute-values '{&quot;:s&quot;: {&quot;N&quot;: &quot;4&quot;}}'
+</code></pre>
+<h3 id="58-productos-de-mas-de-300-scan-con-filtro">5.8 Productos de más de 300 € (<code>scan</code> con filtro)</h3>
+<pre><code class="language-bash">aws dynamodb scan --endpoint-url $EP --table-name Productos \
+  --filter-expression &quot;precio &gt; :p&quot; \
+  --expression-attribute-values '{&quot;:p&quot;: {&quot;N&quot;: &quot;300&quot;}}' \
+  --projection-expression &quot;categoria, id_producto, nombre, precio&quot; \
+  --output table
+</code></pre>
+<p>Devuelve P-001 (749) y P-002 (1099). Fíjate en los contadores: <code>Count = 2</code> pero <code>ScannedCount = 5</code>. El <code>scan</code> ha leído (y cobrado) toda la tabla y luego ha descartado lo que no cumple el filtro. Por eso <code>query</code> es preferible siempre que se pueda usar.</p>
+<h3 id="59-borrar-un-periferico-delete-item">5.9 Borrar un periférico (<code>delete-item</code>)</h3>
+<pre><code class="language-bash">aws dynamodb delete-item --endpoint-url $EP --table-name Productos \
+  --key '{&quot;categoria&quot;: {&quot;S&quot;: &quot;Perifericos&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;PE-002&quot;}}' \
+  --return-values ALL_OLD
+</code></pre>
+<p><code>--return-values ALL_OLD</code> muestra el elemento tal como era antes de borrarlo. Para verificar el borrado:</p>
+<pre><code class="language-bash">aws dynamodb get-item --endpoint-url $EP --table-name Productos \
+  --key '{&quot;categoria&quot;: {&quot;S&quot;: &quot;Perifericos&quot;}, &quot;id_producto&quot;: {&quot;S&quot;: &quot;PE-002&quot;}}'
+ Sin salida: el elemento ya no existe
+
+aws dynamodb scan --endpoint-url $EP --table-name Productos --select COUNT
+ &quot;Count&quot;: 4
+</code></pre>
+<h3 id="atajo-opcional">Atajo opcional</h3>
+<p>Para no repetir <code>--endpoint-url</code> en cada comando, se puede crear un alias. Úsalo solo después de haber entendido los comandos completos:</p>
+<pre><code class="language-bash">alias ddb=&quot;aws dynamodb --endpoint-url $EP&quot;
+ddb scan --table-name Productos --select COUNT
+</code></pre>
+<h2 id="tarea-6-hacer-la-tabla-privada">Tarea 6. Hacer la tabla privada</h2>
+<p>Hasta ahora, la tabla también se puede usar sin pasar por el endpoint. Compruébalo en la EC2:</p>
+<pre><code class="language-bash">aws dynamodb scan --table-name Productos --select COUNT    sin --endpoint-url: funciona, sale por el Internet Gateway
+</code></pre>
+<ol>
+<li>Obtén tu ID de cuenta (menú de usuario, arriba a la derecha) y el ID del endpoint (<code>vpce-…</code>).</li>
+<li><strong>DynamoDB → Tables → Productos → pestaña Permissions → Create table policy</strong> (política basada en recursos).</li>
+<li>Pega esta política, sustituyendo <code>CUENTA</code> y <code>vpce-XXXXXXXX</code>:</li>
+</ol>
+<pre><code class="language-json">{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Sid&quot;: &quot;SoloDesdeEndpointPrivado&quot;,
+      &quot;Effect&quot;: &quot;Deny&quot;,
+      &quot;Principal&quot;: &quot;*&quot;,
+      &quot;Action&quot;: [
+        &quot;dynamodb:GetItem&quot;, &quot;dynamodb:BatchGetItem&quot;,
+        &quot;dynamodb:PutItem&quot;, &quot;dynamodb:UpdateItem&quot;, &quot;dynamodb:DeleteItem&quot;,
+        &quot;dynamodb:BatchWriteItem&quot;, &quot;dynamodb:Query&quot;, &quot;dynamodb:Scan&quot;
+      ],
+      &quot;Resource&quot;: [
+        &quot;arn:aws:dynamodb:us-east-1:CUENTA:table/Productos&quot;,
+        &quot;arn:aws:dynamodb:us-east-1:CUENTA:table/Productos/index/*&quot;
+      ],
+      &quot;Condition&quot;: {
+        &quot;StringNotEquals&quot;: { &quot;aws:SourceVpce&quot;: &quot;vpce-XXXXXXXX&quot; }
+      }
+    }
+  ]
+}
+</code></pre>
+<ol>
+<li><strong>Create policy</strong>. Solo se deniegan operaciones de datos, no las de administración: así puedes seguir editando o borrando la política desde la consola.</li>
+<li>Comprobaciones:</li>
+</ol>
+<pre><code class="language-bash"> Con endpoint: funciona
+aws dynamodb scan --endpoint-url $EP --table-name Productos --select COUNT
+
+ Sin endpoint: AccessDeniedException ... with an explicit deny in a resource-based policy
+aws dynamodb scan --table-name Productos --select COUNT
+</code></pre>
+<ol>
+<li>En la consola, <strong>Explore items → Productos</strong>: también aparece un error de acceso denegado. La consola llama a DynamoDB desde Internet, no desde tu endpoint.</li>
+</ol>
+<blockquote>
+<p>Si el Learner Lab no permite crear políticas de recursos, documenta el error obtenido y responde a la pregunta 5 de forma teórica.</p>
+</blockquote>
+<h2 id="tarea-7-preguntas">Tarea 7. Preguntas</h2>
+<h3 id="preguntas-de-reflexion-con-solucion">Preguntas de reflexión (con solución)</h3>
+<ol>
+<li><strong>¿Por qué no podemos "meter" la tabla DynamoDB en <code>PrivateSubnet</code> como hacemos con una EC2?</strong> DynamoDB es un servicio gestionado y regional: AWS opera los servidores fuera de nuestra VPC. Lo que sí podemos colocar en la subred es un endpoint de interfaz, una ENI con IP privada que da acceso al servicio por la red de AWS.</li>
+<li><strong>¿Qué ocurre si quitas la regla HTTPS de <code>SG-Endpoint-DynamoDB</code>?</strong> Las llamadas con <code>--endpoint-url</code> se quedan esperando hasta agotar el tiempo (<em>timeout</em>), porque el grupo de seguridad bloquea el tráfico al puerto 443 de la ENI.</li>
+<li><strong>¿Por qué, antes de la tarea 6, funcionaba <code>aws dynamodb scan</code> sin <code>--endpoint-url</code>?</strong> Sin DNS privado, el nombre <code>dynamodb.us-east-1.amazonaws.com</code> resuelve a IPs públicas. La EC2 está en una subred pública y sale por el Internet Gateway. La petición está autenticada (rol <code>LabRole</code>), así que DynamoDB la acepta.</li>
+<li><strong>Diferencias entre endpoint de tipo Gateway e Interface para DynamoDB.</strong> El <em>Gateway</em> es gratuito, se asocia a tablas de rutas (añade una ruta a la <em>prefix list</em> de DynamoDB), no tiene IP ni grupo de seguridad y no es accesible desde fuera de la VPC. El de <em>Interface</em> crea una ENI con IP privada en la subred, admite grupos de seguridad, se puede usar desde redes locales (VPN o Direct Connect) y tiene coste por hora y por GB.</li>
+<li><strong>¿Qué aporta la condición <code>aws:SourceVpce</code> en la política de la tabla?</strong> Convierte la ruta de red en un requisito de acceso: aunque alguien tenga credenciales válidas, no puede leer ni escribir datos si la petición no entra por ese endpoint.</li>
+<li><strong>¿Por qué la consulta de la tarea 5.5 es <code>Query</code> y la de 5.7 es <code>Scan</code>? ¿Cuál es más eficiente?</strong> <code>Query</code> usa la clave de partición y solo lee esa partición. <code>Scan</code> recorre toda la tabla y filtra después, consumiendo más capacidad. Para buscar por precio de forma eficiente habría que crear un índice secundario global (GSI).</li>
+<li><strong>¿Es necesario el NAT Gateway para esta práctica?</strong> No. La EC2 está en la subred pública y el endpoint no necesita salida a Internet. El NAT solo serviría a instancias de la subred privada que necesiten Internet.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1394 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Crear-RDS-03/">
+      
+      
+        <link rel="next" href="../Practica-DynamoDB/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Monitorización, copias de seguridad, mantenimiento y protección de los datos - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#monitorizacion-copias-de-seguridad-mantenimiento-y-proteccion-de-los-datos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Monitorización, copias de seguridad, mantenimiento y protección de los datos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo light"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo light" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-importancia-de-la-monitorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La importancia de la monitorización
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modalidad-estandar-y-modalidad-avanzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modalidad estándar y modalidad avanzada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retencion-de-metricas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retención de métricas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitorizacion-mejorada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitorización mejorada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudwatch-como-plataforma-de-observabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch como plataforma de observabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exportacion-de-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exportación de registros
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exportación de registros">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro general
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de auditoría
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-consultas-lentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de consultas lentas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copias-de-seguridad-automaticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad automáticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#periodo-de-retencion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Periodo de retención
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ventana-de-copia-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventana de copia de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replicacion-de-copias-entre-regiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replicación de copias entre regiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizaciones-y-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones y mantenimiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizaciones y mantenimiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actualizaciones-automaticas-de-versiones-secundarias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones automáticas de versiones secundarias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventanas-de-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventanas de mantenimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proteccion-contra-eliminacion-accidental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protección contra eliminación accidental
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-inicial-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grupos-de-parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grupos-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de opciones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifrado-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-importancia-de-la-monitorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La importancia de la monitorización
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Insights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Insights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modalidad-estandar-y-modalidad-avanzada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modalidad estándar y modalidad avanzada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retencion-de-metricas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retención de métricas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitorizacion-mejorada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitorización mejorada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cloudwatch-como-plataforma-de-observabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch como plataforma de observabilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exportacion-de-registros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exportación de registros
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exportación de registros">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de errores
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro general
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-auditoria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de auditoría
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-consultas-lentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de consultas lentas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copias-de-seguridad-automaticas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad automáticas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#periodo-de-retencion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Periodo de retención
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ventana-de-copia-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventana de copia de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replicacion-de-copias-entre-regiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replicación de copias entre regiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizaciones-y-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones y mantenimiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizaciones y mantenimiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actualizaciones-automaticas-de-versiones-secundarias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones automáticas de versiones secundarias
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ventanas-de-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ventanas de mantenimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proteccion-contra-eliminacion-accidental" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protección contra eliminación accidental
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-inicial-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración inicial de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grupos-de-parametros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de parámetros
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#grupos-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de opciones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifrado-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="monitorizacion-copias-de-seguridad-mantenimiento-y-proteccion-de-los-datos">Monitorización, copias de seguridad, mantenimiento y protección de los datos</h1>
+<p><img alt="image" src="../imgs/RDS-Intro4.png" /></p>
+<p>La creación de una base de datos no finaliza cuando la instancia comienza a funcionar. De hecho, gran parte del trabajo de administración se desarrolla posteriormente, cuando es necesario supervisar el comportamiento del sistema, detectar problemas de rendimiento, aplicar actualizaciones, proteger la información y garantizar que los datos puedan recuperarse en caso de fallo.</p>
+<p>En entornos profesionales, una base de datos no debe considerarse únicamente como un repositorio de información, sino como un servicio crítico cuyo funcionamiento debe supervisarse de forma continua. Por este motivo, Amazon RDS incorpora mecanismos de observabilidad, monitorización, auditoría, copia de seguridad y recuperación que permiten administrar el ciclo de vida completo de la plataforma. La monitorización activa, la configuración de mecanismos de recuperación y la protección de la información forman parte de las competencias asociadas a la administración profesional de bases de datos en la nube.</p>
+<hr />
+<h2 id="la-importancia-de-la-monitorizacion">La importancia de la monitorización</h2>
+<p>Toda base de datos experimenta cambios continuos en su carga de trabajo. El número de usuarios conectados, el volumen de consultas ejecutadas, la utilización de memoria o la actividad de almacenamiento pueden variar significativamente a lo largo del tiempo.</p>
+<p>Sin mecanismos adecuados de supervisión resulta imposible determinar si la infraestructura está funcionando correctamente o identificar las causas de una degradación del rendimiento.</p>
+<p>La monitorización permite responder a preguntas fundamentales como:</p>
+<ul>
+<li>¿Está la CPU trabajando al límite de su capacidad?</li>
+<li>¿Existe falta de memoria disponible?</li>
+<li>¿Se están produciendo bloqueos en el almacenamiento?</li>
+<li>¿Las consultas responden dentro de los tiempos esperados?</li>
+<li>¿Existen tendencias de crecimiento que requieran ampliar recursos?</li>
+</ul>
+<p>La respuesta a estas cuestiones es esencial para garantizar la estabilidad y la eficiencia del sistema.</p>
+<hr />
+<h2 id="database-insights">Database Insights</h2>
+<p>Amazon RDS incorpora funcionalidades avanzadas de observabilidad agrupadas bajo el nombre de Database Insights.</p>
+<p>Su objetivo es proporcionar una visión detallada del comportamiento de la base de datos mediante métricas históricas y herramientas de análisis orientadas a la identificación de problemas de rendimiento.</p>
+<p>Mientras que las métricas tradicionales muestran el estado general del sistema, Database Insights permite profundizar en las causas concretas que provocan una degradación del servicio.</p>
+<p>Esta información facilita enormemente las tareas de diagnóstico y optimización, especialmente en entornos con una elevada complejidad operativa.</p>
+<hr />
+<h3 id="modalidad-estandar-y-modalidad-avanzada">Modalidad estándar y modalidad avanzada</h3>
+<p>Amazon RDS ofrece diferentes niveles de capacidad analítica.</p>
+<p>La <strong>modalidad estándar</strong> proporciona acceso a métricas detalladas sobre el funcionamiento de la base de datos y permite analizar el comportamiento general del sistema durante un periodo determinado.</p>
+<p>Por su parte, <strong>la modalidad avanzada</strong> amplía las capacidades de observación, incorporando información más detallada y periodos de retención más amplios para el análisis histórico.</p>
+<p>La elección entre ambas opciones depende de factores como la criticidad del sistema, la necesidad de análisis avanzados y el presupuesto disponible para la operación del servicio.</p>
+<hr />
+<h2 id="retencion-de-metricas">Retención de métricas</h2>
+<p>Una de las decisiones asociadas a la monitorización consiste en determinar <strong>cuánto tiempo se conservarán</strong> los datos históricos.</p>
+<p>La retención de métricas permite comparar el comportamiento actual con periodos anteriores y detectar tendencias que podrían pasar desapercibidas en una observación puntual.</p>
+<p>Gracias a esta información es posible identificar aumentos progresivos de carga, variaciones estacionales en el uso del sistema o degradaciones graduales del rendimiento.</p>
+<p>La conservación de históricos también facilita las tareas de auditoría y la planificación de futuras ampliaciones de infraestructura.</p>
+<hr />
+<h2 id="monitorizacion-mejorada">Monitorización mejorada</h2>
+<p>Además de las métricas estándar proporcionadas por RDS, AWS permite habilitar la denominada monitorización mejorada.</p>
+<p>Este servicio proporciona acceso a información más detallada sobre el sistema operativo subyacente que ejecuta la instancia.</p>
+<p>Mientras que las métricas convencionales muestran indicadores generales de la base de datos, la monitorización mejorada <strong>permite conocer con mayor precisión</strong> cómo se están utilizando los recursos físicos asignados.</p>
+<p>Entre otros aspectos, ofrece información relacionada con:</p>
+<ul>
+<li>Uso de CPU.</li>
+<li>Consumo de memoria.</li>
+<li>Actividad de los procesos internos.</li>
+<li>Operaciones de entrada y salida.</li>
+<li>Utilización de red.</li>
+</ul>
+<p>Esta visibilidad adicional resulta especialmente útil cuando es necesario determinar si un problema de rendimiento tiene su origen en la propia base de datos o en limitaciones de la infraestructura donde se ejecuta.</p>
+<hr />
+<h2 id="cloudwatch-como-plataforma-de-observabilidad">CloudWatch como plataforma de observabilidad</h2>
+<p>Las métricas generadas por Amazon RDS pueden integrarse con Amazon CloudWatch, el servicio de monitorización centralizado de AWS.</p>
+<p>CloudWatch actúa como una plataforma unificada donde se recopilan, almacenan y representan datos procedentes de múltiples servicios.</p>
+<p>Gracias a esta integración es posible construir paneles de supervisión, generar alertas automáticas y correlacionar eventos que afectan simultáneamente a distintas partes de una arquitectura.</p>
+<p>En infraestructuras empresariales complejas, esta visión global resulta fundamental para comprender el comportamiento conjunto de aplicaciones, servidores, redes y bases de datos.</p>
+<p>La incorporación de recursos de monitorización y observabilidad constituye una práctica habitual dentro de la administración moderna de infraestructuras cloud.---</p>
+<h2 id="exportacion-de-registros">Exportación de registros</h2>
+<p>Además de las métricas numéricas, una fuente esencial de información para el administrador son los registros o <em>logs</em>.</p>
+<p>Los registros almacenan eventos generados durante el funcionamiento normal de la base de datos y permiten reconstruir lo ocurrido cuando se produce una incidencia.</p>
+<p>La integración con CloudWatch posibilita centralizar estos registros y analizarlos mediante herramientas específicas de búsqueda y visualización.</p>
+<hr />
+<h3 id="registro-de-errores">Registro de errores</h3>
+<p>El registro de errores contiene información sobre <strong>problemas detectados</strong> por el motor MariaDB durante su funcionamiento.</p>
+<p>Cuando una base de datos experimenta fallos inesperados, errores de configuración o incidencias internas, este registro suele constituir el primer punto de análisis para el administrador.</p>
+<hr />
+<h3 id="registro-general">Registro general</h3>
+<p>El registro general almacena información sobre las operaciones realizadas por los clientes que interactúan con la base de datos.</p>
+<p>Aunque proporciona una visión muy completa de la actividad del sistema, también <strong>puede generar una cantidad considerable de información</strong>, por lo que su utilización debe evaluarse en función de las necesidades concretas de cada entorno.</p>
+<hr />
+<h3 id="registro-de-auditoria">Registro de auditoría</h3>
+<p>El registro de auditoría permite mantener <strong>trazabilidad</strong> sobre las acciones realizadas dentro de la plataforma.</p>
+<p>Este tipo de información resulta especialmente relevante en organizaciones sujetas a requisitos normativos o políticas de control de accesos que exigen conocer quién realizó una determinada operación y en qué momento se produjo.</p>
+<hr />
+<h3 id="registro-de-consultas-lentas">Registro de consultas lentas</h3>
+<p><strong>Uno de los registros más valiosos desde el punto de vista del rendimiento</strong> es el registro de consultas lentas.</p>
+<p>Su finalidad consiste en identificar aquellas consultas SQL cuya ejecución supera determinados umbrales de tiempo.</p>
+<p>Analizando estas consultas es posible detectar problemas de diseño, índices inadecuados o patrones de acceso ineficientes que afectan negativamente al rendimiento global del sistema.</p>
+<p>La optimización basada en el análisis de consultas lentas constituye una de las técnicas más habituales de mejora del rendimiento en bases de datos relacionales.</p>
+<hr />
+<h2 id="copias-de-seguridad-automaticas">Copias de seguridad automáticas</h2>
+<p>La protección de la información es uno de los pilares fundamentales de cualquier sistema de bases de datos.</p>
+<p>Amazon RDS incorpora mecanismos de copia de seguridad automática que permiten recuperar la información ante errores humanos, fallos de infraestructura o incidencias operativas.</p>
+<p>Estas copias se <strong>generan automáticamente</strong> sin necesidad de intervención manual y constituyen la base de las estrategias de recuperación ante desastres.</p>
+<p>La configuración de políticas de copia de seguridad y recuperación forma parte de las tareas esenciales asociadas a la administración de bases de datos en la nube. </p>
+<hr />
+<h2 id="periodo-de-retencion">Periodo de retención</h2>
+<p>Uno de los parámetros fundamentales de las copias de seguridad es el periodo de retención.</p>
+<p>La retención determina <strong>durante cuánto tiempo se conservarán</strong> las copias generadas automáticamente antes de ser eliminadas.</p>
+<p>Un periodo de retención amplio proporciona una mayor capacidad de recuperación frente a errores detectados tardíamente, aunque también incrementa el volumen de almacenamiento utilizado.</p>
+<p>Por el contrario, una retención reducida minimiza costes, pero limita la capacidad de restaurar información histórica.</p>
+<p>La elección adecuada dependerá de las políticas de recuperación y continuidad definidas por la organización.</p>
+<hr />
+<h2 id="ventana-de-copia-de-seguridad">Ventana de copia de seguridad</h2>
+<p>Amazon RDS también permite definir la ventana temporal durante la cual se ejecutarán las copias automáticas.</p>
+<p>La programación de estas operaciones suele realizarse durante periodos de baja actividad para minimizar cualquier posible impacto sobre las aplicaciones.</p>
+<p>Cuando no se especifica una ventana concreta, AWS selecciona automáticamente el momento que considera más adecuado para ejecutar estas tareas.</p>
+<hr />
+<h2 id="replicacion-de-copias-entre-regiones">Replicación de copias entre regiones</h2>
+<p>Para escenarios donde la protección de la información resulta especialmente crítica, Amazon RDS permite replicar <strong>copias de seguridad en regiones diferentes</strong>.</p>
+<p>Esta estrategia proporciona protección adicional frente a incidentes que puedan afectar a una región completa de AWS.</p>
+<p>La replicación geográfica incrementa la resiliencia del sistema, aunque también añade costes adicionales asociados al almacenamiento y a la transferencia de datos.</p>
+<p>Su utilización suele reservarse para sistemas que requieren elevados niveles de continuidad operativa y recuperación ante desastres.</p>
+<hr />
+<h2 id="actualizaciones-y-mantenimiento">Actualizaciones y mantenimiento</h2>
+<p>Toda base de datos requiere tareas periódicas de mantenimiento destinadas a corregir errores, mejorar la estabilidad y solucionar vulnerabilidades de seguridad.</p>
+<p>Amazon RDS automatiza gran parte de estas tareas, simplificando considerablemente la administración cotidiana del servicio.</p>
+<hr />
+<h3 id="actualizaciones-automaticas-de-versiones-secundarias">Actualizaciones automáticas de versiones secundarias</h3>
+<p>AWS permite habilitar la instalación automática de <strong>actualizaciones menores del motor</strong> MariaDB.</p>
+<p>Estas actualizaciones suelen incorporar correcciones de errores, mejoras de estabilidad y parches de seguridad sin introducir cambios importantes en la funcionalidad de la plataforma.</p>
+<p>Mantener activadas las actualizaciones automáticas reduce la exposición a vulnerabilidades conocidas y simplifica la gestión operacional.</p>
+<p>No obstante, algunas organizaciones prefieren validar previamente los cambios en entornos de prueba antes de permitir su despliegue en sistemas de producción.</p>
+<hr />
+<h3 id="ventanas-de-mantenimiento">Ventanas de mantenimiento</h3>
+<p>Las operaciones programadas de mantenimiento pueden realizarse dentro de franjas horarias definidas por el administrador.</p>
+<p>La utilización de ventanas de mantenimiento permite planificar posibles intervenciones en horarios que minimicen el impacto sobre los usuarios.</p>
+<p>Este enfoque resulta especialmente importante en sistemas utilizados de forma continua o con elevados requisitos de disponibilidad.</p>
+<hr />
+<h2 id="proteccion-contra-eliminacion-accidental">Protección contra eliminación accidental</h2>
+<p>Una de las características más sencillas y, al mismo tiempo, más valiosas de Amazon RDS es la protección contra eliminación.</p>
+<p>Cuando esta función se encuentra habilitada, <strong>la instancia no puede ser eliminada accidentalmente</strong> desde la consola de administración.</p>
+<p>Antes de proceder a su eliminación, el administrador deberá desactivar explícitamente esta protección.</p>
+<p>Aunque se trata de una medida aparentemente simple, evita numerosos errores operativos y proporciona una capa adicional de seguridad administrativa.</p>
+<hr />
+<h2 id="configuracion-inicial-de-la-base-de-datos">Configuración inicial de la base de datos</h2>
+<p>Amazon RDS permite crear una base de datos inicial durante el despliegue de la instancia.</p>
+<p>Esta funcionalidad facilita la automatización de entornos y simplifica la puesta en marcha de aplicaciones que requieren una estructura básica preparada desde el principio.</p>
+<p>No obstante, también es posible crear únicamente la instancia y generar posteriormente las distintas bases de datos según las necesidades del proyecto.</p>
+<hr />
+<h2 id="grupos-de-parametros">Grupos de parámetros</h2>
+<p>Los grupos de parámetros constituyen uno de los mecanismos más importantes de personalización de una instancia RDS.</p>
+<p>Un grupo de parámetros contiene la <strong>configuración interna utilizada por MariaDB</strong> para controlar aspectos relacionados con memoria, cachés, conexiones, tiempos de espera y numerosos elementos del comportamiento del motor.</p>
+<p>AWS proporciona configuraciones predeterminadas adecuadas para la mayoría de escenarios, aunque las organizaciones con necesidades específicas pueden crear grupos personalizados adaptados a sus cargas de trabajo.</p>
+<p>La modificación de estos parámetros permite realizar optimizaciones orientadas tanto al rendimiento como al consumo de recursos, una capacidad contemplada dentro de las tareas de administración y optimización de bases de datos.</p>
+<hr />
+<h2 id="grupos-de-opciones">Grupos de opciones</h2>
+<p>Además de los parámetros generales del motor, Amazon RDS incorpora grupos de opciones destinados a habilitar funcionalidades adicionales.</p>
+<p>Estas opciones permiten extender determinadas capacidades del sistema sin necesidad de modificar manualmente la instalación de MariaDB.</p>
+<p>Su disponibilidad depende del motor y de la versión utilizada, así como de las características soportadas por AWS en cada momento.</p>
+<hr />
+<h2 id="cifrado-de-la-base-de-datos">Cifrado de la base de datos</h2>
+<p>La protección de la información almacenada constituye otro aspecto fundamental de cualquier despliegue profesional.</p>
+<p>Amazon RDS permite <strong>cifrar los datos almacenados</strong> mediante claves gestionadas a través de AWS Key Management Service (KMS).</p>
+<p>El cifrado protege la información almacenada frente a accesos no autorizados y contribuye al cumplimiento de requisitos normativos relacionados con la protección de datos.</p>
+<p>La configuración de mecanismos de cifrado constituye una de las actividades fundamentales contempladas dentro de la administración segura de bases de datos en la nube.</p>
+<hr />
+<h2 id="conclusiones">Conclusiones</h2>
+<p>La fase de monitorización, protección y mantenimiento representa la última etapa del despliegue inicial de una instancia MariaDB en Amazon RDS, pero marca el comienzo de su ciclo de vida operativo.</p>
+<p>Las decisiones relacionadas con observabilidad, copias de seguridad, actualización de software, retención de información, recuperación ante desastres y cifrado tienen una influencia directa sobre la disponibilidad, la seguridad y la capacidad de gestión del sistema. Una infraestructura correctamente diseñada no es únicamente aquella que funciona hoy, sino aquella que puede supervisarse, mantenerse y recuperarse eficazmente cuando se produzca una incidencia. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

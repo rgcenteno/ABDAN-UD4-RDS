@@ -1,0 +1,1089 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../Crear-RDS-02/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Configuración inicial, credenciales - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#configuracion-inicial-gestion-de-credenciales-y-buenas-practicas" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Configuración inicial, credenciales
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo light"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo light" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#seleccion-de-la-plantilla-de-despliegue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selección de la plantilla de despliegue
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Selección de la plantilla de despliegue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entornos-de-produccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entornos de producción
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entornos-de-desarrollo-y-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entornos de desarrollo y pruebas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capa-gratuita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capa gratuita
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seleccion-de-la-version-del-motor-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selección de la versión del motor MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Selección de la versión del motor MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#escrituras-optimizadas-de-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escrituras optimizadas de Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identificacion-de-la-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identificación de la instancia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-las-credenciales-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de las credenciales de administración
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-de-credenciales-mediante-aws-secrets-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión de credenciales mediante AWS Secrets Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-manual-de-credenciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión manual de credenciales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-de-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métodos de autenticación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifrado-de-credenciales-y-claves-kms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado de credenciales y claves KMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-recomendadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas recomendadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    -Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#seleccion-de-la-plantilla-de-despliegue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selección de la plantilla de despliegue
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Selección de la plantilla de despliegue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entornos-de-produccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entornos de producción
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entornos-de-desarrollo-y-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entornos de desarrollo y pruebas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capa-gratuita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capa gratuita
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#seleccion-de-la-version-del-motor-mariadb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selección de la versión del motor MariaDB
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Selección de la versión del motor MariaDB">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#escrituras-optimizadas-de-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escrituras optimizadas de Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identificacion-de-la-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identificación de la instancia
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuracion-de-las-credenciales-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración de las credenciales de administración
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-de-credenciales-mediante-aws-secrets-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión de credenciales mediante AWS Secrets Manager
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gestion-manual-de-credenciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gestión manual de credenciales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-de-autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métodos de autenticación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cifrado-de-credenciales-y-claves-kms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado de credenciales y claves KMS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-recomendadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas recomendadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="configuracion-inicial-gestion-de-credenciales-y-buenas-practicas">Configuración inicial, gestión de credenciales y buenas prácticas</h1>
+<p><img alt="image" src="../imgs/RDS-intro.png" /></p>
+<p>Amazon Relational Database Service (Amazon RDS) es el servicio gestionado de bases de datos relacionales de AWS. Su objetivo es simplificar las tareas habituales de administración, eliminando la necesidad de gestionar directamente servidores, almacenamiento, actualizaciones del sistema operativo o mecanismos de alta disponibilidad.</p>
+<p>Durante la creación de una instancia MariaDB, AWS solicita una serie de configuraciones que condicionarán aspectos fundamentales del servicio, como el rendimiento, la seguridad, la disponibilidad, la escalabilidad o el coste económico. Comprender el impacto de estas decisiones resulta esencial para diseñar infraestructuras de datos que respondan adecuadamente a los requisitos funcionales y no funcionales de una organización.</p>
+<p>La administración de bases de datos en la nube implica precisamente la selección y configuración de estos componentes, prestando especial atención a factores relacionados con el acceso, el cifrado, la monitorización, la replicación y la recuperación de la información.</p>
+<hr />
+<h2 id="seleccion-de-la-plantilla-de-despliegue">Selección de la plantilla de despliegue</h2>
+<p>Uno de los primeros pasos en la creación de una instancia MariaDB consiste en seleccionar una plantilla de configuración. Estas plantillas permiten adaptar automáticamente numerosos parámetros del servicio al escenario para el que se pretende utilizar la base de datos.</p>
+<p>AWS ofrece diferentes configuraciones predefinidas orientadas principalmente a entornos de producción, desarrollo y formación. Aunque la elección de una plantilla no determina de forma permanente el comportamiento de la instancia, sí establece una serie de valores iniciales que afectan al coste, a la disponibilidad y a la robustez general del despliegue.</p>
+<h3 id="entornos-de-produccion">Entornos de producción</h3>
+<p>La plantilla de producción está orientada a bases de datos que forman parte de sistemas reales utilizados por usuarios finales. En este contexto, la prioridad es garantizar la continuidad del servicio, minimizar los riesgos de pérdida de información y proporcionar una infraestructura capaz de mantener niveles adecuados de rendimiento incluso ante incrementos de carga.</p>
+<p>Por este motivo, AWS suele proponer configuraciones más conservadoras, con mayores niveles de redundancia y mecanismos adicionales de protección. Esta aproximación incrementa el coste total de la solución, aunque proporciona una fiabilidad superior.</p>
+<p>La utilización de esta plantilla resulta especialmente adecuada en aplicaciones empresariales, sistemas de gestión corporativa, plataformas de comercio electrónico o cualquier otro entorno donde una interrupción del servicio pueda generar un impacto significativo.</p>
+<h3 id="entornos-de-desarrollo-y-pruebas">Entornos de desarrollo y pruebas</h3>
+<p>La plantilla de desarrollo y pruebas está diseñada para escenarios donde el objetivo principal es validar aplicaciones, realizar experimentos o desarrollar nuevas funcionalidades.</p>
+<p>En este tipo de entornos la disponibilidad no suele ser un requisito crítico, por lo que AWS propone una configuración más sencilla y económica. De este modo es posible reducir costes sin comprometer la capacidad de realizar pruebas funcionales o actividades formativas.</p>
+<p>La mayoría de las prácticas docentes y laboratorios académicos utilizan configuraciones de este tipo, ya que permiten trabajar con el servicio sin necesidad de desplegar una arquitectura completa de producción.</p>
+<h3 id="capa-gratuita">Capa gratuita</h3>
+<p>Cuando la cuenta dispone de acceso a la capa gratuita de AWS, puede utilizarse una configuración especialmente orientada al aprendizaje y a la realización de pruebas básicas.</p>
+<p>Esta modalidad permite familiarizarse con los servicios de Amazon RDS sin asumir costes adicionales dentro de los límites establecidos por AWS. Sin embargo, la capacidad disponible y el rendimiento del sistema son considerablemente más reducidos que en los despliegues convencionales.</p>
+<hr />
+<h2 id="seleccion-de-la-version-del-motor-mariadb">Selección de la versión del motor MariaDB</h2>
+<p>Una vez elegida la plantilla, es necesario seleccionar la versión del motor MariaDB que ejecutará la instancia.</p>
+<p>La elección de la versión constituye una decisión relevante, ya que determina las funcionalidades disponibles, el nivel de compatibilidad con aplicaciones existentes y el periodo durante el cual se recibirán actualizaciones de seguridad y mantenimiento.</p>
+<p>Las versiones más recientes suelen incorporar mejoras relacionadas con el rendimiento, la eficiencia de las consultas, la estabilidad del sistema y la corrección de vulnerabilidades detectadas en versiones anteriores. Sin embargo, determinadas aplicaciones pueden requerir versiones específicas debido a dependencias o limitaciones de compatibilidad.</p>
+<p>Por esta razón, la selección de la versión debe realizarse considerando simultáneamente los requisitos técnicos de la aplicación y las recomendaciones de soporte establecidas por AWS.</p>
+<h3 id="escrituras-optimizadas-de-amazon-rds">Escrituras optimizadas de Amazon RDS</h3>
+<p>En determinadas versiones del motor, Amazon RDS permite habilitar funcionalidades optimizadas para operaciones de escritura.</p>
+<p>Estas mejoras están orientadas a reducir la latencia y aumentar el rendimiento cuando la base de datos debe gestionar un elevado volumen de inserciones o modificaciones de información. Este tipo de optimizaciones puede resultar especialmente interesante en aplicaciones transaccionales, donde se realizan continuamente operaciones de creación y actualización de registros.</p>
+<p>Aunque su utilización no modifica el funcionamiento lógico de la base de datos, sí puede aportar beneficios significativos en determinados escenarios de carga.</p>
+<hr />
+<h2 id="identificacion-de-la-instancia">Identificación de la instancia</h2>
+<p>Cada instancia de Amazon RDS debe disponer de un identificador único dentro de la cuenta y la región donde se despliega.</p>
+<p>Este identificador no corresponde al nombre de la base de datos que almacenará las tablas y registros, sino al propio servicio administrado por AWS. Puede entenderse como el nombre con el que la plataforma identifica el servidor de base de datos dentro de la infraestructura del cliente.</p>
+<p>La elección de nombres descriptivos facilita enormemente las tareas de administración posteriores, especialmente cuando una organización mantiene múltiples entornos de trabajo.</p>
+<p>Por ejemplo, resulta habitual utilizar convenciones de nomenclatura que permitan identificar de forma inmediata el propósito de la instancia, distinguiendo entre sistemas de desarrollo, pruebas o producción.</p>
+<p>Una estrategia de nombrado adecuada reduce errores operativos y simplifica la gestión de recursos a medida que la infraestructura crece.</p>
+<hr />
+<h2 id="configuracion-de-las-credenciales-de-administracion">Configuración de las credenciales de administración</h2>
+<p>Toda instancia MariaDB requiere la existencia de una cuenta administrativa inicial, también denominada usuario maestro o <em>master user</em>.</p>
+<p>Esta cuenta constituye el nivel más alto de privilegio dentro de la base de datos y será utilizada para realizar tareas como la creación de esquemas, la administración de usuarios o la configuración de permisos.</p>
+<p>Debido a su importancia, AWS proporciona diferentes mecanismos para gestionar de forma segura las credenciales asociadas a esta cuenta.</p>
+<hr />
+<h2 id="gestion-de-credenciales-mediante-aws-secrets-manager">Gestión de credenciales mediante AWS Secrets Manager</h2>
+<p>La opción recomendada por AWS consiste en delegar la gestión de credenciales en AWS Secrets Manager.</p>
+<p>En este modelo, las contraseñas dejan de almacenarse manualmente por parte del administrador y pasan a gestionarse mediante un servicio especializado en la protección de información sensible.</p>
+<p>Además del almacenamiento seguro, Secrets Manager permite automatizar la generación de contraseñas complejas, controlar los accesos a las mismas y programar procesos de rotación periódica que incrementan significativamente el nivel de seguridad del sistema.</p>
+<p>Desde una perspectiva operativa, esta aproximación reduce los riesgos asociados a la reutilización de contraseñas, al almacenamiento inseguro de credenciales o a la pérdida accidental de información sensible.</p>
+<p>Su principal inconveniente es el coste adicional asociado al servicio, motivo por el cual algunos entornos de formación o desarrollo optan por soluciones más sencillas.</p>
+<hr />
+<h2 id="gestion-manual-de-credenciales">Gestión manual de credenciales</h2>
+<p>Como alternativa, Amazon RDS permite que las credenciales sean administradas directamente por el responsable de la infraestructura.</p>
+<p>En este escenario, la organización define la contraseña inicial y asume completamente las tareas de custodia, actualización y protección de las credenciales.</p>
+<p>Aunque esta aproximación resulta más simple y económica, también implica una mayor responsabilidad administrativa. La seguridad del sistema dependerá en gran medida de las políticas internas relacionadas con la creación, almacenamiento y renovación de contraseñas.</p>
+<p>En entornos formativos suele ser una solución suficiente, mientras que en sistemas empresariales se recomienda utilizar mecanismos centralizados de gestión de secretos.</p>
+<hr />
+<h2 id="metodos-de-autenticacion">Métodos de autenticación</h2>
+<p>Además de la gestión de credenciales, Amazon RDS permite seleccionar el mecanismo de autenticación que utilizarán los usuarios para acceder al sistema.</p>
+<p>La opción tradicional consiste en utilizar usuarios y contraseñas almacenados directamente en MariaDB. Este modelo continúa siendo el más extendido debido a su simplicidad y compatibilidad con cualquier aplicación capaz de conectarse a una base de datos relacional.</p>
+<p>Sin embargo, AWS también ofrece la posibilidad de integrar la autenticación con AWS Identity and Access Management (IAM).</p>
+<p>Mediante este mecanismo, la gestión de identidades se centraliza dentro de la plataforma AWS, permitiendo controlar accesos, asignar permisos y registrar actividades utilizando las mismas herramientas de gobierno y seguridad empleadas en el resto de servicios de la nube.</p>
+<p>Esta aproximación resulta especialmente interesante en entornos corporativos donde la trazabilidad y el control de accesos constituyen requisitos importantes de seguridad.</p>
+<hr />
+<h2 id="cifrado-de-credenciales-y-claves-kms">Cifrado de credenciales y claves KMS</h2>
+<p>Cuando se utilizan mecanismos avanzados de gestión de identidades o servicios como AWS Secrets Manager, es necesario proteger la información almacenada mediante técnicas de cifrado.</p>
+<p>Para ello, Amazon RDS se integra con AWS Key Management Service (KMS), el servicio encargado de la gestión centralizada de claves criptográficas.</p>
+<p>KMS permite crear, almacenar y administrar las claves utilizadas para proteger información sensible dentro de AWS. Gracias a este mecanismo, incluso aunque un tercero obtuviera acceso a los datos almacenados, no podría interpretar su contenido sin disponer de las claves correspondientes.</p>
+<p>El uso de claves administradas por AWS simplifica la puesta en marcha del sistema, mientras que la utilización de claves personalizadas proporciona un mayor nivel de control para organizaciones sujetas a requisitos normativos o políticas de seguridad más estrictas.</p>
+<hr />
+<h2 id="buenas-practicas-recomendadas">Buenas prácticas recomendadas</h2>
+<p>Para la mayoría de despliegues académicos y empresariales, una configuración equilibrada debería contemplar el uso de una v<strong>ersión estable y soportada de MariaDB</strong>, nombres descriptivos para las instancias, gestión centralizada de credenciales mediante AWS Secrets Manager y mecanismos de cifrado basados en AWS KMS.</p>
+<p>Asimismo, siempre que resulte viable, conviene integrar la autenticación con IAM para unificar la gestión de identidades y mejorar la trazabilidad de las operaciones realizadas sobre la base de datos.</p>
+<hr />
+<h2 id="conclusiones">Conclusiones</h2>
+<p>La configuración inicial de una instancia MariaDB en Amazon RDS constituye la base sobre la que se construirá el resto de la infraestructura de datos. Decisiones aparentemente sencillas, como la selección de una plantilla, la versión del motor o el mecanismo de autenticación, tienen consecuencias directas sobre el nivel de seguridad, los costes operativos y la facilidad de administración del sistema.</p>
+<p>Por este motivo, el diseño de una base de datos en la nube no debe limitarse a crear recursos, sino que debe considerar aspectos relacionados con la protección de la información, la gestión de accesos y la gobernanza del servicio, competencias que forman parte de la administración profesional de bases de datos en entornos cloud. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
