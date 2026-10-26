@@ -1,6 +1,6 @@
 # Redes, conectividad y seguridad de acceso
 
-![image](imgs/RDS-Intro3.png)
+![image](imgs/RDS-Intro3.jpg)
 
 Una vez definidos los recursos de computación, el almacenamiento y los mecanismos de alta disponibilidad, el siguiente paso consiste en establecer cómo podrán acceder los distintos sistemas a la base de datos.
 
@@ -50,7 +50,7 @@ La selección adecuada de redes virtuales, rangos de direccionamiento y mecanism
 
 ### Subredes y zonas de disponibilidad
 
-![image](imgs/RDS-subredes.png)
+![image](imgs/RDS-subredes.jpg)
 
 Dentro de una VPC es posible crear diferentes subredes con finalidades específicas.
 
@@ -96,7 +96,7 @@ La utilización adecuada de grupos de seguridad constituye **una de las medidas 
 
 ### RDS Proxy
 
-![image](imgs/RDS-proxy.png)
+![image](imgs/RDS-proxy.jpg)
 
 Las aplicaciones modernas suelen gestionar un elevado número de conexiones simultáneas contra las bases de datos.
 

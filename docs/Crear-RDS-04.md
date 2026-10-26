@@ -1,6 +1,6 @@
 # Monitorización, copias de seguridad, mantenimiento y protección de los datos
 
-![image](imgs/RDS-Intro4.png)
+![image](imgs/RDS-Intro4.jpg)
 
 La creación de una base de datos no finaliza cuando la instancia comienza a funcionar. De hecho, gran parte del trabajo de administración se desarrolla posteriormente, cuando es necesario supervisar el comportamiento del sistema, detectar problemas de rendimiento, aplicar actualizaciones, proteger la información y garantizar que los datos puedan recuperarse en caso de fallo.
 

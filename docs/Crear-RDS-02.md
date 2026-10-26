@@ -1,6 +1,6 @@
 # Configuración de la capacidad de cómputo, almacenamiento y alta disponibilidad
 
-![image](imgs/RDS-intro2.png)
+![image](imgs/RDS-intro2.jpg)
 
 Una vez definidas las características básicas de la instancia, como el motor de base de datos, la gestión de credenciales o los mecanismos de autenticación, el siguiente paso consiste en determinar los recursos físicos que estarán disponibles para ejecutar MariaDB.
 
@@ -126,7 +126,7 @@ Sin embargo, incrementar las IOPS también incrementa el coste del servicio, por
 
 ### Relación entre almacenamiento e IOPS
 
-![image](imgs/RDS-IOPS-capacidad.png)
+![image](imgs/RDS-IOPS-capacidad.jpg)
 
 Uno de los **errores más habituales al diseñar infraestructuras de bases de datos consiste en centrarse exclusivamente en la capacidad** de almacenamiento disponible.
 

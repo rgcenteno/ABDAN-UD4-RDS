@@ -6,7 +6,7 @@ En esta práctica crearemos una tabla DynamoDB accesible solo desde la subred pr
 
 **Idea clave antes de empezar.** DynamoDB es un servicio gestionado y regional: la tabla no se despliega dentro de una subred. Lo que sí se coloca en la subred privada es la *puerta de entrada* al servicio: el endpoint de interfaz crea una interfaz de red (ENI) con una IP privada `10.0.2.x`. *El contenido relacionado con la puerta de entrada se trabaja en el módulo de Redes correspondiente*. Después, una política de recursos en la tabla rechaza cualquier petición que no llegue por ese endpoint. El resultado práctico es una base de datos "privada".
 
-![image](imgs/arquitectura-practica-dynamodb.png)
+![image](imgs/arquitectura-practica-dynamodb.jpg)
 
 El tráfico de datos va de la EC2 a la ENI del endpoint (10.0.2.x) y de ahí a DynamoDB por la red de AWS; lo que no entra por el endpoint, como la consola, se rechaza tras la tarea 6.
 

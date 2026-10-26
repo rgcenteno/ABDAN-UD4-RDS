@@ -1,6 +1,6 @@
 # Configuración inicial, gestión de credenciales y buenas prácticas
 
-![image](imgs/RDS-intro.png)
+![image](imgs/RDS-intro.jpg)
 
 Amazon Relational Database Service (Amazon RDS) es el servicio gestionado de bases de datos relacionales de AWS. Su objetivo es simplificar las tareas habituales de administración, eliminando la necesidad de gestionar directamente servidores, almacenamiento, actualizaciones del sistema operativo o mecanismos de alta disponibilidad.
 
