@@ -1,0 +1,1098 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Crear-RDS-02/">
+      
+      
+        <link rel="next" href="../Crear-RDS-04/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Redes, conectividad y seguridad de acceso - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#redes-conectividad-y-seguridad-de-acceso" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Redes, conectividad y seguridad de acceso
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integracion-con-recursos-de-computacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integración con recursos de computación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipo-de-red-y-direccionamiento-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipo de red y direccionamiento IP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redes-privadas-virtuales-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redes privadas virtuales (VPC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Redes privadas virtuales (VPC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subredes-y-zonas-de-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subredes y zonas de disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceso-publico-y-acceso-privado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceso público y acceso privado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Proxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificados-y-cifrado-de-las-comunicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificados y cifrado de las comunicaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etiquetas-y-organizacion-de-recursos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etiquetas y organización de recursos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-recomendadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas recomendadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supervisión
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comandos útiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#integracion-con-recursos-de-computacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integración con recursos de computación
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipo-de-red-y-direccionamiento-ip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipo de red y direccionamiento IP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redes-privadas-virtuales-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redes privadas virtuales (VPC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Redes privadas virtuales (VPC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subredes-y-zonas-de-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subredes y zonas de disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acceso-publico-y-acceso-privado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceso público y acceso privado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Proxy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificados-y-cifrado-de-las-comunicaciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificados y cifrado de las comunicaciones
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#etiquetas-y-organizacion-de-recursos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Etiquetas y organización de recursos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buenas-practicas-recomendadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Buenas prácticas recomendadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="redes-conectividad-y-seguridad-de-acceso">Redes, conectividad y seguridad de acceso<a class="headerlink" href="#redes-conectividad-y-seguridad-de-acceso" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/RDS-Intro3.jpg" /></p>
+<p>Una vez definidos los recursos de computación, el almacenamiento y los mecanismos de alta disponibilidad, el siguiente paso consiste en establecer cómo podrán acceder los distintos sistemas a la base de datos.</p>
+<p>En muchas ocasiones, <strong>los problemas más graves</strong> de una infraestructura de datos no están relacionados con el rendimiento o la capacidad de almacenamiento, sino con <strong>configuraciones incorrectas de red y seguridad</strong>. Una base de datos excesivamente expuesta puede convertirse en un objetivo para ataques externos, mientras que una configuración demasiado restrictiva puede impedir el funcionamiento correcto de las aplicaciones. </p>
+<p>Por este motivo, Amazon RDS incorpora un conjunto de mecanismos que permiten controlar la conectividad, restringir el acceso a los recursos autorizados y proteger las comunicaciones mediante cifrado. La configuración de parámetros relativos a visibilidad, acceso, seguridad, monitorización y auditoría forma parte de las tareas fundamentales asociadas a la administración de bases de datos en la nube.</p>
+<h2 id="integracion-con-recursos-de-computacion">Integración con recursos de computación<a class="headerlink" href="#integracion-con-recursos-de-computacion" title="Permanent link">&para;</a></h2>
+<p>Durante la creación de una instancia, Amazon RDS permite asociar la base de datos con recursos de cómputo desplegados en AWS, especialmente instancias Amazon EC2.</p>
+<p>Esta integración facilita la creación de arquitecturas donde la aplicación y la base de datos forman parte de la misma infraestructura, simplificando determinados aspectos de la configuración de red.</p>
+<p>No obstante, <strong>la base de datos puede desplegarse de forma completamente independiente</strong>. Esta situación es habitual cuando todavía no se han creado los servidores de aplicaciones o cuando la misma instancia debe ser utilizada simultáneamente por varios sistemas diferentes.</p>
+<p>Desde el punto de vista arquitectónico, es importante comprender que una base de datos no necesita estar asociada permanentemente a un único servidor. <strong>Amazon RDS actúa como un servicio independiente</strong> al que posteriormente podrán conectarse diferentes aplicaciones autorizadas.</p>
+<hr />
+<h2 id="tipo-de-red-y-direccionamiento-ip">Tipo de red y direccionamiento IP<a class="headerlink" href="#tipo-de-red-y-direccionamiento-ip" title="Permanent link">&para;</a></h2>
+<p>Toda comunicación en AWS se realiza utilizando protocolos de red basados en direcciones IP.</p>
+<p>Durante la configuración de la instancia es posible seleccionar si el servicio utilizará exclusivamente IPv4 o si admitirá simultáneamente IPv4 e IPv6 mediante un esquema de pila dual.</p>
+<p>Actualmente, <strong>IPv4 continúa siendo el protocolo predominante</strong> en la mayoría de organizaciones y entornos empresariales. Por este motivo, la inmensa mayoría de las implementaciones utilizan esta opción sin necesidad de realizar configuraciones adicionales.</p>
+<p>Sin embargo, IPv6 aporta ventajas relacionadas con la disponibilidad de direcciones y la evolución futura de Internet. Las organizaciones que estén desarrollando nuevas infraestructuras o que trabajen en entornos donde IPv6 ya se encuentra desplegado pueden optar por configuraciones de doble pila para garantizar la compatibilidad con ambos protocolos.</p>
+<p>La elección del tipo de red no suele tener impacto sobre el funcionamiento de MariaDB, pero sí influye en la forma en que otros sistemas podrán establecer conexiones con la base de datos.</p>
+<hr />
+<h2 id="redes-privadas-virtuales-vpc">Redes privadas virtuales (VPC)<a class="headerlink" href="#redes-privadas-virtuales-vpc" title="Permanent link">&para;</a></h2>
+<p>Uno de los conceptos más importantes dentro de AWS es la Virtual Private Cloud o VPC.</p>
+<p>Una VPC puede entenderse como una red privada definida por software dentro de la infraestructura de Amazon. Todos los recursos desplegados dentro de la misma VPC comparten un entorno de comunicación común y pueden interactuar siguiendo las reglas de seguridad establecidas por el administrador.</p>
+<p>Cuando se despliega una instancia RDS, es obligatorio decidir en qué VPC residirá.</p>
+<p>Esta decisión tiene una especial relevancia porque condiciona posteriormente la conectividad con otros recursos. Una base de datos desplegada en una determinada VPC podrá comunicarse fácilmente con servicios ubicados en la misma red, mientras que la comunicación con recursos externos requerirá configuraciones adicionales.</p>
+<p>Por este motivo, la planificación de la arquitectura de red debe realizarse antes de desplegar los servicios. Una mala elección de la VPC puede obligar a rediseñar parte de la infraestructura o incluso recrear determinados recursos.</p>
+<p>La selección adecuada de redes virtuales, rangos de direccionamiento y mecanismos de segmentación constituye un elemento esencial en la administración segura de infraestructuras cloud.</p>
+<h3 id="subredes-y-zonas-de-disponibilidad">Subredes y zonas de disponibilidad<a class="headerlink" href="#subredes-y-zonas-de-disponibilidad" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../imgs/RDS-subredes.jpg" /></p>
+<p>Dentro de una VPC es posible crear diferentes subredes con finalidades específicas.</p>
+<p>Amazon RDS utiliza grupos de subredes para determinar dónde puede desplegar físicamente la base de datos y qué zonas de disponibilidad estarán disponibles para el servicio.</p>
+<p>La existencia de múltiples subredes distribuidas entre varias zonas permite implementar arquitecturas de alta disponibilidad y aprovechar funcionalidades como Multi-AZ.</p>
+<p>Desde una perspectiva de diseño, las subredes constituyen un mecanismo de segmentación que facilita la separación lógica de distintos tipos de recursos. Es habitual encontrar subredes específicas para servidores de aplicaciones, sistemas de almacenamiento, servicios de administración y bases de datos.</p>
+<p>Esta segmentación contribuye a mejorar tanto la seguridad como la capacidad de gestión de la infraestructura.</p>
+<hr />
+<h3 id="acceso-publico-y-acceso-privado">Acceso público y acceso privado<a class="headerlink" href="#acceso-publico-y-acceso-privado" title="Permanent link">&para;</a></h3>
+<p>Una de las decisiones más relevantes durante la configuración de una base de datos es determinar si la instancia será accesible desde Internet.</p>
+<p>Cuando se habilita el acceso público, Amazon puede asignar una dirección accesible desde redes externas. Esto permite que herramientas de administración, aplicaciones remotas o usuarios autorizados establezcan conexiones sin necesidad de encontrarse dentro de la misma VPC.</p>
+<p>Aunque esta configuración simplifica considerablemente las tareas de acceso, también incrementa la superficie de exposición del sistema.</p>
+<p>Por el contrario, una instancia sin acceso público únicamente podrá ser utilizada por recursos autorizados dentro de la red privada o mediante mecanismos específicos de conectividad segura.</p>
+<p>En entornos empresariales, <strong>la práctica más habitual consiste en mantener las bases de datos dentro de redes privadas y permitir el acceso únicamente a través de los servidores de aplicaciones</strong>. De esta manera se añade una capa adicional de protección entre los usuarios externos y la información almacenada.</p>
+<p>El acceso público puede ser adecuado para laboratorios, actividades formativas o entornos de pruebas, pero en sistemas de producción debe evaluarse cuidadosamente desde una perspectiva de seguridad.</p>
+<hr />
+<h3 id="grupos-de-seguridad">Grupos de seguridad<a class="headerlink" href="#grupos-de-seguridad" title="Permanent link">&para;</a></h3>
+<p>Si la VPC define la red donde se encuentra la base de datos, los grupos de seguridad determinan quién puede comunicarse con ella.</p>
+<p>Un grupo de seguridad actúa como un <strong>cortafuegos virtual</strong> encargado de controlar el tráfico permitido hacia la instancia.</p>
+<p>Cada regla especifica qué sistemas pueden conectarse, utilizando qué protocolos y a través de qué puertos.</p>
+<p>En el caso de MariaDB, el puerto de comunicación más habitual es el 3306. Sin embargo, incluso aunque la base de datos disponga de una dirección accesible, ninguna conexión será aceptada si las reglas del grupo de seguridad no la autorizan explícitamente.</p>
+<p>La utilización adecuada de grupos de seguridad constituye <strong>una de las medidas de protección más importantes dentro de AWS</strong>. La creación de reglas excesivamente permisivas puede exponer la base de datos a accesos no autorizados, mientras que una configuración correctamente diseñada permite aplicar el principio de mínimo privilegio, autorizando únicamente los accesos estrictamente necesarios. </p>
+<hr />
+<h3 id="rds-proxy">RDS Proxy<a class="headerlink" href="#rds-proxy" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../imgs/RDS-proxy.jpg" /></p>
+<p>Las aplicaciones modernas suelen gestionar un elevado número de conexiones simultáneas contra las bases de datos.</p>
+<p>Cada conexión consume recursos y, cuando la carga aumenta considerablemente, la apertura y cierre constante de sesiones puede afectar al rendimiento global del sistema.</p>
+<p>Para responder a este problema, Amazon ofrece RDS Proxy.</p>
+<p>Un proxy actúa como una <strong>capa intermedia entre las aplicaciones y la base de datos</strong>. En lugar de crear conexiones directas para cada petición, el proxy mantiene un conjunto optimizado de conexiones reutilizables y gestiona su distribución entre las aplicaciones que las solicitan.</p>
+<p>Esta arquitectura permite reducir la sobrecarga del servidor, mejorar la escalabilidad y aumentar la estabilidad bajo cargas elevadas.</p>
+<p>Además, determinadas operaciones de mantenimiento o cambios en la infraestructura pueden resultar más transparentes para las aplicaciones cuando se utiliza un proxy, ya que las conexiones se gestionan desde esta capa intermedia.</p>
+<p>No obstante, la incorporación de un proxy introduce cierta complejidad adicional y puede incrementar los costes del despliegue, por lo que normalmente se reserva para sistemas con un número importante de usuarios o conexiones concurrentes.</p>
+<hr />
+<h3 id="certificados-y-cifrado-de-las-comunicaciones">Certificados y cifrado de las comunicaciones<a class="headerlink" href="#certificados-y-cifrado-de-las-comunicaciones" title="Permanent link">&para;</a></h3>
+<p>La seguridad de una base de datos no depende únicamente de quién puede conectarse, sino también de cómo se transmiten los datos a través de la red.</p>
+<p>Cuando una aplicación establece una conexión con MariaDB intercambia información sensible que puede incluir credenciales, datos personales o información empresarial.</p>
+<p>Para proteger estas comunicaciones, Amazon RDS permite utilizar certificados digitales emitidos por autoridades certificadoras reconocidas.</p>
+<p>El uso de certificados posibilita establecer conexiones cifradas mediante TLS, garantizando que <strong>la información transmitida entre clientes y servidores no pueda ser interpretada por terceros</strong> durante su tránsito por la red.</p>
+<p>Además del cifrado, los certificados permiten verificar la identidad del servidor, reduciendo el riesgo de ataques basados en la suplantación de sistemas legítimos.</p>
+<p>La utilización de conexiones cifradas constituye actualmente una práctica fundamental en cualquier entorno profesional donde se gestione información sensible o crítica.</p>
+<hr />
+<h2 id="etiquetas-y-organizacion-de-recursos">Etiquetas y organización de recursos<a class="headerlink" href="#etiquetas-y-organizacion-de-recursos" title="Permanent link">&para;</a></h2>
+<p>A medida que una infraestructura crece, se vuelve cada vez más importante disponer de mecanismos que permitan clasificar y organizar los recursos desplegados.</p>
+<p>Para ello, AWS utiliza etiquetas o <em>tags</em>, que consisten en pares clave-valor asociados a cada elemento de la plataforma.</p>
+<p>Las etiquetas permiten identificar entornos, departamentos, proyectos, responsables técnicos o cualquier otro criterio relevante para la organización.</p>
+<p>Aunque no afectan directamente al funcionamiento de la base de datos, desempeñan un papel fundamental en la administración cotidiana de la infraestructura.</p>
+<p>Gracias a ellas resulta posible filtrar recursos, automatizar tareas, generar informes o atribuir costes a proyectos concretos. En organizaciones con cientos o miles de recursos desplegados, las etiquetas son una herramienta imprescindible de gobierno y gestión.</p>
+<hr />
+<h2 id="buenas-practicas-recomendadas">Buenas prácticas recomendadas<a class="headerlink" href="#buenas-practicas-recomendadas" title="Permanent link">&para;</a></h2>
+<p>La estrategia recomendada para la mayoría de organizaciones consiste en alojar las bases de datos dentro de <strong>redes privadas, limitar el acceso mediante grupos de seguridad específicos y utilizar conexiones cifradas para proteger el tráfico de red</strong>.</p>
+<p>Asimismo, resulta conveniente segmentar correctamente las subredes, evitar accesos públicos innecesarios y documentar adecuadamente los recursos mediante etiquetas consistentes.</p>
+<p>Cuando las aplicaciones gestionan grandes volúmenes de conexiones simultáneas, la incorporación de RDS Proxy puede contribuir significativamente a mejorar la escalabilidad y la estabilidad del sistema.</p>
+<hr />
+<h2 id="conclusiones">Conclusiones<a class="headerlink" href="#conclusiones" title="Permanent link">&para;</a></h2>
+<p>La configuración de la conectividad y la seguridad constituye una de las fases más importantes en el despliegue de una base de datos MariaDB sobre Amazon RDS. La definición de redes, subredes, grupos de seguridad y mecanismos de acceso determina quién podrá utilizar la información almacenada y bajo qué condiciones podrá hacerlo.</p>
+<p>Una base de datos correctamente protegida no es aquella que resulta inaccesible, sino aquella que únicamente permite el acceso a los sistemas y usuarios autorizados, manteniendo el equilibrio adecuado entre funcionalidad, rendimiento y seguridad. La configuración de controles de acceso, conectividad segura y mecanismos de protección forma parte de las competencias esenciales de la administración de bases de datos en entornos cloud. </p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2510 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Practica-DynamoDB-solucion/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>[EVALUABLE] Servidor Web + MySQL + DynamoDB - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#practica-aplicacion-web-php-con-amazon-rds-for-mysql-y-gestion-de-sesiones-en-amazon-dynamodb" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              [EVALUABLE] Servidor Web + MySQL + DynamoDB
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supervisión
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comandos útiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-planteamiento-del-problema-las-sesiones-locales-en-entornos-escalables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Planteamiento del problema: las sesiones locales en entornos escalables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Planteamiento del problema: las sesiones locales en entornos escalables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-funcionamiento-de-las-sesiones-en-php" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Funcionamiento de las sesiones en PHP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-el-problema-al-escalar-horizontalmente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. El problema al escalar horizontalmente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-alternativas-de-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Alternativas de solución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-arquitectura-objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Arquitectura objetivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-requisitos-previos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Requisitos previos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-desarrollo-de-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Desarrollo de la práctica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Desarrollo de la práctica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-creacion-de-la-vpc-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1. Creación de la VPC base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-grupo-de-seguridad-de-los-servidores-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2. Grupo de seguridad de los servidores web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-lanzamiento-de-la-instancia-ec2-servidorweb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3. Lanzamiento de la instancia EC2 ServidorWeb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-ampliacion-de-labvpc-con-subredes-privadas-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4. Ampliación de LabVPC con subredes privadas adicionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-creacion-del-grupo-de-subredes-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 5. Creación del grupo de subredes de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-grupo-de-seguridad-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 6. Grupo de seguridad de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-creacion-de-la-instancia-de-amazon-rds-for-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 7. Creación de la instancia de Amazon RDS for MySQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-importacion-de-la-base-de-datos-tienda-en-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 8. Importación de la base de datos tienda en Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recomendacion-supervision-de-los-errores-de-php-durante-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Recomendación: supervisión de los errores de PHP durante la práctica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edicion-de-las-variables-de-entorno-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✏️ Edición de las variables de entorno de la aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 9. Conexión de la aplicación con Amazon RDS (sesiones locales)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-creacion-de-la-tabla-de-sesiones-y-del-punto-de-enlace-de-vpc-para-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 10. Creación de la tabla de sesiones y del punto de enlace de VPC para DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-almacenamiento-de-las-sesiones-en-amazon-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 11. Almacenamiento de las sesiones en Amazon DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-obligar-a-que-la-conexion-a-dynamodb-se-haga-desde-el-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 12. Obligar a que la conexión a DynamoDB se haga desde el endpoint.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cuestiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Cuestiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-evidencias-a-entregar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Evidencias a entregar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-finalizacion-del-laboratorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Finalización del laboratorio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-planteamiento-del-problema-las-sesiones-locales-en-entornos-escalables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Planteamiento del problema: las sesiones locales en entornos escalables
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Planteamiento del problema: las sesiones locales en entornos escalables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-funcionamiento-de-las-sesiones-en-php" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Funcionamiento de las sesiones en PHP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-el-problema-al-escalar-horizontalmente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. El problema al escalar horizontalmente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-alternativas-de-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Alternativas de solución
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-objetivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Objetivos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-arquitectura-objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Arquitectura objetivo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-requisitos-previos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Requisitos previos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-desarrollo-de-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Desarrollo de la práctica
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Desarrollo de la práctica">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-creacion-de-la-vpc-base" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 1. Creación de la VPC base
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-grupo-de-seguridad-de-los-servidores-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 2. Grupo de seguridad de los servidores web
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-lanzamiento-de-la-instancia-ec2-servidorweb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 3. Lanzamiento de la instancia EC2 ServidorWeb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-ampliacion-de-labvpc-con-subredes-privadas-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 4. Ampliación de LabVPC con subredes privadas adicionales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-creacion-del-grupo-de-subredes-de-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 5. Creación del grupo de subredes de base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-grupo-de-seguridad-de-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 6. Grupo de seguridad de la base de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-creacion-de-la-instancia-de-amazon-rds-for-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 7. Creación de la instancia de Amazon RDS for MySQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-importacion-de-la-base-de-datos-tienda-en-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 8. Importación de la base de datos tienda en Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recomendacion-supervision-de-los-errores-de-php-durante-la-practica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Recomendación: supervisión de los errores de PHP durante la práctica
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#edicion-de-las-variables-de-entorno-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✏️ Edición de las variables de entorno de la aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 9. Conexión de la aplicación con Amazon RDS (sesiones locales)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-creacion-de-la-tabla-de-sesiones-y-del-punto-de-enlace-de-vpc-para-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 10. Creación de la tabla de sesiones y del punto de enlace de VPC para DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-almacenamiento-de-las-sesiones-en-amazon-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 11. Almacenamiento de las sesiones en Amazon DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-obligar-a-que-la-conexion-a-dynamodb-se-haga-desde-el-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Paso 12. Obligar a que la conexión a DynamoDB se haga desde el endpoint.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-cuestiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Cuestiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-evidencias-a-entregar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Evidencias a entregar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-finalizacion-del-laboratorio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Finalización del laboratorio
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="practica-aplicacion-web-php-con-amazon-rds-for-mysql-y-gestion-de-sesiones-en-amazon-dynamodb">Práctica: Aplicación web PHP con Amazon RDS for MySQL y gestión de sesiones en Amazon DynamoDB<a class="headerlink" href="#practica-aplicacion-web-php-con-amazon-rds-for-mysql-y-gestion-de-sesiones-en-amazon-dynamodb" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Curso de especialización</strong></td>
+<td>Recursos y Servicios en la Nube</td>
+</tr>
+<tr>
+<td><strong>Módulo profesional</strong></td>
+<td>Administración de bases de datos y almacenamiento en la nube</td>
+</tr>
+<tr>
+<td><strong>Plataforma</strong></td>
+<td>AWS Academy Learner Lab (región <code>us-east-1</code>)</td>
+</tr>
+<tr>
+<td><strong>Servicios implicados</strong></td>
+<td>Amazon VPC, Amazon EC2, Amazon RDS for MySQL, Amazon DynamoDB, AWS IAM</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-introduccion">1. Introducción<a class="headerlink" href="#1-introduccion" title="Permanent link">&para;</a></h2>
+<p>En la presente práctica se desplegará una aplicación web desarrollada en PHP cuya capa de persistencia se distribuye entre dos servicios gestionados de AWS con propósitos claramente diferenciados:</p>
+<ul>
+<li><strong>Amazon RDS for MySQL</strong>, que albergará la base de datos relacional de la aplicación (catálogo, usuarios, pedidos, etc.).</li>
+<li><strong>Amazon DynamoDB</strong>, que actuará como almacén centralizado de las <strong>sesiones de usuario</strong>.</li>
+</ul>
+<p>La aplicación se ejecutará sobre instancias <strong>Amazon EC2</strong> concebidas para formar parte de un grupo de servidores web, de modo que la arquitectura resultante pueda escalar horizontalmente detrás de un balanceador de carga o de un grupo de Auto Scaling sin que los usuarios pierdan su contexto de navegación.</p>
+<h2 id="2-planteamiento-del-problema-las-sesiones-locales-en-entornos-escalables">2. Planteamiento del problema: las sesiones locales en entornos escalables<a class="headerlink" href="#2-planteamiento-del-problema-las-sesiones-locales-en-entornos-escalables" title="Permanent link">&para;</a></h2>
+<h3 id="21-funcionamiento-de-las-sesiones-en-php">2.1. Funcionamiento de las sesiones en PHP<a class="headerlink" href="#21-funcionamiento-de-las-sesiones-en-php" title="Permanent link">&para;</a></h3>
+<p>El protocolo HTTP carece de estado: cada petición es independiente de las anteriores. Para mantener información asociada a un usuario a lo largo de su navegación (identidad autenticada, contenido del carrito de la compra, preferencias, mensajes <em>flash</em>, <em>tokens</em> CSRF, etc.), PHP emplea el mecanismo de <strong>sesiones</strong>:</p>
+<ol>
+<li>Al invocar <code>session_start()</code>, PHP genera un identificador de sesión aleatorio y lo envía al navegador mediante una <em>cookie</em> (por defecto, <code>PHPSESSID</code>).</li>
+<li>Los datos de la sesión (<code>$_SESSION</code>) <strong>se almacenan en el servidor</strong>. Con la configuración por defecto (<code>session.save_handler = files</code>), se guardan como ficheros en el disco local de la máquina, en la ruta indicada por <code>session.save_path</code> (por ejemplo, <code>/var/lib/php/session/sess_&lt;id&gt;</code>).</li>
+<li>En cada petición posterior, el navegador reenvía la <em>cookie</em> y PHP recupera del disco local el fichero correspondiente a ese identificador.</li>
+</ol>
+<p>Este diseño resulta completamente válido mientras la aplicación se ejecute en <strong>un único servidor</strong>.</p>
+<h3 id="22-el-problema-al-escalar-horizontalmente">2.2. El problema al escalar horizontalmente<a class="headerlink" href="#22-el-problema-al-escalar-horizontalmente" title="Permanent link">&para;</a></h3>
+<p>Cuando la aplicación se despliega en varias instancias EC2 detrás de un <strong>Application Load Balancer (ALB)</strong> o dentro de un <strong>grupo de Auto Scaling</strong>, el balanceador reparte las peticiones entre las instancias disponibles sin garantizar, por defecto, que un mismo usuario sea atendido siempre por la misma máquina.</p>
+<p>La consecuencia es la que se ilustra en la Figura 1:</p>
+<ul>
+<li>La <strong>petición 1</strong> (por ejemplo, el inicio de sesión) llega a la <em>instancia A</em>, que crea el fichero <code>sess_abc123</code> en <strong>su propio disco</strong>.</li>
+<li>La <strong>petición 2</strong> del mismo usuario es encaminada a la <em>instancia B</em>. El navegador envía correctamente la <em>cookie</em> <code>PHPSESSID=abc123</code>, pero la instancia B no dispone de ese fichero: PHP crea una sesión nueva y vacía y <strong>el contexto del usuario se pierde</strong> (el usuario aparece como no autenticado, el carrito queda vacío, los formularios fallan por <em>token</em> CSRF inválido, etc.).</li>
+</ul>
+<p><img alt="Figura 1. Pérdida del contexto de sesión cuando las sesiones se almacenan localmente" src="../imgs/problema-sesiones.png" /></p>
+<p><em>Figura 1. Pérdida del contexto de sesión cuando las sesiones se almacenan en el disco local de cada instancia.</em></p>
+<p>El problema se agrava en un grupo de <strong>Auto Scaling</strong>, ya que las instancias son efímeras por naturaleza:</p>
+<ul>
+<li>En una operación de <strong>reducción de escala</strong> (<em>scale-in</em>) o al sustituir una instancia considerada no saludable, la instancia se termina y <strong>todas las sesiones almacenadas en su disco desaparecen</strong> con ella.</li>
+<li>Las instancias de nueva creación arrancan sin ninguna sesión previa.</li>
+</ul>
+<h3 id="23-alternativas-de-solucion">2.3. Alternativas de solución<a class="headerlink" href="#23-alternativas-de-solucion" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternativa</th>
+<th>Descripción</th>
+<th>Limitaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sesiones persistentes</strong> (<em>sticky sessions</em>)</td>
+<td>El balanceador asocia cada cliente a una instancia concreta mediante una <em>cookie</em> de afinidad.</td>
+<td>Reparto de carga desigual; las sesiones se siguen perdiendo si la instancia se termina; contradice el principio de servidores sin estado.</td>
+</tr>
+<tr>
+<td><strong>Sistema de ficheros compartido</strong> (Amazon EFS)</td>
+<td>Todas las instancias montan el mismo directorio de sesiones.</td>
+<td>Mayor latencia, problemas de bloqueo de ficheros y coste añadido.</td>
+</tr>
+<tr>
+<td><strong>Almacén de sesiones centralizado</strong></td>
+<td>Las sesiones se guardan en un servicio externo a las instancias (Amazon DynamoDB, Amazon ElastiCache, una base de datos relacional).</td>
+<td>Requiere configurar un manejador de sesiones (<em>session handler</em>) en la aplicación.</td>
+</tr>
+</tbody>
+</table>
+<p>La solución adoptada en esta práctica es la tercera: externalizar las sesiones en <strong>Amazon DynamoDB</strong>. De este modo, las instancias EC2 pasan a ser <strong>sin estado</strong> (<em>stateless</em>) y cualquiera de ellas puede atender cualquier petición. DynamoDB resulta especialmente adecuado para esta tarea por los siguientes motivos:</p>
+<ul>
+<li>Es un servicio <strong>completamente gestionado y sin servidor</strong>, sin instancias que administrar ni dimensionar.</li>
+<li>Ofrece <strong>latencias de milisegundos de un solo dígito</strong> en accesos por clave, que es exactamente el patrón de una sesión (lectura y escritura por identificador).</li>
+<li>Permite definir un atributo <strong>TTL</strong> (<em>Time To Live</em>) para que las sesiones caducadas se eliminen automáticamente.</li>
+<li>El <strong>AWS SDK para PHP</strong> incorpora un manejador de sesiones para DynamoDB (<code>Aws\DynamoDb\SessionHandler</code>) que sustituye de forma transparente al almacenamiento en ficheros, sin necesidad de modificar el uso de <code>$_SESSION</code> en el código.</li>
+<li>El acceso se autoriza mediante el <strong>rol de IAM</strong> asociado a la instancia (<code>LabRole</code>), sin incrustar credenciales en la aplicación.</li>
+</ul>
+<p>Por su parte, los datos de negocio, de naturaleza relacional, residirán en <strong>Amazon RDS for MySQL</strong>, alojado en subredes privadas y sin acceso público.</p>
+<h2 id="3-objetivos">3. Objetivos<a class="headerlink" href="#3-objetivos" title="Permanent link">&para;</a></h2>
+<p>Al finalizar la práctica, el alumnado será capaz de:</p>
+<ol>
+<li>Justificar la necesidad de externalizar el estado de sesión en arquitecturas escalables horizontalmente.</li>
+<li>Ampliar una VPC con subredes privadas distribuidas en varias zonas de disponibilidad y configurar su enrutamiento a través de un NAT Gateway.</li>
+<li>Desplegar una instancia EC2 con un servidor web y una aplicación PHP mediante un script de datos de usuario (<em>user data</em>).</li>
+<li>Crear un grupo de subredes de base de datos y una instancia de Amazon RDS for MySQL en subredes privadas.</li>
+<li>Restringir el acceso a la base de datos mediante grupos de seguridad que referencian a otros grupos de seguridad.</li>
+<li>Configurar Amazon DynamoDB como almacén de sesiones de una aplicación PHP.</li>
+</ol>
+<h2 id="4-arquitectura-objetivo">4. Arquitectura objetivo<a class="headerlink" href="#4-arquitectura-objetivo" title="Permanent link">&para;</a></h2>
+<p>La Figura 2 muestra la arquitectura que se construirá en los apartados siguientes.</p>
+<p><img alt="Figura 2. Arquitectura objetivo de la práctica" src="../imgs/arquitectura-objetivo.png" /></p>
+<p><em>Figura 2. Arquitectura objetivo de la práctica.</em></p>
+<p>Elementos principales:</p>
+<ul>
+<li><strong>LabVPC</strong> (<code>10.0.0.0/16</code>) con una subred pública y tres subredes privadas repartidas en tres zonas de disponibilidad.</li>
+<li>Instancia <strong>EC2 <code>ServidorWeb</code></strong> en la subred pública, con Apache y PHP 8.4, que ejecuta la aplicación.</li>
+<li>Instancia <strong>RDS MySQL <code>tienda-db-server</code></strong> en el grupo de subredes privadas <code>labvpc-subgroup</code>, accesible únicamente desde los servidores web.</li>
+<li><strong>Tabla de DynamoDB <code>sessions</code></strong> para las sesiones, servicio regional al que la instancia accede mediante el rol <code>LabRole</code>.</li>
+<li><strong>Punto de enlace de VPC de tipo interfaz</strong> (<em>interface VPC endpoint</em>, basado en AWS PrivateLink) para DynamoDB, ubicado en <code>PrivateSubnet3</code>. A través de él, el tráfico entre los servidores web y DynamoDB viaja por la red privada de AWS sin atravesar Internet.</li>
+</ul>
+<h2 id="5-requisitos-previos">5. Requisitos previos<a class="headerlink" href="#5-requisitos-previos" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Haber iniciado el laboratorio en <strong>AWS Academy Learner Lab</strong> (indicador en verde) y acceder a la consola de AWS.</li>
+<li>Trabajar en todo momento en la región <strong>Norte de Virginia (<code>us-east-1</code>)</strong>.</li>
+<li>Disponer de los ficheros proporcionados por el profesorado:</li>
+<li><code>inicializar-entorno.sh</code>: creación de la VPC base.</li>
+<li><code>user-data-ec2.sh</code>: script de aprovisionamiento de la instancia EC2.</li>
+<li><code>00-ud5.sql</code>: volcado de la base de datos <code>tienda</code> utilizada por la aplicación.</li>
+<li>Descargar la clave privada del laboratorio (<code>labsuser.pem</code>) desde <strong>AWS Details → Download PEM</strong> en la página del Learner Lab, necesaria para conectarse por SSH y transferir ficheros a la instancia EC2.</li>
+</ul>
+<hr />
+<h2 id="6-desarrollo-de-la-practica">6. Desarrollo de la práctica<a class="headerlink" href="#6-desarrollo-de-la-practica" title="Permanent link">&para;</a></h2>
+<p>Revisa la sección 8. Evidencias a entregar ya que muchas de las evidencias se generan mientras se realiza la práctica.</p>
+<h3 id="paso-1-creacion-de-la-vpc-base">Paso 1. Creación de la VPC base<a class="headerlink" href="#paso-1-creacion-de-la-vpc-base" title="Permanent link">&para;</a></h3>
+<p>El script <a href="https://rgcenteno.github.io/ABDAN-PracticasUD3/#script-que-crea-vpc-con-subred-publica-y-subred-privada">inicializar-entorno.sh</a> crea, mediante la AWS CLI, la infraestructura de red de partida:</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Nombre / Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code> – <code>10.0.0.0/16</code> (resolución y nombres DNS habilitados)</td>
+</tr>
+<tr>
+<td>Subred pública</td>
+<td><code>PublicSubnet</code> – <code>10.0.1.0/24</code> (asignación automática de IP pública)</td>
+</tr>
+<tr>
+<td>Subred privada</td>
+<td><code>PrivateSubnet</code> – <code>10.0.2.0/24</code></td>
+</tr>
+<tr>
+<td>Internet Gateway</td>
+<td>Asociado a <code>LabVPC</code></td>
+</tr>
+<tr>
+<td>Tabla de rutas pública</td>
+<td><code>0.0.0.0/0</code> → Internet Gateway, asociada a <code>PublicSubnet</code></td>
+</tr>
+<tr>
+<td>Elastic IP y NAT Gateway</td>
+<td>NAT Gateway ubicado en <code>PublicSubnet</code></td>
+</tr>
+<tr>
+<td>Tabla de rutas privada</td>
+<td><code>0.0.0.0/0</code> → NAT Gateway, asociada a <code>PrivateSubnet</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ambas subredes se crean en la <strong>primera zona de disponibilidad</strong> de la región (<code>us-east-1a</code>).</p>
+<p><strong>Procedimiento:</strong></p>
+<ol>
+<li>
+<p>Abra <strong>AWS CloudShell</strong> desde la barra superior de la consola de AWS.</p>
+</li>
+<li>
+<p>Suba el fichero mediante <strong>Acciones → Cargar archivo</strong> y seleccione <code>inicializar-entorno.sh</code>.</p>
+</li>
+<li>
+<p>Conceda permisos de ejecución y ejecute el script:</p>
+</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>inicializar-entorno.sh
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./inicializar-entorno.sh
+</span></code></pre></div>
+<ol>
+<li>Espere a que finalice. La creación del NAT Gateway puede prolongarse varios minutos. Al terminar, el script muestra un resumen con los identificadores de los recursos creados:</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>==========================================
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>VPC              : vpc-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>IGW              : igw-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Public Subnet    : subnet-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Private Subnet   : subnet-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Public RT        : rtb-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Private RT       : rtb-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Elastic IP       : eipalloc-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>NAT Gateway      : nat-xxxxxxxxxxxxxxxxx
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>==========================================
+</span></code></pre></div>
+<ol>
+<li>Anote estos identificadores, en particular el de la <strong>tabla de rutas privada</strong> (<code>Private RT</code>), que se utilizará en el Paso 4. Esta salida es parte del contenido que se debe entregar al realizar la práctica.</li>
+</ol>
+<blockquote>
+<p><strong>Nota:</strong> el NAT Gateway genera coste por hora de funcionamiento. Recuerde detener el laboratorio al finalizar cada sesión de trabajo.</p>
+</blockquote>
+<h3 id="paso-2-grupo-de-seguridad-de-los-servidores-web">Paso 2. Grupo de seguridad de los servidores web<a class="headerlink" href="#paso-2-grupo-de-seguridad-de-los-servidores-web" title="Permanent link">&para;</a></h3>
+<p>Desde <strong>EC2 → Red y seguridad → Grupos de seguridad → Crear grupo de seguridad</strong>, cree un grupo con la siguiente configuración:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre del grupo de seguridad</td>
+<td><code>servidor-web-sg</code></td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>Acceso a los servidores web</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reglas de entrada:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Protocolo</th>
+<th>Puerto</th>
+<th>Origen</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH</td>
+<td>TCP</td>
+<td>22</td>
+<td><code>0.0.0.0/0</code> (Anywhere-IPv4)</td>
+<td>Administración remota</td>
+</tr>
+</tbody>
+</table>
+<p>Las reglas de salida se mantienen con su valor por defecto (todo el tráfico permitido).</p>
+<blockquote>
+<p><strong>Nota:</strong> para comprobar el funcionamiento de la aplicación desde un navegador será necesario permitir también el tráfico <strong>HTTP (TCP 80)</strong>. Esta regla se añadirá en el Paso 9.</p>
+</blockquote>
+<h3 id="paso-3-lanzamiento-de-la-instancia-ec2-servidorweb">Paso 3. Lanzamiento de la instancia EC2 <code>ServidorWeb</code><a class="headerlink" href="#paso-3-lanzamiento-de-la-instancia-ec2-servidorweb" title="Permanent link">&para;</a></h3>
+<p>Desde <strong>EC2 → Instancias → Lanzar instancias</strong>, configure la instancia como se indica:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td><code>ServidorWeb</code></td>
+</tr>
+<tr>
+<td>AMI</td>
+<td><strong>Amazon Linux 2023</strong> (valor por defecto de <em>Amazon Linux</em>)</td>
+</tr>
+<tr>
+<td>Tipo de instancia</td>
+<td><code>t3.micro</code></td>
+</tr>
+<tr>
+<td>Par de claves</td>
+<td><code>vockey</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+<tr>
+<td>Subred</td>
+<td><code>PublicSubnet</code></td>
+</tr>
+<tr>
+<td>Asignar automáticamente la IP pública</td>
+<td>Habilitar</td>
+</tr>
+<tr>
+<td>Grupo de seguridad</td>
+<td>Seleccionar existente: <code>servidor-web-sg</code></td>
+</tr>
+<tr>
+<td>Almacenamiento</td>
+<td>8 GiB, <code>gp3</code></td>
+</tr>
+<tr>
+<td>Perfil de instancia de IAM (<em>Detalles avanzados</em>)</td>
+<td><code>LabInstanceProfile</code> (contiene el rol <code>LabRole</code>)</td>
+</tr>
+<tr>
+<td>Datos de usuario (<em>Detalles avanzados</em>)</td>
+<td>Contenido íntegro de <code>[user-data-ec2.sh](files/user-data-ec2.sh)</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Nota:</strong> en AWS Academy, el rol <code>LabRole</code> se asigna a las instancias EC2 a través del perfil de instancia <code>LabInstanceProfile</code>, que es el nombre que aparece en el desplegable de la consola.</p>
+</blockquote>
+<p>El script de datos de usuario se ejecuta una única vez, durante el primer arranque de la instancia, y realiza las siguientes tareas:</p>
+<ol>
+<li>Actualiza el sistema operativo.</li>
+<li>Instala Apache (<code>httpd</code>), Git y PHP 8.4 con las extensiones necesarias (entre ellas, <code>php8.4-mysqlnd</code> para la conexión con MySQL).</li>
+<li>Clona el repositorio de la aplicación en <code>/var/www/app</code>.</li>
+<li>Instala las dependencias de la aplicación con <strong>Composer</strong> (entre ellas, el AWS SDK para PHP, necesario para el manejador de sesiones de DynamoDB).</li>
+<li>Crea un <em>VirtualHost</em> de Apache cuyo <code>DocumentRoot</code> es <code>/var/www/app/www/public</code>.</li>
+<li>Habilita e inicia los servicios <code>php-fpm</code> y <code>httpd</code>.</li>
+</ol>
+<p><strong>Verificación:</strong></p>
+<ol>
+<li>
+<p>Espere a que la instancia supere las <strong>comprobaciones de estado</strong> (2/2).</p>
+</li>
+<li>
+<p>Conéctese por SSH (o mediante <em>EC2 Instance Connect</em>) y revise el registro de ejecución del script:</p>
+</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">50</span><span class="w"> </span>/var/log/cloud-init-output.log
+</span></code></pre></div>
+<ol>
+<li>Compruebe que los servicios están activos y que la aplicación se ha descargado:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>systemctl<span class="w"> </span>status<span class="w"> </span>httpd<span class="w"> </span>php-fpm<span class="w"> </span>--no-pager
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ls<span class="w"> </span>-l<span class="w"> </span>/var/www/app/www/public
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>php<span class="w"> </span>--version
+</span></code></pre></div>
+<h3 id="paso-4-ampliacion-de-labvpc-con-subredes-privadas-adicionales">Paso 4. Ampliación de LabVPC con subredes privadas adicionales<a class="headerlink" href="#paso-4-ampliacion-de-labvpc-con-subredes-privadas-adicionales" title="Permanent link">&para;</a></h3>
+<p>Amazon RDS exige que un grupo de subredes de base de datos incluya subredes de, al menos, <strong>dos zonas de disponibilidad</strong>. Por ello, <code>LabVPC</code> debe ampliarse hasta quedar formada por <strong>una subred pública y tres subredes privadas</strong>, con la configuración exacta que se muestra a continuación:</p>
+<p><img alt="Configuración final de subredes de LabVPC" src="../imgs/subredes-rds-mysql.png" /></p>
+<p><em>Figura 3. Configuración final de subredes de LabVPC.</em></p>
+<blockquote>
+<p><strong>Atención:</strong> en la captura, la tercera subred privada figura como <code>PrivateSubNet3</code>. El nombre que debe utilizarse es <strong><code>PrivateSubnet3</code></strong>, con la <strong>n en minúscula</strong>, tal como se indica en la tabla siguiente.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>CIDR IPv4</th>
+<th>Zona de disponibilidad</th>
+<th>Tipo</th>
+<th>Estado inicial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PublicSubnet</code></td>
+<td><code>10.0.1.0/24</code></td>
+<td><code>us-east-1a</code></td>
+<td>Pública</td>
+<td>Creada en el Paso 1</td>
+</tr>
+<tr>
+<td><code>PrivateSubnet</code></td>
+<td><code>10.0.2.0/24</code></td>
+<td><code>us-east-1a</code></td>
+<td>Privada</td>
+<td>Creada en el Paso 1</td>
+</tr>
+<tr>
+<td><code>PrivateSubnet2</code></td>
+<td><code>10.0.3.0/24</code></td>
+<td><code>us-east-1b</code></td>
+<td>Privada</td>
+<td><strong>A crear</strong></td>
+</tr>
+<tr>
+<td><code>PrivateSubnet3</code></td>
+<td><code>10.0.4.0/24</code></td>
+<td><code>us-east-1c</code></td>
+<td>Privada</td>
+<td><strong>A crear</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>4.1. Creación de las subredes</strong></p>
+<ol>
+<li>Acceda a <strong>VPC → Subredes → Crear subred</strong>.</li>
+<li>Seleccione la VPC <code>LabVPC</code>.</li>
+<li>Añada las dos subredes con los valores de la tabla anterior (puede usar el botón <strong>Agregar nueva subred</strong> para crearlas en una única operación):</li>
+<li><code>PrivateSubnet2</code>: zona <code>us-east-1b</code>, bloque <code>10.0.3.0/24</code>.</li>
+<li><code>PrivateSubnet3</code>: zona <code>us-east-1c</code>, bloque <code>10.0.4.0/24</code>.</li>
+<li>Pulse <strong>Crear subred</strong>.</li>
+</ol>
+<blockquote>
+<p><strong>Importante:</strong> respete exactamente los nombres de las subredes (incluidas mayúsculas y minúsculas), sus bloques CIDR y sus zonas de disponibilidad.</p>
+</blockquote>
+<p><strong>4.2. Enrutamiento de las nuevas subredes a través del NAT Gateway</strong></p>
+<p>Una subred recién creada queda asociada implícitamente a la <strong>tabla de rutas principal</strong> de la VPC, que solo contiene la ruta local. Para que las nuevas subredes privadas dispongan de salida a Internet a través del NAT Gateway, deben asociarse a la tabla de rutas privada creada en el Paso 1:</p>
+<ol>
+<li>Acceda a <strong>VPC → Tablas de enrutamiento</strong> y seleccione la tabla de rutas privada (identificador <code>Private RT</code> del Paso 1). Verifique en la pestaña <strong>Rutas</strong> que contiene la entrada:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Destino</th>
+<th>Destino (<em>target</em>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>10.0.0.0/16</code></td>
+<td><code>local</code></td>
+</tr>
+<tr>
+<td><code>0.0.0.0/0</code></td>
+<td><code>nat-xxxxxxxxxxxxxxxxx</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>
+<p>En la pestaña <strong>Asociaciones de subred explícitas</strong>, pulse <strong>Editar asociaciones de subred</strong>.</p>
+</li>
+<li>
+<p>Marque <code>PrivateSubnet</code>, <code>PrivateSubnet2</code> y <code>PrivateSubnet3</code> y guarde los cambios.</p>
+</li>
+</ol>
+<p><strong>Verificación:</strong> en <strong>VPC → Subredes</strong>, seleccione cada subred privada y compruebe, en la pestaña <strong>Tabla de enrutamiento</strong>, que dispone de la ruta <code>0.0.0.0/0 → nat-…</code>.</p>
+<h3 id="paso-5-creacion-del-grupo-de-subredes-de-base-de-datos">Paso 5. Creación del grupo de subredes de base de datos<a class="headerlink" href="#paso-5-creacion-del-grupo-de-subredes-de-base-de-datos" title="Permanent link">&para;</a></h3>
+<p>Un <strong>grupo de subredes de base de datos</strong> (<em>DB subnet group</em>) es el conjunto de subredes de una VPC en las que Amazon RDS puede ubicar las instancias de base de datos.</p>
+<p>Desde <strong>Aurora and RDS → Grupos de subredes → Crear grupo de subredes de base de datos</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre</td>
+<td><code>labvpc-subgroup</code></td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>Subredes privadas de LabVPC para RDS</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+<tr>
+<td>Zonas de disponibilidad</td>
+<td><code>us-east-1a</code>, <code>us-east-1b</code>, <code>us-east-1c</code></td>
+</tr>
+<tr>
+<td>Subredes</td>
+<td><code>10.0.2.0/24</code> (<code>PrivateSubnet</code>), <code>10.0.3.0/24</code> (<code>PrivateSubnet2</code>), <code>10.0.4.0/24</code> (<code>PrivateSubnet3</code>)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Importante:</strong> seleccione exclusivamente las tres subredes <strong>privadas</strong>. La subred pública <code>10.0.1.0/24</code>, que también pertenece a <code>us-east-1a</code>, <strong>no</strong> debe formar parte del grupo ya que, para securizar la base de datos, queremos que ésta no sea accesible desde internet.</p>
+</blockquote>
+<h3 id="paso-6-grupo-de-seguridad-de-la-base-de-datos">Paso 6. Grupo de seguridad de la base de datos<a class="headerlink" href="#paso-6-grupo-de-seguridad-de-la-base-de-datos" title="Permanent link">&para;</a></h3>
+<p>La base de datos solo debe aceptar conexiones procedentes de los servidores web. En lugar de autorizar direcciones IP concretas, se autorizará al <strong>grupo de seguridad</strong> de los servidores web, de forma que cualquier instancia que pertenezca a <code>servidor-web-sg</code> (incluidas las que se creen en el futuro dentro de un grupo de Auto Scaling) pueda conectarse.</p>
+<p>Desde <strong>EC2 → Grupos de seguridad → Crear grupo de seguridad</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre del grupo de seguridad</td>
+<td><code>rds-mysql-sg</code></td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>Acceso MySQL desde los servidores web</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reglas de entrada:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Protocolo</th>
+<th>Puerto</th>
+<th>Origen</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL/Aurora</td>
+<td>TCP</td>
+<td>3306</td>
+<td>Grupo de seguridad <code>servidor-web-sg</code></td>
+<td>MySQL desde servidores web</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-7-creacion-de-la-instancia-de-amazon-rds-for-mysql">Paso 7. Creación de la instancia de Amazon RDS for MySQL<a class="headerlink" href="#paso-7-creacion-de-la-instancia-de-amazon-rds-for-mysql" title="Permanent link">&para;</a></h3>
+<p>Desde <strong>Aurora and RDS → Bases de datos → Crear base de datos</strong>, seleccione el método <strong>Creación estándar</strong> y configure los siguientes parámetros:</p>
+<p><strong>Opciones del motor y plantilla</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tipo de motor</td>
+<td>MySQL</td>
+</tr>
+<tr>
+<td>Edición</td>
+<td>MySQL Community</td>
+</tr>
+<tr>
+<td>Versión del motor</td>
+<td>Versión por defecto</td>
+</tr>
+<tr>
+<td>Plantilla</td>
+<td><strong>Desarrollo y pruebas</strong></td>
+</tr>
+<tr>
+<td>Opciones de implementación</td>
+<td><strong>Implementación de instancia de base de datos de zona de disponibilidad única</strong> (1 instancia)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuración</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador de la instancia de base de datos</td>
+<td><code>tienda-db-server</code></td>
+</tr>
+<tr>
+<td>Nombre de usuario maestro</td>
+<td><code>admin</code></td>
+</tr>
+<tr>
+<td>Administración de credenciales</td>
+<td>Autoadministrado</td>
+</tr>
+<tr>
+<td>Usuario maestro</td>
+<td><code>admin</code></td>
+</tr>
+<tr>
+<td>Contraseña maestra</td>
+<td><code>abdanPass</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Configuración de la instancia y almacenamiento</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clase de instancia</td>
+<td>Clases ampliables → <code>db.t3.micro</code></td>
+</tr>
+<tr>
+<td>Tipo de almacenamiento</td>
+<td>SSD de uso general (gp), valor por defecto</td>
+</tr>
+<tr>
+<td>Almacenamiento asignado</td>
+<td>20 GiB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conectividad</strong></p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Recurso de computación</td>
+<td>No conectarse a un recurso informático EC2</td>
+</tr>
+<tr>
+<td>Nube privada virtual (VPC)</td>
+<td><code>LabVPC</code></td>
+</tr>
+<tr>
+<td>Grupo de subredes de base de datos</td>
+<td><code>labvpc-subgroup</code></td>
+</tr>
+<tr>
+<td>Acceso público</td>
+<td><strong>No</strong></td>
+</tr>
+<tr>
+<td>Grupo de seguridad de VPC</td>
+<td>Elegir existente: <code>rds-mysql-sg</code> (eliminar el grupo <code>default</code>)</td>
+</tr>
+<tr>
+<td>Zona de disponibilidad</td>
+<td>Sin preferencia</td>
+</tr>
+<tr>
+<td>Puerto de la base de datos</td>
+<td>3306</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Supervisión</strong> (configuración orientada a minimizar el coste)</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database Insights</td>
+<td><strong>Estándar</strong></td>
+</tr>
+<tr>
+<td>Período de retención de Performance Insights</td>
+<td><strong>7 días</strong></td>
+</tr>
+<tr>
+<td>Monitorización mejorada (<em>Enhanced Monitoring</em>)</td>
+<td><strong>Deshabilitada</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Revise el resumen de costes estimados y pulse <strong>Crear base de datos</strong>. La creación de la instancia puede tardar entre 10 y 15 minutos.</p>
+<p><strong>Verificación:</strong></p>
+<ol>
+<li>
+<p>Espere a que el estado de <code>tienda-db-server</code> sea <strong>Disponible</strong>.</p>
+</li>
+<li>
+<p>En la pestaña <strong>Conectividad y seguridad</strong>, anote el <strong>punto de enlace</strong> (<em>endpoint</em>) de la instancia, con el formato <code>tienda-db-server.xxxxxxxxxxxx.us-east-1.rds.amazonaws.com</code>. Compruebe que <strong>Accesible públicamente</strong> figura como <code>No</code> y que el grupo de seguridad asociado es <code>rds-mysql-sg</code>.</p>
+</li>
+<li>
+<p>Descarga el fichero <code>bundle.pem</code></p>
+</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-o<span class="w"> </span>global-bundle.pem<span class="w"> </span>https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
+</span></code></pre></div>
+<ol>
+<li>Desde la instancia <code>ServidorWeb</code>, compruebe la conectividad con la base de datos. Ejecuta estos comandos desde la carpeta en la que te descargaste el ficheor <code>bundle.pem</code>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mariadb105
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;endpoint-rds&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>--ssl<span class="w"> </span>--ssl-ca<span class="o">=</span>./global-bundle.pem<span class="w"> </span>--ssl-verify-server-cert
+</span></code></pre></div>
+<p>Introduzca la contraseña <code>abdanPass</code> y ejecute <code>SELECT VERSION();</code> para confirmar la conexión.</p>
+<p>Si te fijas, el comando de conexión varía respecto al que te propone AWS cuando entras en tienda-db-server &gt; Conectividad y seguridad &gt; MySQL (Linux). Esto es porque el cliente que usamos en la AMI EC2 instala MariaDB, y no es compatible con los argumentos <code>--ssl-mode=VERIFY_IDENTITY</code></p>
+<h3 id="paso-8-importacion-de-la-base-de-datos-tienda-en-amazon-rds">Paso 8. Importación de la base de datos <code>tienda</code> en Amazon RDS<a class="headerlink" href="#paso-8-importacion-de-la-base-de-datos-tienda-en-amazon-rds" title="Permanent link">&para;</a></h3>
+<p>La instancia RDS se encuentra en subredes privadas y no es accesible públicamente, por lo que <strong>la importación debe realizarse desde la instancia <code>ServidorWeb</code></strong>, que sí tiene permitido el acceso al puerto 3306. AWS CloudShell no puede utilizarse para este fin, ya que se ejecuta fuera de <code>LabVPC</code>.</p>
+<p><strong>8.1. Acceder a la carpeta donde se encuentra el volcado de base de la base de datos</strong></p>
+<p>Accede a la consola de la máquina EC2. Mi recomendación es que te conectes desde el terminal de tu equipo ya que es posible que necesites tener varias conexiones abiertas, una para configurar y otra para <a href="#recomendacion-supervision-de-los-errores-de-php-durante-la-practica">ver el log de errores de apache</a>.</p>
+<p>Una vez conectada, copia el fichero de volcado </p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cp<span class="w"> </span>/var/www/app/docker/mysql/dumps/00-tienda.sql<span class="w"> </span>~/
+</span></code></pre></div>
+<p><strong>8.2. Importación del volcado</strong></p>
+<p>Conéctese por SSH a <code>ServidorWeb</code> y ejecute:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;endpoint-rds&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>--ssl<span class="w"> </span>--ssl-ca<span class="o">=</span>./global-bundle.pem<span class="w"> </span>--ssl-verify-server-cert<span class="w"> </span>&lt;<span class="w"> </span>~/00-tienda.sql
+</span></code></pre></div>
+<p>El script elimina, si existe, y crea el esquema <code>tienda</code>, junto con sus tablas, datos y restricciones de integridad referencial.</p>
+<p><strong>Verificación:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;endpoint-rds&gt;<span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span>--ssl<span class="w"> </span>--ssl-ca<span class="o">=</span>./global-bundle.pem<span class="w"> </span>--ssl-verify-server-cert
+</span></code></pre></div>
+<p>Una vez conectado ejecuta los siguientes comandos sql:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">USE</span><span class="w"> </span><span class="n">tienda</span><span class="p">;</span><span class="w"> </span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">TABLES</span><span class="p">;</span><span class="w"> </span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id_usuario</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">id_rol</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">usuario_sistema</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Deben aparecer, entre otras, las tablas <code>categoria</code>, <code>producto</code>, <code>proveedor</code>, <code>trabajadores</code>, <code>rol</code> y <code>usuario_sistema</code>. La última sentencia debería mostrar los usuarios de la aplicación, todos ellos con la contraseña <code>TestTest1</code>. Anota el email del usuario con <code>id_user = 1</code>.</p>
+<p><strong>8.3. Creación de un usuario de base de datos para la aplicación</strong></p>
+<p>Por el principio de <strong>mínimo privilegio</strong>, la aplicación no debe conectarse con el usuario maestro <code>admin</code>, que tiene control total sobre la instancia RDS. Se creará un usuario específico con privilegios exclusivamente sobre el esquema <code>tienda</code>.</p>
+<p>Ejecute las siguientes sentencias:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">'tienda_user'</span><span class="o">@</span><span class="s1">'%'</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">'TiendaPass1'</span><span class="p">;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">GRANT</span><span class="w"> </span><span class="k">SELECT</span><span class="p">,</span><span class="w"> </span><span class="k">INSERT</span><span class="p">,</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">,</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">tienda</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">'tienda_user'</span><span class="o">@</span><span class="s1">'%'</span><span class="p">;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">FLUSH</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="p">;</span>
+</span></code></pre></div>
+<p><strong>Verificación:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>mysql<span class="w"> </span>-h<span class="w"> </span>&lt;endpoint-rds&gt;<span class="w"> </span>-u<span class="w"> </span>tienda_user<span class="w"> </span>-p<span class="w"> </span>--ssl<span class="w"> </span>--ssl-ca<span class="o">=</span>./global-bundle.pem<span class="w"> </span>--ssl-verify-server-cert<span class="w"> </span>-e<span class="w"> </span><span class="s2">"SHOW GRANTS; USE tienda; SELECT COUNT(*) FROM producto;"</span>
+</span></code></pre></div>
+<p>El usuario debe poder consultar las tablas de <code>tienda</code>, pero no debe tener acceso a ningún otro esquema.</p>
+<blockquote>
+<p><strong>Nota:</strong> el origen <code>'%'</code> permite la conexión desde cualquier equipo, pero la restricción efectiva la impone el grupo de seguridad <code>rds-mysql-sg</code>, que solo admite tráfico procedente de los servidores web.</p>
+</blockquote>
+<hr />
+<blockquote>
+<h3 id="recomendacion-supervision-de-los-errores-de-php-durante-la-practica">🛠️ Recomendación: supervisión de los errores de PHP durante la práctica<a class="headerlink" href="#recomendacion-supervision-de-los-errores-de-php-durante-la-practica" title="Permanent link">&para;</a></h3>
+<p>Aunque no es obligatorio, se recomienda <strong>mantener abierta en una pestaña independiente del terminal una conexión SSH a la instancia <code>ServidorWeb</code></strong> que muestre en tiempo real los errores generados por PHP. Esto permite identificar con rapidez si un fallo de la aplicación se debe a la <strong>conexión con la base de datos</strong> o a algún <strong>error en el acceso a DynamoDB</strong>:</p>
+</blockquote>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/php-fpm/www-error.log
+</span></code></pre></div>
+<blockquote>
+<p>Puede utilizarse la inteligencia artificial o cualquier otro recurso habitual de trabajo para, a partir de los mensajes de error obtenidos, ir subsanando las incidencias que se presenten.</p>
+<p><strong>Para realizar la práctica no es necesario modificar ningún código de la aplicación.</strong> Únicamente debe editarse el fichero de variables de entorno <code>.env</code>, ubicado en <code>/var/www/app/www/.env</code>.</p>
+<h3 id="edicion-de-las-variables-de-entorno-de-la-aplicacion">✏️ Edición de las variables de entorno de la aplicación<a class="headerlink" href="#edicion-de-las-variables-de-entorno-de-la-aplicacion" title="Permanent link">&para;</a></h3>
+<p>Toda la configuración de la aplicación se realiza con el siguiente comando:</p>
+</blockquote>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/var/www/app/www/.env
+</span></code></pre></div>
+<blockquote>
+<p>En <code>nano</code>, guarde los cambios con <code>Ctrl + O</code> (confirmando con <code>Intro</code>) y salga con <code>Ctrl + X</code>.</p>
+</blockquote>
+<hr />
+<h3 id="paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales">Paso 9. Conexión de la aplicación con Amazon RDS (sesiones locales)<a class="headerlink" href="#paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales" title="Permanent link">&para;</a></h3>
+<p>En este paso la aplicación se conectará a la base de datos, pero continuará almacenando las sesiones en el disco local de la instancia.</p>
+<p><strong>9.1. Apertura del puerto HTTP</strong></p>
+<p>Edite las reglas de entrada del grupo de seguridad <code>servidor-web-sg</code> y añada la siguiente regla:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Protocolo</th>
+<th>Puerto</th>
+<th>Origen</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP</td>
+<td>TCP</td>
+<td>80</td>
+<td><code>0.0.0.0/0</code> (Anywhere-IPv4)</td>
+<td>Acceso web a la aplicación</td>
+</tr>
+</tbody>
+</table>
+<p><strong>9.2. Configuración de la conexión a la base de datos</strong></p>
+<ol>
+<li>
+<p>Abra en otra pestaña del terminal la supervisión de errores descrita en la recomendación anterior.</p>
+</li>
+<li>
+<p>Descargue el fichero global-bundle.pem en la carpeta <code>/var/www/app/www/</code></p>
+</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>curl<span class="w"> </span>-o<span class="w"> </span>/var/www/app/www/global-bundle.pem<span class="w"> </span>https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
+</span></code></pre></div>
+<ol>
+<li>Edite el fichero de variables de entorno:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/var/www/app/www/.env
+</span></code></pre></div>
+<ol>
+<li>Complete el bloque <code>CONFIGURACION DE MYSQL</code> con los datos de la instancia RDS y del usuario creado en el Paso 8.3:</li>
+</ol>
+<div class="language-ini highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># CONFIGURACION DE MYSQL</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># Punto de enlace de la base de datos MySQL</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="na">db.host</span><span class="o">=</span><span class="s">""</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Nombre de la base de datos a la que nos conectamos</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="na">db.schema</span><span class="o">=</span><span class="s">""</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># Usuario que hemos creado con los privilegios para conectarse sólo a la base de datos tienda</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="na">db.user</span><span class="o">=</span><span class="s">""</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="c1"># Password de ese usuario</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="na">db.pass</span><span class="o">=</span><span class="s">""</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="na">db.charset</span><span class="o">=</span><span class="s">'utf8mb4'</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="na">db.ssl_pem</span><span class="o">=</span><span class="s">"/var/www/app/www/global-bundle.pem"</span>
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a><span class="na">db.emulated</span><span class="o">=</span><span class="s">'1'</span>
+</span></code></pre></div>
+<p>Sustituya <code>db.host</code> por el punto de enlace real anotado en el Paso 7. El resto de variables del bloque (<code>db.charset</code>, <code>db.ssl_pem</code>, <code>db.emulated</code>) <strong>no deben modificarse</strong>.</p>
+<blockquote>
+<p><strong>Nota:</strong> la variable <code>db.ssl_pem</code> apunta al paquete de certificados raíz de Amazon RDS (<code>global-bundle.pem</code>), incluido en el repositorio de la aplicación. Gracias a él, la conexión entre la aplicación y la base de datos viaja <strong>cifrada mediante TLS</strong> y el certificado del servidor RDS se valida. Puede comprobar su presencia con <code>ls -l /var/www/app/www/global-bundle.pem</code>.</p>
+</blockquote>
+<ol>
+<li>Mantenga, de momento, el bloque <code>CONFIGURACION DE SESIONES</code> con su valor por defecto:</li>
+</ol>
+<div class="language-ini highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="na">session.type</span><span class="o">=</span><span class="s">'local'</span>
+</span></code></pre></div>
+<p><strong>Verificación:</strong></p>
+<ol>
+<li>Acceda desde el navegador a <code>http://&lt;IP-publica-ServidorWeb&gt;</code>. Debe mostrarse la pantalla de inicio de sesión con un <strong>aviso en color amarillo</strong> que indica que se está utilizando una sesión local, no compatible con grupos de Auto Scaling ni con balanceadores de carga de aplicación (Figura 4).</li>
+</ol>
+<p><img alt="Figura 4. Aplicación utilizando sesiones locales" src="../imgs/app-sesion-local.png" /></p>
+<p><em>Figura 4. Aplicación utilizando sesiones almacenadas localmente.</em></p>
+<ol>
+<li>
+<p>Inicie sesión con el usuario <code>admin@test.org</code> y la contraseña <code>TestTest1</code>. Si el acceso es correcto, la conexión con Amazon RDS está funcionando. En caso contrario, revise en la pestaña de supervisión los errores de <code>www-error.log</code> (errores típicos: punto de enlace incorrecto, credenciales erróneas o regla de entrada ausente en <code>rds-mysql-sg</code>, que se manifiesta como un tiempo de espera agotado).</p>
+</li>
+<li>
+<p>Compruebe, desde la sesión SSH, que la sesión se ha guardado como fichero en el disco local de la instancia:</p>
+</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span>/var/lib/php/session/
+</span></code></pre></div>
+<p>Este fichero, <code>sess_&lt;identificador&gt;</code>, es precisamente el que se perdería si la siguiente petición del usuario fuese atendida por otra instancia.</p>
+<h3 id="paso-10-creacion-de-la-tabla-de-sesiones-y-del-punto-de-enlace-de-vpc-para-dynamodb">Paso 10. Creación de la tabla de sesiones y del punto de enlace de VPC para DynamoDB<a class="headerlink" href="#paso-10-creacion-de-la-tabla-de-sesiones-y-del-punto-de-enlace-de-vpc-para-dynamodb" title="Permanent link">&para;</a></h3>
+<p>El manejador de sesiones de DynamoDB del AWS SDK para PHP (<code>Aws\DynamoDb\SessionHandler</code>) almacena cada sesión como un elemento de una tabla cuya clave de partición es el identificador de la sesión. El nombre de la tabla no es configurable desde el fichero <code>.env</code>, por lo que deberá crearse <strong>exactamente</strong> con el nombre indicado.</p>
+<p>Desde <strong>DynamoDB → Tablas → Crear tabla</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre de la tabla</td>
+<td><code>sessions</code></td>
+</tr>
+<tr>
+<td>Clave de partición</td>
+<td><code>id</code> (tipo <strong>Cadena</strong> / <em>String</em>)</td>
+</tr>
+<tr>
+<td>Clave de ordenación</td>
+<td>Ninguna</td>
+</tr>
+<tr>
+<td>Configuración de la tabla</td>
+<td>Personalizar configuración</td>
+</tr>
+<tr>
+<td>Clase de tabla</td>
+<td>DynamoDB Standard</td>
+</tr>
+<tr>
+<td>Modo de capacidad</td>
+<td><strong>Bajo demanda</strong> (<em>On-demand</em>)</td>
+</tr>
+</tbody>
+</table>
+<p>Mantenga el resto de parámetros con sus valores por defecto y pulse <strong>Crear tabla</strong>.</p>
+<blockquote>
+<p><strong>Nota:</strong> el modo de capacidad <strong>bajo demanda</strong> solo factura las lecturas y escrituras efectivamente realizadas, lo que resulta idóneo para un entorno de prácticas con tráfico mínimo e irregular.</p>
+</blockquote>
+<p><strong>10.1. Habilitación del TTL</strong></p>
+<p>El manejador de sesiones registra en cada elemento el atributo <code>expires</code>, que contiene la fecha de caducidad de la sesión en formato <em>timestamp</em> UNIX. Activando el <strong>TTL</strong> sobre dicho atributo, DynamoDB eliminará automáticamente las sesiones caducadas sin necesidad de ejecutar procesos de limpieza (<em>garbage collection</em>) desde la aplicación.</p>
+<ol>
+<li>Seleccione la tabla <code>sessions</code> y acceda a la pestaña <strong>Configuración</strong>.</li>
+<li>En la sección <strong>Período de vida (TTL)</strong>, pulse <strong>Activar</strong>.</li>
+<li>Indique como nombre de atributo de TTL: <code>expires</code>.</li>
+</ol>
+<blockquote>
+<p><strong>Nota:</strong> el acceso de la instancia a DynamoDB se autoriza a través del rol <code>LabRole</code>, asociado en el Paso 3 mediante el perfil de instancia. No es necesario configurar claves de acceso en la aplicación.</p>
+</blockquote>
+<p><strong>10.2. Grupo de seguridad del punto de enlace</strong></p>
+<p>El punto de enlace de tipo interfaz se materializa como una interfaz de red elástica (ENI) dentro de la VPC y, como tal, requiere un grupo de seguridad que controle quién puede utilizarlo.</p>
+<p>Desde <strong>EC2 → Grupos de seguridad → Crear grupo de seguridad</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nombre del grupo de seguridad</td>
+<td><code>dynamodb-endpoint-sg</code></td>
+</tr>
+<tr>
+<td>Descripción</td>
+<td><code>Acceso al endpoint de DynamoDB desde los servidores web</code></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Reglas de entrada:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Protocolo</th>
+<th>Puerto</th>
+<th>Origen</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td>TCP</td>
+<td>443</td>
+<td>Grupo de seguridad <code>servidor-web-sg</code></td>
+<td>API de DynamoDB desde servidores web</td>
+</tr>
+</tbody>
+</table>
+<p><strong>10.3. Creación del punto de enlace de VPC para DynamoDB</strong></p>
+<p>Desde <strong>VPC → Puntos de conexión → Crear punto de enlace</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Etiqueta de nombre</td>
+<td><code>dynamodb-endpoint</code></td>
+</tr>
+<tr>
+<td>Tipo</td>
+<td><strong>Servicios de AWS</strong></td>
+</tr>
+<tr>
+<td>Servicio</td>
+<td><code>com.amazonaws.us-east-1.dynamodb</code>, de tipo <strong>Interface</strong></td>
+</tr>
+<tr>
+<td>VPC</td>
+<td><code>LabVPC</code></td>
+</tr>
+<tr>
+<td>Configuración adicional → Habilitar nombre de DNS</td>
+<td>Desmarcado</td>
+</tr>
+<tr>
+<td>Subredes</td>
+<td>Zona <code>us-east-1c</code> → <code>PrivateSubnet3</code></td>
+</tr>
+<tr>
+<td>Tipo de dirección IP</td>
+<td>IPv4</td>
+</tr>
+<tr>
+<td>Grupos de seguridad</td>
+<td><code>dynamodb-endpoint-sg</code></td>
+</tr>
+<tr>
+<td>Política</td>
+<td>Acceso completo</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Importante:</strong> el servicio <code>com.amazonaws.us-east-1.dynamodb</code> aparece dos veces en el listado, una de tipo <strong>Gateway</strong> y otra de tipo <strong>Interface</strong>. Seleccione la de tipo <strong>Interface</strong>: es la que genera un nombre DNS propio que la aplicación utilizará mediante la variable <code>dynamo.endpoint</code>.</p>
+</blockquote>
+<p>Pulse <strong>Crear punto de enlace</strong> y espere a que su estado sea <strong>Disponible</strong> (puede tardar unos minutos).</p>
+<p><strong>Verificación:</strong></p>
+<ol>
+<li>Seleccione el punto de enlace y, en la pestaña <strong>Detalles</strong>, localice la sección <strong>Nombres de DNS</strong>. Anote el nombre regional, que tendrá un formato similar a:</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>vpce-0123456789abcdef0-abcd1234.dynamodb.us-east-1.vpce.amazonaws.com
+</span></code></pre></div>
+<p>Si el nombre aparece precedido de <code>*.</code>, elimine dicho prefijo.</p>
+<ol>
+<li>Desde la instancia <code>ServidorWeb</code>, compruebe que el nombre se resuelve a una dirección IP <strong>privada</strong> de la subred <code>10.0.4.0/24</code>:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>dig<span class="w"> </span>+short<span class="w"> </span>vpce-0123456789abcdef0-abcd1234.dynamodb.us-east-1.vpce.amazonaws.com
+</span></code></pre></div>
+<blockquote>
+<p><strong>Nota:</strong> los puntos de enlace de tipo interfaz se facturan por hora y por zona de disponibilidad. Por este motivo se crea en una única subred; en un entorno de producción se desplegaría en varias zonas para garantizar la alta disponibilidad.</p>
+</blockquote>
+<h3 id="paso-11-almacenamiento-de-las-sesiones-en-amazon-dynamodb">Paso 11. Almacenamiento de las sesiones en Amazon DynamoDB<a class="headerlink" href="#paso-11-almacenamiento-de-las-sesiones-en-amazon-dynamodb" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Cierre la sesión iniciada en la aplicación.</p>
+</li>
+<li>
+<p>Edite de nuevo el fichero de variables de entorno:</p>
+</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>nano<span class="w"> </span>/var/www/app/www/.env
+</span></code></pre></div>
+<ol>
+<li>Modifique el bloque <code>CONFIGURACION DE SESIONES</code>:</li>
+</ol>
+<div class="language-ini highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># CONFIGURACION DE SESIONES</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1">#'local' para local, 'dynamo' para usar dynamodb</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="na">session.type</span><span class="o">=</span><span class="s">'dynamo'</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Región donde alojamos la tabla dynamodb</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="na">dynamo.region</span><span class="o">=</span><span class="s">''</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="c1"># Versión de dynamoDB. Dejamos latest por defecto</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="na">dynamo.version</span><span class="o">=</span><span class="s">'latest'</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="c1"># Si usamos un endpoint, se pondrá https://vpce-xxxx-yyyy.dynamodb.us-east-1.vpce.amazonaws.com</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="na">dynamo.endpoint</span><span class="o">=</span><span class="s">'https://vpce-0123456789abcdef0-abcd1234.dynamodb.us-east-1.vpce.amazonaws.com'</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="c1"># En caso de configurar conexión por key, secret. NO NECESARIO PARA ESTA PRÁCTICA ...</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="na">dynamo.key</span><span class="o">=</span><span class="s">''</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="na">dynamo.secret</span><span class="o">=</span><span class="s">''</span>
+</span></code></pre></div>
+<p>Sustituya el valor de <code>dynamo.endpoint</code> por el nombre DNS real anotado en el Paso 10.3, <strong>precedido de <code>https://</code></strong>. Los cambios se limitan a <code>session.type</code>, <code>dynamo.region</code> y <code>dynamo.endpoint</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Valor</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session.type</code></td>
+<td><code>'dynamo'</code></td>
+<td>Activa el manejador de sesiones de DynamoDB.</td>
+</tr>
+<tr>
+<td><code>dynamo.region</code></td>
+<td><code>''</code></td>
+<td>Región en la que se ha creado la tabla <code>sessions</code>.</td>
+</tr>
+<tr>
+<td><code>dynamo.version</code></td>
+<td><code>'latest'</code></td>
+<td>Sin cambios.</td>
+</tr>
+<tr>
+<td><code>dynamo.endpoint</code></td>
+<td><code>'https://vpce-….dynamodb.us-east-1.vpce.amazonaws.com'</code></td>
+<td>Obliga al SDK a enviar las peticiones al punto de enlace de VPC en lugar de al punto de enlace público <code>dynamodb.us-east-1.amazonaws.com</code>.</td>
+</tr>
+<tr>
+<td><code>dynamo.key</code> / <code>dynamo.secret</code></td>
+<td><code>''</code></td>
+<td>Vacíos: las credenciales se obtienen automáticamente del rol <code>LabRole</code> asociado a la instancia.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Importante:</strong> no introduzca claves de acceso en <code>dynamo.key</code> ni en <code>dynamo.secret</code>. Además de ser innecesarias, incrustar credenciales en ficheros de configuración constituye una mala práctica de seguridad.</p>
+</blockquote>
+<ol>
+<li>Si los cambios no se reflejan de inmediato, reinicie el servicio PHP-FPM:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>php-fpm
+</span></code></pre></div>
+<p><strong>Verificación:</strong></p>
+<ol>
+<li>Recargue la aplicación en el navegador. El aviso debe aparecer ahora en <strong>color verde</strong>, indicando que se está utilizando una sesión almacenada en DynamoDB (Figura 5). Si se produce algún error, consulte la salida de <code>www-error.log</code> en la pestaña de supervisión.</li>
+</ol>
+<p><img alt="Figura 5. Aplicación utilizando sesiones almacenadas en DynamoDB" src="../imgs/app-sesion-dynamodb.png" /></p>
+<p><em>Figura 5. Aplicación utilizando sesiones almacenadas en Amazon DynamoDB.</em></p>
+<ol>
+<li>
+<p>Inicie sesión con <code>admin@test.org</code> / <code>TestTest1</code> y navegue por la aplicación.</p>
+</li>
+<li>
+<p>En la consola, acceda a <strong>DynamoDB → Explorar elementos → <code>sessions</code></strong>. Debe existir un elemento por cada sesión activa, con los atributos:</p>
+</li>
+<li>
+<p><code>id</code>: identificador de la sesión, precedido del nombre de la <em>cookie</em> de sesión (por ejemplo, <code>PHPSESSID_abc123…</code>).</p>
+</li>
+<li><code>data</code>: contenido serializado de <code>$_SESSION</code>.</li>
+<li>
+<p><code>expires</code>: fecha de caducidad de la sesión.</p>
+</li>
+<li>
+<p>Compare el valor de la <em>cookie</em> de sesión del navegador (herramientas de desarrollo → <strong>Aplicación/Almacenamiento → Cookies</strong>) con el <code>id</code> del elemento almacenado en DynamoDB.</p>
+</li>
+<li>
+<p>Inicie sesión con otro usuario (por ejemplo, <code>auditor@test.org</code>) desde una ventana de incógnito o desde otro navegador, y compruebe que aparece un segundo elemento en la tabla.</p>
+</li>
+<li>
+<p>Cierre la sesión en la aplicación y verifique que el elemento correspondiente desaparece de la tabla.</p>
+</li>
+</ol>
+<p>Llegados a este punto, <strong>el estado de la sesión ya no reside en la instancia EC2</strong>: cualquier otra instancia configurada del mismo modo podría atender las peticiones de un usuario sin que este perciba la pérdida de su contexto, lo que hace viable situar la aplicación detrás de un balanceador de carga o en un grupo de Auto Scaling.</p>
+<h3 id="paso-12-obligar-a-que-la-conexion-a-dynamodb-se-haga-desde-el-endpoint">Paso 12. Obligar a que la conexión a DynamoDB se haga desde el endpoint.<a class="headerlink" href="#paso-12-obligar-a-que-la-conexion-a-dynamodb-se-haga-desde-el-endpoint" title="Permanent link">&para;</a></h3>
+<p>Fíjate que si comentas la configuración <code>dynamo.endpoint</code> poniendo un caracter de # antes, las sesiones remotas siguen funcionando. </p>
+<div class="language-ini highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># CONFIGURACION DE SESIONES</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="c1">#'local' para local, 'dynamo' para usar dynamodb</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="na">session.type</span><span class="o">=</span><span class="s">'dynamo'</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># Región donde alojamos la tabla dynamodb</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="na">dynamo.region</span><span class="o">=</span><span class="s">'******'</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="c1"># Versión de dynamoDB. Dejamos latest por defecto</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="na">dynamo.version</span><span class="o">=</span><span class="s">'latest'</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="c1"># Si usamos un endpoint, se pondrá https://vpce-xxxx-yyyy.dynamodb.us-east-1.vpce.amazonaws.com</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="c1"># dynamo.endpoint='https://vpce-007720a7bbcff5b3b-6nrj7op1.dynamodb.us-east-1.vpce.amazonaws.com'</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># En caso de configurar conexión por key, secret. NO NECESARIO PARA ESTA PRÁCTICA ya que se usará el rol de la máquina EC2 para obtener el acceso a DynamoDB</span>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="na">dynamo.key</span><span class="o">=</span><span class="s">''</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="na">dynamo.secret</span><span class="o">=</span><span class="s">''</span>
+</span></code></pre></div>
+<p>Esto sucede porque nuestro servidor web se conecta a la tabla DynamoDB por el internet público en vez de usar nuestro endpoint. Además de esto queremos denegar el acceso a la tabla a todo aquel que no tenga asociado el Rol IAM LabRole. Es por ello que se solicita crear una política en la tabla DynamoDB que:</p>
+<ul>
+<li>
+<p>Obligue a conectarnos a la tabla DynamoDB desde nuestro punto de enlace</p>
+</li>
+<li>
+<p>Deniegue la conexión a cualquiera que no tenga asociado un Rol <code>LabRole</code></p>
+</li>
+</ul>
+<p>Al aplicar la política abre un terminal para <a href="#recomendacion-supervision-de-los-errores-de-php-durante-la-practica">mostrar el log de errores de apache</a>. Si has configurado correctamente la política y sigue comentado <code>dynamo.endpoint</code>, verás que al intentar iniciar sesión en la web aparecen los siguientes errores en el log:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>PHP<span class="w"> </span>Warning:<span class="w">  </span>Error<span class="w"> </span>writing<span class="w"> </span>session<span class="w"> </span>PHPSESSID_55vuu46b33lh60dmrkt6gj9rvn:<span class="w"> </span>Error<span class="w"> </span>executing<span class="w"> </span><span class="s2">"UpdateItem"</span><span class="w"> </span>on<span class="w"> </span><span class="s2">"https://dynamodb.us-east-1.amazonaws.com/"</span><span class="p">;</span><span class="w"> </span>AWS<span class="w"> </span>HTTP<span class="w"> </span>error:
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>AccessDeniedException<span class="w"> </span><span class="o">(</span>client<span class="o">)</span>:<span class="w"> </span>User:<span class="w"> </span>arn:aws:sts::640647244108:assumed-role/LabRole/i-0b0438ab72b7e69d1<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>authorized<span class="w"> </span>to<span class="w"> </span>perform:<span class="w"> </span>dynamodb:UpdateItem<span class="w"> </span>on<span class="w"> </span>resource:<span class="w"> </span>arn:aws:dynamodb:us-east-1:640647244108:table/sessions<span class="w"> </span>with<span class="w"> </span>an<span class="w"> </span>explicit<span class="w"> </span>deny<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>resource-based<span class="w"> </span>policy<span class="w"> </span><span class="k">in</span><span class="w"> </span>/var/www/app/www/vendor/aws/aws-sdk-php/src/DynamoDb/StandardSessionConnection.php<span class="w"> </span>on<span class="w"> </span>line<span class="w"> </span><span class="m">144</span>
+</span></code></pre></div>
+<p>Vuelve a configurar el campo <code>dynamo.endpoint</code>. Ahora deberías poder iniciar sesión normalmente.</p>
+<hr />
+<h2 id="7-cuestiones">7. Cuestiones<a class="headerlink" href="#7-cuestiones" title="Permanent link">&para;</a></h2>
+<p>Estas cuestiones se encuentran para contestar en el tarea del aula virtual. Se agregan aquí para facilitar su consulta mientras se realiza la práctica:</p>
+<ol>
+<li>¿Por qué la instancia RDS se ha ubicado en subredes privadas y qué ventaja aporta autorizar el acceso al puerto 3306 mediante el grupo de seguridad <code>servidor-web-sg</code> en lugar de mediante una dirección IP?</li>
+<li>¿Por qué Amazon RDS exige que el grupo de subredes de base de datos abarque al menos dos zonas de disponibilidad, aunque la instancia se haya desplegado en una sola?</li>
+<li>¿Por qué hemos tenido que hacer la importación del script SQL desde una máquina EC2 en vez de hacerlo directamente desde CloudShell o conectándonos directamente a la base de datos?</li>
+<li>Explique qué ocurriría con las sesiones de los usuarios si la aplicación se desplegase en un grupo de Auto Scaling con sesiones locales y se produjese una reducción de escala.</li>
+<li>¿Qué inconvenientes presentan las <em>sticky sessions</em> del balanceador frente al almacenamiento de sesiones en DynamoDB?</li>
+<li>¿Qué función cumple el TTL en la tabla de sesiones? ¿Qué ocurriría si no se activase?</li>
+<li>¿Cómo obtiene la aplicación permisos para leer y escribir en DynamoDB sin que se haya configurado ninguna clave de acceso en el fichero <code>.env</code>?</li>
+<li>¿Por qué se ha creado el usuario <code>tienda_user</code> en lugar de utilizar el usuario maestro <code>admin</code> en la aplicación? ¿Qué riesgos evita?</li>
+<li>¿Qué función cumple la variable <code>db.ssl_pem</code> y qué ocurriría con la confidencialidad de los datos si la conexión con RDS no estuviese cifrada?</li>
+<li>¿Qué ventajas aporta acceder a DynamoDB a través de un punto de enlace de VPC frente al punto de enlace público? </li>
+</ol>
+<h2 id="8-evidencias-a-entregar">8. Evidencias a entregar<a class="headerlink" href="#8-evidencias-a-entregar" title="Permanent link">&para;</a></h2>
+<p>Genera una memoria de prácticas que contenga el siguiente contenido (formato pdf):</p>
+<ol>
+<li>La salida completa del script <code>inicializar-entorno.sh</code> en CloudShell.</li>
+<li>Las reglas de entrada de los grupos de seguridad <code>servidor-web-sg</code> (SSH y HTTP) y <code>rds-mysql-sg</code>.</li>
+<li>Los detalles de la instancia <code>ServidorWeb</code> (tipo, subred, IP pública, perfil de IAM) y la salida de <code>cloud-init-output.log</code>.</li>
+<li>El listado de subredes de <code>LabVPC</code>, equivalente a la Figura 3.</li>
+<li>El grupo de subredes <code>labvpc-subgroup</code> con sus tres subredes.</li>
+<li>La pestaña <strong>Conectividad y seguridad</strong> de <code>tienda-db-server</code>.</li>
+<li>El bloque <code>CONFIGURACION DE MYSQL</code> del fichero <code>.env</code> (puede ocultarse la contraseña).</li>
+<li>La aplicación con el aviso de <strong>sesión local</strong> (amarillo) y el fichero de sesión en <code>/var/lib/php/session/</code>.</li>
+<li>La configuración de la tabla <code>sessions</code> (clave de partición, modo de capacidad y TTL).</li>
+<li>Las reglas de entrada de <code>dynamodb-endpoint-sg</code>, los detalles del punto de enlace <code>dynamodb-endpoint</code> (tipo, subred, nombres de DNS) y la resolución del nombre con <code>dig</code>.</li>
+<li>El bloque <code>CONFIGURACION DE SESIONES</code> del fichero <code>.env</code>.</li>
+<li>La aplicación con el aviso de <strong>sesión en DynamoDB</strong> (verde) y los elementos de sesión en <strong>Explorar elementos</strong>, con al menos dos sesiones activas (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).</li>
+<li>La desaparición del elemento de sesión tras cerrar la sesión en la aplicación (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).</li>
+<li>Texto de las política solicitadas en el paso 12 y que se aplican en la tabla DynamoDB <code>sessions</code>.</li>
+</ol>
+<h2 id="9-finalizacion-del-laboratorio">9. Finalización del laboratorio<a class="headerlink" href="#9-finalizacion-del-laboratorio" title="Permanent link">&para;</a></h2>
+<p>Al terminar cada sesión de trabajo, pulse <strong>End Lab</strong> en AWS Academy para detener los recursos. Tenga en cuenta que el <strong>NAT Gateway</strong>, el <strong>punto de enlace de VPC de tipo interfaz</strong> y la <strong>instancia RDS</strong> son los recursos que más presupuesto consumen; si la práctica se da por concluida, elimínelos para preservar el crédito del laboratorio.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
