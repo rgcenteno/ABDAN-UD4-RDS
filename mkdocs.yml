@@ -1,28 +1,59 @@
 site_name: "Amazon RDS"
-# site_url: "https://rgcenteno.github.io/ABDAN-UD4-RDS/"
+
 theme:
   name: material
-  locale: "es"
+  locale: es
+
   features:
     - navigation.expand
-  palette: 
-    # Palette toggle for light mode
+    - content.code.copy
+    - content.code.annotate
+
+  palette:
     - scheme: default
       toggle:
-        icon: material/brightness-7 
+        icon: material/brightness-7
         name: Cambiar a modo oscuro
-    # Palette toggle for dark mode
+
     - scheme: slate
       toggle:
         icon: material/brightness-4
-        name: Cambiar a modo light
+        name: Cambiar a modo claro
+
+markdown_extensions:
+
+  - admonition
+  - attr_list
+  - md_in_html
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+
+  - pymdownx.superfences
+
+  - pymdownx.inlinehilite
+
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  - toc:
+      permalink: true
+
 nav:
-    - Inicio: "index.md"
-    - Creación de sistema RDS:
-        - Configuración inicial, credenciales: "Crear-RDS-01.md"
-        - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
-        - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
-        - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
-    - Prácticas:
-        -DynamoDB: "Practica-DynamoDB.md"
-        -Solución: "Practica-DynamoDB-solucion.md"
+  - Inicio: "index.md"
+
+  - Creación de sistema RDS:
+      - Configuración inicial, credenciales: "Crear-RDS-01.md"
+      - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
+      - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
+      - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
+
+  - Supervisión: "Supervision-RDS.md"
+  - Comandos útiles: "Tips.md"
+
+  - Prácticas:
+      - DynamoDB: "Practica-DynamoDB.md"
+      - Solución: "Practica-DynamoDB-solucion.md"
+      - "[Evaluable]MySQL + DynamoDB": "practica-rds-dynamodb-sesiones.md"
