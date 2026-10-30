@@ -56,4 +56,4 @@ nav:
   - Prácticas:
       - DynamoDB: "Practica-DynamoDB.md"
       - Solución: "Practica-DynamoDB-solucion.md"
-      - "[Evaluable]MySQL + DynamoDB": "practica-rds-dynamodb-sesiones.md"
+      - "[EVALUABLE] Servidor Web + MySQL + DynamoDB": "practica-rds-dynamodb-sesiones.md"

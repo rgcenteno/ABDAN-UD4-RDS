@@ -107,6 +107,8 @@ Elementos principales:
 
 ## 6. Desarrollo de la práctica
 
+Revisa la sección 8. Evidencias a entregar ya que muchas de las evidencias se generan mientras se realiza la práctica.
+
 ### Paso 1. Creación de la VPC base
 
 El script [inicializar-entorno.sh](https://rgcenteno.github.io/ABDAN-PracticasUD3/#script-que-crea-vpc-con-subred-publica-y-subred-privada) crea, mediante la AWS CLI, la infraestructura de red de partida:
@@ -151,7 +153,7 @@ NAT Gateway      : nat-xxxxxxxxxxxxxxxxx
 ==========================================
 ```
 
-5. Anote estos identificadores, en particular el de la **tabla de rutas privada** (`Private RT`), que se utilizará en el Paso 4.
+5. Anote estos identificadores, en particular el de la **tabla de rutas privada** (`Private RT`), que se utilizará en el Paso 4. Esta salida es parte del contenido que se debe entregar al realizar la práctica.
 
 > **Nota:** el NAT Gateway genera coste por hora de funcionamiento. Recuerde detener el laboratorio al finalizar cada sesión de trabajo.
 
@@ -445,11 +447,11 @@ El usuario debe poder consultar las tablas de `tienda`, pero no debe tener acces
 > ### 🛠️ Recomendación: supervisión de los errores de PHP durante la práctica
 >
 > Aunque no es obligatorio, se recomienda **mantener abierta en una pestaña independiente del terminal una conexión SSH a la instancia `ServidorWeb`** que muestre en tiempo real los errores generados por PHP. Esto permite identificar con rapidez si un fallo de la aplicación se debe a la **conexión con la base de datos** o a algún **error en el acceso a DynamoDB**:
->
+
 ```sh
 sudo tail -f /var/log/php-fpm/www-error.log
 ```
->
+
 > Puede utilizarse la inteligencia artificial o cualquier otro recurso habitual de trabajo para, a partir de los mensajes de error obtenidos, ir subsanando las incidencias que se presenten.
 >
 > **Para realizar la práctica no es necesario modificar ningún código de la aplicación.** Únicamente debe editarse el fichero de variables de entorno `.env`, ubicado en `/var/www/app/www/.env`.
@@ -457,11 +459,11 @@ sudo tail -f /var/log/php-fpm/www-error.log
 > ### ✏️ Edición de las variables de entorno de la aplicación
 >
 > Toda la configuración de la aplicación se realiza con el siguiente comando:
->
+
 ```sh
 sudo nano /var/www/app/www/.env
 ```
->
+
 > En `nano`, guarde los cambios con `Ctrl + O` (confirmando con `Intro`) y salga con `Ctrl + X`.
 
 ---
@@ -513,7 +515,7 @@ db.emulated='1'
 
    Sustituya `db.host` por el punto de enlace real anotado en el Paso 7. El resto de variables del bloque (`db.charset`, `db.ssl_pem`, `db.emulated`) **no deben modificarse**.
 
-   > **Nota:** la variable `db.ssl_pem` apunta al paquete de certificados raíz de Amazon RDS (`global-bundle.pem`), incluido en el repositorio de la aplicación. Gracias a él, la conexión entre la aplicación y la base de datos viaja **cifrada mediante TLS** y el certificado del servidor RDS se valida. Puede comprobar su presencia con `ls -l /var/www/app/www/global-bundle.pem`.
+> **Nota:** la variable `db.ssl_pem` apunta al paquete de certificados raíz de Amazon RDS (`global-bundle.pem`), incluido en el repositorio de la aplicación. Gracias a él, la conexión entre la aplicación y la base de datos viaja **cifrada mediante TLS** y el certificado del servidor RDS se valida. Puede comprobar su presencia con `ls -l /var/www/app/www/global-bundle.pem`.
 
 5. Mantenga, de momento, el bloque `CONFIGURACION DE SESIONES` con su valor por defecto:
 
@@ -653,15 +655,15 @@ dynamo.secret=''
 
    Sustituya el valor de `dynamo.endpoint` por el nombre DNS real anotado en el Paso 10.3, **precedido de `https://`**. Los cambios se limitan a `session.type`, `dynamo.region` y `dynamo.endpoint`:
 
-   | Variable                       | Valor                                                    | Motivo                                                                                                                                     |
-   | ------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-   | `session.type`                 | `'dynamo'`                                               | Activa el manejador de sesiones de DynamoDB.                                                                                               |
-   | `dynamo.region`                | `''`                                                     | Región en la que se ha creado la tabla `sessions`.                                                                                         |
-   | `dynamo.version`               | `'latest'`                                               | Sin cambios.                                                                                                                               |
-   | `dynamo.endpoint`              | `'https://vpce-….dynamodb.us-east-1.vpce.amazonaws.com'` | Obliga al SDK a enviar las peticiones al punto de enlace de VPC en lugar de al punto de enlace público `dynamodb.us-east-1.amazonaws.com`. |
-   | `dynamo.key` / `dynamo.secret` | `''`                                                     | Vacíos: las credenciales se obtienen automáticamente del rol `LabRole` asociado a la instancia.                                            |
+| Variable                       | Valor                                                    | Motivo                                                                                                                                     |
+| ------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `session.type`                 | `'dynamo'`                                               | Activa el manejador de sesiones de DynamoDB.                                                                                               |
+| `dynamo.region`                | `''`                                                     | Región en la que se ha creado la tabla `sessions`.                                                                                         |
+| `dynamo.version`               | `'latest'`                                               | Sin cambios.                                                                                                                               |
+| `dynamo.endpoint`              | `'https://vpce-….dynamodb.us-east-1.vpce.amazonaws.com'` | Obliga al SDK a enviar las peticiones al punto de enlace de VPC en lugar de al punto de enlace público `dynamodb.us-east-1.amazonaws.com`. |
+| `dynamo.key` / `dynamo.secret` | `''`                                                     | Vacíos: las credenciales se obtienen automáticamente del rol `LabRole` asociado a la instancia.                                            |
 
-   > **Importante:** no introduzca claves de acceso en `dynamo.key` ni en `dynamo.secret`. Además de ser innecesarias, incrustar credenciales en ficheros de configuración constituye una mala práctica de seguridad.
+> **Importante:** no introduzca claves de acceso en `dynamo.key` ni en `dynamo.secret`. Además de ser innecesarias, incrustar credenciales en ficheros de configuración constituye una mala práctica de seguridad.
 
 4. Si los cambios no se reflejan de inmediato, reinicie el servicio PHP-FPM:
 
@@ -731,40 +733,37 @@ Vuelve a configurar el campo `dynamo.endpoint`. Ahora deberías poder iniciar se
 
 ## 7. Cuestiones
 
-Responda razonadamente en la memoria de la práctica:
+Estas cuestiones se encuentran para contestar en el tarea del aula virtual. Se agregan aquí para facilitar su consulta mientras se realiza la práctica:
 
 1. ¿Por qué la instancia RDS se ha ubicado en subredes privadas y qué ventaja aporta autorizar el acceso al puerto 3306 mediante el grupo de seguridad `servidor-web-sg` en lugar de mediante una dirección IP?
 2. ¿Por qué Amazon RDS exige que el grupo de subredes de base de datos abarque al menos dos zonas de disponibilidad, aunque la instancia se haya desplegado en una sola?
-3. ¿Por qué no ha sido posible importar el volcado SQL directamente desde AWS CloudShell?
+3. ¿Por qué hemos tenido que hacer la importación del script SQL desde una máquina EC2 en vez de hacerlo directamente desde CloudShell o conectándonos directamente a la base de datos?
 4. Explique qué ocurriría con las sesiones de los usuarios si la aplicación se desplegase en un grupo de Auto Scaling con sesiones locales y se produjese una reducción de escala.
 5. ¿Qué inconvenientes presentan las *sticky sessions* del balanceador frente al almacenamiento de sesiones en DynamoDB?
 6. ¿Qué función cumple el TTL en la tabla de sesiones? ¿Qué ocurriría si no se activase?
 7. ¿Cómo obtiene la aplicación permisos para leer y escribir en DynamoDB sin que se haya configurado ninguna clave de acceso en el fichero `.env`?
 8. ¿Por qué se ha creado el usuario `tienda_user` en lugar de utilizar el usuario maestro `admin` en la aplicación? ¿Qué riesgos evita?
 9. ¿Qué función cumple la variable `db.ssl_pem` y qué ocurriría con la confidencialidad de los datos si la conexión con RDS no estuviese cifrada?
-10. ¿Qué ventajas aporta acceder a DynamoDB a través de un punto de enlace de VPC frente al punto de enlace público? ¿Qué diferencias existen entre un punto de enlace de tipo **Gateway** y uno de tipo **Interface** para DynamoDB (coste, configuración de tablas de rutas y uso de `dynamo.endpoint`)?
+10. ¿Qué ventajas aporta acceder a DynamoDB a través de un punto de enlace de VPC frente al punto de enlace público? 
 
 ## 8. Evidencias a entregar
 
-Incluya en la memoria de la práctica capturas de pantalla que acrediten:
+Genera una memoria de prácticas que contenga el siguiente contenido (formato pdf):
 
 1. La salida completa del script `inicializar-entorno.sh` en CloudShell.
 2. Las reglas de entrada de los grupos de seguridad `servidor-web-sg` (SSH y HTTP) y `rds-mysql-sg`.
 3. Los detalles de la instancia `ServidorWeb` (tipo, subred, IP pública, perfil de IAM) y la salida de `cloud-init-output.log`.
 4. El listado de subredes de `LabVPC`, equivalente a la Figura 3.
-5. Las asociaciones de subred y las rutas de la tabla de rutas privada.
-6. El grupo de subredes `labvpc-subgroup` con sus tres subredes.
-7. La pestaña **Conectividad y seguridad** de `tienda-db-server`.
-8. La importación del volcado y el resultado de la consulta de verificación sobre `usuario_sistema`.
-9. La creación del usuario `tienda_user` y la salida de `SHOW GRANTS` con dicho usuario.
-10. El bloque `CONFIGURACION DE MYSQL` del fichero `.env` (puede ocultarse la contraseña).
-11. La aplicación con el aviso de **sesión local** (amarillo) y el fichero de sesión en `/var/lib/php/session/`.
-12. La configuración de la tabla `sessions` (clave de partición, modo de capacidad y TTL).
-13. Las reglas de entrada de `dynamodb-endpoint-sg`, los detalles del punto de enlace `dynamodb-endpoint` (tipo, subred, nombres de DNS) y la resolución del nombre con `dig`.
-14. El bloque `CONFIGURACION DE SESIONES` del fichero `.env`.
-15. La aplicación con el aviso de **sesión en DynamoDB** (verde) y los elementos de sesión en **Explorar elementos**, con al menos dos sesiones activas (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).
-16. La desaparición del elemento de sesión tras cerrar la sesión en la aplicación (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).
-17. Fichero `politica.json` con el texto de la política configurada en la tabla DynamoDB.
+5. El grupo de subredes `labvpc-subgroup` con sus tres subredes.
+6. La pestaña **Conectividad y seguridad** de `tienda-db-server`.
+7. El bloque `CONFIGURACION DE MYSQL` del fichero `.env` (puede ocultarse la contraseña).
+8. La aplicación con el aviso de **sesión local** (amarillo) y el fichero de sesión en `/var/lib/php/session/`.
+9. La configuración de la tabla `sessions` (clave de partición, modo de capacidad y TTL).
+10. Las reglas de entrada de `dynamodb-endpoint-sg`, los detalles del punto de enlace `dynamodb-endpoint` (tipo, subred, nombres de DNS) y la resolución del nombre con `dig`.
+11. El bloque `CONFIGURACION DE SESIONES` del fichero `.env`.
+12. La aplicación con el aviso de **sesión en DynamoDB** (verde) y los elementos de sesión en **Explorar elementos**, con al menos dos sesiones activas (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).
+13. La desaparición del elemento de sesión tras cerrar la sesión en la aplicación (Hacer la captura antes de habilitar la política solicitada ya que esta pantalla dejará de funcionar una vez aplicada).
+14. Texto de las política solicitadas en el paso 12 y que se aplican en la tabla DynamoDB `sessions`.
 
 ## 9. Finalización del laboratorio
 
