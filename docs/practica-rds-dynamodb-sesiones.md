@@ -605,6 +605,10 @@ Desde **VPC → Puntos de conexión → Crear punto de enlace**:
 | Política                                          | Acceso completo                                           |
 
 > **Importante:** el servicio `com.amazonaws.us-east-1.dynamodb` aparece dos veces en el listado, una de tipo **Gateway** y otra de tipo **Interface**. Seleccione la de tipo **Interface**: es la que genera un nombre DNS propio que la aplicación utilizará mediante la variable `dynamo.endpoint`.
+>
+> En un entorno real, si todas las conexiones van a venir desde AWS (es decir no trabajamos con un entorno híbrido), lo ideal es utilizar un endpoint del tipo **Gateway** y asociarlo a la tabla de rutas de la PublicSubnet ya que los Puntos de enlace de tipo conexión tienen un coste menor y ya se asocian a nivel de tabla de rutas de subred. 
+>
+> En esta práctica hemos seleccionado un Punto de enlace de tipo Interfaz para que sea más evidente cuando usamos el Punto de enlace (cuando lo configuramos en la app) y cuando no. Si te parece interesante, una vez hecha la práctica, puedes probar a cambiar el endpoint por uno de tipo Gateway y ver como funcionaría en este caso.
 
 Pulse **Crear punto de enlace** y espere a que su estado sea **Disponible** (puede tardar unos minutos).
 
