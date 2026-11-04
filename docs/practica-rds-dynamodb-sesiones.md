@@ -181,19 +181,19 @@ Las reglas de salida se mantienen con su valor por defecto (todo el tráfico per
 
 Desde **EC2 → Instancias → Lanzar instancias**, configure la instancia como se indica:
 
-| Parámetro                                         | Valor                                                             |
-| ------------------------------------------------- | ----------------------------------------------------------------- |
-| Nombre                                            | `ServidorWeb`                                                     |
-| AMI                                               | **Amazon Linux 2023** (valor por defecto de *Amazon Linux*)       |
-| Tipo de instancia                                 | `t3.micro`                                                        |
-| Par de claves                                     | `vockey`                                                          |
-| VPC                                               | `LabVPC`                                                          |
-| Subred                                            | `PublicSubnet`                                                    |
-| Asignar automáticamente la IP pública             | Habilitar                                                         |
-| Grupo de seguridad                                | Seleccionar existente: `servidor-web-sg`                          |
-| Almacenamiento                                    | 8 GiB, `gp3`                                                      |
-| Perfil de instancia de IAM (*Detalles avanzados*) | `LabInstanceProfile` (contiene el rol `LabRole`)                  |
-| Datos de usuario (*Detalles avanzados*)           | Contenido íntegro de `[user-data-ec2.sh](files/user-data-ec2.sh)` |
+| Parámetro                                         | Valor                                                           |
+| ------------------------------------------------- | --------------------------------------------------------------- |
+| Nombre                                            | `ServidorWeb`                                                   |
+| AMI                                               | **Amazon Linux 2023** (valor por defecto de *Amazon Linux*)     |
+| Tipo de instancia                                 | `t3.micro`                                                      |
+| Par de claves                                     | `vockey`                                                        |
+| VPC                                               | `LabVPC`                                                        |
+| Subred                                            | `PublicSubnet`                                                  |
+| Asignar automáticamente la IP pública             | Habilitar                                                       |
+| Grupo de seguridad                                | Seleccionar existente: `servidor-web-sg`                        |
+| Almacenamiento                                    | 8 GiB, `gp3`                                                    |
+| Perfil de instancia de IAM (*Detalles avanzados*) | `LabInstanceProfile` (contiene el rol `LabRole`)                |
+| Datos de usuario (*Detalles avanzados*)           | Contenido íntegro de [user-data-ec2.sh](files/user-data-ec2.sh) |
 
 > **Nota:** en AWS Academy, el rol `LabRole` se asigna a las instancias EC2 a través del perfil de instancia `LabInstanceProfile`, que es el nombre que aparece en el desplegable de la consola.
 
@@ -744,7 +744,7 @@ Estas cuestiones se encuentran para contestar en el tarea del aula virtual. Se a
 7. ¿Cómo obtiene la aplicación permisos para leer y escribir en DynamoDB sin que se haya configurado ninguna clave de acceso en el fichero `.env`?
 8. ¿Por qué se ha creado el usuario `tienda_user` en lugar de utilizar el usuario maestro `admin` en la aplicación? ¿Qué riesgos evita?
 9. ¿Qué función cumple la variable `db.ssl_pem` y qué ocurriría con la confidencialidad de los datos si la conexión con RDS no estuviese cifrada?
-10. ¿Qué ventajas aporta acceder a DynamoDB a través de un punto de enlace de VPC frente al punto de enlace público? 
+10. ¿Qué ventajas aporta acceder a DynamoDB a través de un punto de enlace de VPC frente al punto de enlace público?
 
 ## 8. Evidencias a entregar
 
