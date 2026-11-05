@@ -1,0 +1,1403 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Crear-RDS-04/">
+      
+      
+        <link rel="next" href="../Tips/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Supervisión - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aws-rds-monitoring-guia-de-metricas-para-operaciones" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Supervisión
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supervisión
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supervisión
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comandos útiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introducción
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="aws-rds-monitoring-guia-de-metricas-para-operaciones">AWS RDS Monitoring: Guía de Métricas para Operaciones<a class="headerlink" href="#aws-rds-monitoring-guia-de-metricas-para-operaciones" title="Permanent link">&para;</a></h1>
+<h2 id="introduccion">Introducción<a class="headerlink" href="#introduccion" title="Permanent link">&para;</a></h2>
+<p>El apartado <strong>Supervisión (Monitoring)</strong> de Amazon RDS permite analizar el estado, rendimiento y consumo de la instancia de base de datos. La mayoría de los problemas de rendimiento, costes o indisponibilidad pueden detectarse revisando periódicamente estas métricas.</p>
+<p><strong>Objetivo del administrador SysOps:</strong></p>
+<ul>
+<li>Detectar cuellos de botella.</li>
+<li>Identificar recursos infrautilizados o saturados.</li>
+<li>Anticipar escalados.</li>
+<li>Evitar degradaciones de servicio.</li>
+<li>Optimizar costes.</li>
+</ul>
+<hr />
+<h1 id="1-cpu-utilization">1. CPU Utilization (%)<a class="headerlink" href="#1-cpu-utilization" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide">¿Qué mide?<a class="headerlink" href="#que-mide" title="Permanent link">&para;</a></h2>
+<p>Porcentaje de uso de CPU de la instancia RDS.</p>
+<h2 id="valores-recomendados">Valores recomendados<a class="headerlink" href="#valores-recomendados" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-40%</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>40-70%</td>
+<td>Vigilancia</td>
+</tr>
+<tr>
+<td>70-85%</td>
+<td>Alto</td>
+</tr>
+<tr>
+<td>&gt;85% sostenido</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<h2 id="que-revisar">Qué revisar<a class="headerlink" href="#que-revisar" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Picos continuos.</li>
+<li>Consultas lentas.</li>
+<li>Procesos de mantenimiento.</li>
+<li>Falta de índices.</li>
+</ul>
+<h2 id="penalizaciones">Penalizaciones<a class="headerlink" href="#penalizaciones" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Latencias elevadas.</li>
+<li>
+<p>Consultas más lentas.</p>
+</li>
+<li>
+<p>Puede forzar escalado vertical.</p>
+</li>
+<li>
+<p>Incremento de costes.</p>
+</li>
+</ul>
+<hr />
+<h1 id="2-database-connections">2. Database Connections<a class="headerlink" href="#2-database-connections" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_1">¿Qué mide?<a class="headerlink" href="#que-mide_1" title="Permanent link">&para;</a></h2>
+<p>Número de conexiones activas a la base de datos.</p>
+<h2 id="valores-recomendados_1">Valores recomendados<a class="headerlink" href="#valores-recomendados_1" title="Permanent link">&para;</a></h2>
+<p>Dependen del motor y tamaño de instancia.</p>
+<p>Como referencia:</p>
+<ul>
+<li>Menos del 70% del máximo → Correcto.</li>
+<li>Más del 80% → Revisar.</li>
+</ul>
+<h3 id="valores-maximos-orientativos">Valores máximos orientativos:<a class="headerlink" href="#valores-maximos-orientativos" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Instancia</th>
+<th>Max Connections</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>db.t3.micro</td>
+<td>~60</td>
+</tr>
+<tr>
+<td>db.t3.small</td>
+<td>~150</td>
+</tr>
+<tr>
+<td>db.t3.medium</td>
+<td>~300</td>
+</tr>
+<tr>
+<td>db.t3.large</td>
+<td>~600</td>
+</tr>
+<tr>
+<td>db.r5.large</td>
+<td>~1000</td>
+</tr>
+<tr>
+<td>db.r5.xlarge</td>
+<td>~2000</td>
+</tr>
+</tbody>
+</table>
+<h2 id="que-revisar_1">Qué revisar<a class="headerlink" href="#que-revisar_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Aplicaciones que no cierran conexiones.</li>
+<li>Pooling mal configurado.</li>
+<li>Picos de usuarios.</li>
+</ul>
+<h2 id="penalizaciones_1">Penalizaciones<a class="headerlink" href="#penalizaciones_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Rechazo de nuevas conexiones.</p>
+</li>
+<li>
+<p>Errores de aplicación.</p>
+</li>
+<li>
+<p>Saturación de memoria.</p>
+</li>
+</ul>
+<hr />
+<h1 id="3-freeable-memory">3. Freeable Memory<a class="headerlink" href="#3-freeable-memory" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_2">¿Qué mide?<a class="headerlink" href="#que-mide_2" title="Permanent link">&para;</a></h2>
+<p>Memoria RAM disponible para procesos nuevos.</p>
+<h2 id="valores-recomendados_2">Valores recomendados<a class="headerlink" href="#valores-recomendados_2" title="Permanent link">&para;</a></h2>
+<p>Debe mantenerse siempre con margen. No debe tener un valor cercano a 0.</p>
+<h2 id="que-revisar_2">Qué revisar<a class="headerlink" href="#que-revisar_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Conexiones excesivas.</li>
+<li>Grandes operaciones de ordenación.</li>
+<li>Cachés mal dimensionadas.</li>
+</ul>
+<h2 id="penalizaciones_2">Penalizaciones<a class="headerlink" href="#penalizaciones_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Uso intensivo de swap.</p>
+</li>
+<li>
+<p>Consultas lentas.</p>
+</li>
+<li>
+<p>Posibles reinicios.</p>
+</li>
+</ul>
+<hr />
+<h1 id="4-free-storage-space">4. Free Storage Space<a class="headerlink" href="#4-free-storage-space" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_3">¿Qué mide?<a class="headerlink" href="#que-mide_3" title="Permanent link">&para;</a></h2>
+<p>Almacenamiento disponible en la instancia.</p>
+<h2 id="valores-recomendados_3">Valores recomendados<a class="headerlink" href="#valores-recomendados_3" title="Permanent link">&para;</a></h2>
+<p>Mantener:</p>
+<ul>
+<li>&gt; 20% libre.</li>
+</ul>
+<p>Alarma recomendada:</p>
+<ul>
+<li>15% libre.</li>
+</ul>
+<p>Crítico:</p>
+<ul>
+<li>&lt;10%.</li>
+</ul>
+<h2 id="que-revisar_3">Qué revisar<a class="headerlink" href="#que-revisar_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Crecimiento de tablas.</li>
+<li>Logs.</li>
+<li>Backups temporales.</li>
+</ul>
+<h2 id="penalizaciones_3">Penalizaciones<a class="headerlink" href="#penalizaciones_3" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Parada del crecimiento de datos.</p>
+</li>
+<li>
+<p>Errores de escritura.</p>
+</li>
+<li>
+<p>Posible caída del servicio.</p>
+</li>
+</ul>
+<hr />
+<h1 id="5-read-iops">5. Read IOPS<a class="headerlink" href="#5-read-iops" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_4">¿Qué mide?<a class="headerlink" href="#que-mide_4" title="Permanent link">&para;</a></h2>
+<p>Operaciones de lectura por segundo.</p>
+<h2 id="valores-optimos">Valores óptimos<a class="headerlink" href="#valores-optimos" title="Permanent link">&para;</a></h2>
+<p>No existe un valor universal.</p>
+<p>Debe ser coherente con la carga.</p>
+<h2 id="que-revisar_4">Qué revisar<a class="headerlink" href="#que-revisar_4" title="Permanent link">&para;</a></h2>
+<p>Picos elevados pueden indicar:</p>
+<ul>
+<li>Falta de caché.</li>
+<li>Escaneos completos de tablas.</li>
+<li>Índices ausentes.</li>
+</ul>
+<h2 id="penalizaciones_4">Penalizaciones<a class="headerlink" href="#penalizaciones_4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Saturación del almacenamiento.</p>
+</li>
+<li>
+<p>Incremento de latencia.</p>
+</li>
+<li>
+<p>Mayor coste en IOPS aprovisionadas.</p>
+</li>
+</ul>
+<hr />
+<h1 id="6-write-iops">6. Write IOPS<a class="headerlink" href="#6-write-iops" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_5">¿Qué mide?<a class="headerlink" href="#que-mide_5" title="Permanent link">&para;</a></h2>
+<p>Operaciones de escritura por segundo.</p>
+<h2 id="valores-optimos_1">Valores óptimos<a class="headerlink" href="#valores-optimos_1" title="Permanent link">&para;</a></h2>
+<p>Deben mantenerse estables para la carga esperada.</p>
+<h2 id="que-revisar_5">Qué revisar<a class="headerlink" href="#que-revisar_5" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Procesos batch.</li>
+<li>Replicaciones.</li>
+<li>Aplicaciones que escriben excesivamente.</li>
+</ul>
+<h2 id="penalizaciones_5">Penalizaciones<a class="headerlink" href="#penalizaciones_5" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Cuellos de botella de disco.</p>
+</li>
+<li>
+<p>Incremento de tiempo de respuesta.</p>
+</li>
+</ul>
+<hr />
+<h1 id="7-read-throughput">7. Read Throughput<a class="headerlink" href="#7-read-throughput" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_6">¿Qué mide?<a class="headerlink" href="#que-mide_6" title="Permanent link">&para;</a></h2>
+<p>Cantidad de datos leídos por segundo (MB/s).</p>
+<h2 id="valores-optimos_2">Valores óptimos<a class="headerlink" href="#valores-optimos_2" title="Permanent link">&para;</a></h2>
+<p>Dependen totalmente de la aplicación.</p>
+<h2 id="que-revisar_6">Qué revisar<a class="headerlink" href="#que-revisar_6" title="Permanent link">&para;</a></h2>
+<p>Si aumenta mucho:</p>
+<ul>
+<li>Consultas pesadas.</li>
+<li>Exportaciones.</li>
+<li>Problemas de índices.</li>
+</ul>
+<h2 id="penalizaciones_6">Penalizaciones<a class="headerlink" href="#penalizaciones_6" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Saturación de almacenamiento.</p>
+</li>
+<li>
+<p>Latencia.</p>
+</li>
+</ul>
+<hr />
+<h1 id="8-write-throughput">8. Write Throughput<a class="headerlink" href="#8-write-throughput" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_7">¿Qué mide?<a class="headerlink" href="#que-mide_7" title="Permanent link">&para;</a></h2>
+<p>Datos escritos por segundo.</p>
+<h2 id="valores-optimos_3">Valores óptimos<a class="headerlink" href="#valores-optimos_3" title="Permanent link">&para;</a></h2>
+<p>Debe ser acorde al patrón de negocio.</p>
+<h2 id="que-revisar_7">Qué revisar<a class="headerlink" href="#que-revisar_7" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Importaciones masivas.</li>
+<li>Aplicaciones mal diseñadas.</li>
+<li>Logs excesivos.</li>
+</ul>
+<h2 id="penalizaciones_7">Penalizaciones<a class="headerlink" href="#penalizaciones_7" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Saturación del volumen.</p>
+</li>
+<li>
+<p>Retrasos en confirmaciones (commit).</p>
+</li>
+</ul>
+<hr />
+<h1 id="9-read-latency">9. Read Latency<a class="headerlink" href="#9-read-latency" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_8">¿Qué mide?<a class="headerlink" href="#que-mide_8" title="Permanent link">&para;</a></h2>
+<p>Tiempo medio de lectura.</p>
+<h2 id="valores-recomendados_4">Valores recomendados<a class="headerlink" href="#valores-recomendados_4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Latencia</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;10 ms</td>
+<td>Excelente</td>
+</tr>
+<tr>
+<td>10-20 ms</td>
+<td>Buena</td>
+</tr>
+<tr>
+<td>20-50 ms</td>
+<td>Revisar</td>
+</tr>
+<tr>
+<td>&gt;50 ms</td>
+<td>Problema</td>
+</tr>
+</tbody>
+</table>
+<h2 id="penalizaciones_8">Penalizaciones<a class="headerlink" href="#penalizaciones_8" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Consultas lentas.</p>
+</li>
+<li>
+<p>Usuarios perciben retrasos.</p>
+</li>
+</ul>
+<hr />
+<h1 id="10-write-latency">10. Write Latency<a class="headerlink" href="#10-write-latency" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_9">¿Qué mide?<a class="headerlink" href="#que-mide_9" title="Permanent link">&para;</a></h2>
+<p>Tiempo medio de escritura.</p>
+<h2 id="valores-recomendados_5">Valores recomendados<a class="headerlink" href="#valores-recomendados_5" title="Permanent link">&para;</a></h2>
+<p>Ideal:</p>
+<ul>
+<li>Menos de 10 ms.</li>
+</ul>
+<p>Crítico:</p>
+<ul>
+<li>Más de 20-30 ms sostenidos.</li>
+</ul>
+<h2 id="penalizaciones_9">Penalizaciones<a class="headerlink" href="#penalizaciones_9" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Lentitud en transacciones.</p>
+</li>
+<li>
+<p>Bloqueos.</p>
+</li>
+<li>
+<p>Retrasos en replicación.</p>
+</li>
+</ul>
+<hr />
+<h1 id="11-disk-queue-depth">11. Disk Queue Depth<a class="headerlink" href="#11-disk-queue-depth" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_10">¿Qué mide?<a class="headerlink" href="#que-mide_10" title="Permanent link">&para;</a></h2>
+<p>Número de operaciones esperando acceso al disco.</p>
+<h2 id="valores-recomendados_6">Valores recomendados<a class="headerlink" href="#valores-recomendados_6" title="Permanent link">&para;</a></h2>
+<p>Ideal:</p>
+<ul>
+<li>Cercano a 0.</li>
+</ul>
+<p>Alarma:</p>
+<ul>
+<li>&gt;10 sostenido.</li>
+</ul>
+<h2 id="que-indica">Qué indica<a class="headerlink" href="#que-indica" title="Permanent link">&para;</a></h2>
+<p>El almacenamiento no puede seguir el ritmo.</p>
+<h2 id="penalizaciones_10">Penalizaciones<a class="headerlink" href="#penalizaciones_10" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Aumento de latencia.</p>
+</li>
+<li>
+<p>Saturación de IOPS.</p>
+</li>
+</ul>
+<hr />
+<h1 id="12-network-receive-throughput">12. Network Receive Throughput<a class="headerlink" href="#12-network-receive-throughput" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_11">¿Qué mide?<a class="headerlink" href="#que-mide_11" title="Permanent link">&para;</a></h2>
+<p>Tráfico de red recibido.</p>
+<h2 id="que-revisar_8">Qué revisar<a class="headerlink" href="#que-revisar_8" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Réplicas.</li>
+<li>Consultas remotas.</li>
+<li>Aplicaciones con mucho tráfico.</li>
+</ul>
+<h2 id="penalizaciones_11">Penalizaciones<a class="headerlink" href="#penalizaciones_11" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Posibles cuellos de botella de red.</li>
+</ul>
+<hr />
+<h1 id="13-network-transmit-throughput">13. Network Transmit Throughput<a class="headerlink" href="#13-network-transmit-throughput" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_12">¿Qué mide?<a class="headerlink" href="#que-mide_12" title="Permanent link">&para;</a></h2>
+<p>Tráfico enviado por la instancia.</p>
+<h2 id="que-revisar_9">Qué revisar<a class="headerlink" href="#que-revisar_9" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Grandes respuestas SQL.</li>
+<li>Exportaciones masivas.</li>
+</ul>
+<h2 id="penalizaciones_12">Penalizaciones<a class="headerlink" href="#penalizaciones_12" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Saturación de red.</p>
+</li>
+<li>
+<p>Mayor latencia de respuesta.</p>
+</li>
+</ul>
+<hr />
+<h1 id="14-swap-usage">14. Swap Usage<a class="headerlink" href="#14-swap-usage" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_13">¿Qué mide?<a class="headerlink" href="#que-mide_13" title="Permanent link">&para;</a></h2>
+<p>Uso de memoria swap.</p>
+<h2 id="valores-recomendados_7">Valores recomendados<a class="headerlink" href="#valores-recomendados_7" title="Permanent link">&para;</a></h2>
+<p>Ideal:</p>
+<ul>
+<li>0 MB.</li>
+</ul>
+<h2 id="que-revisar_10">Qué revisar<a class="headerlink" href="#que-revisar_10" title="Permanent link">&para;</a></h2>
+<p>Cualquier uso significativo.</p>
+<h2 id="penalizaciones_13">Penalizaciones<a class="headerlink" href="#penalizaciones_13" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Caída importante del rendimiento.</p>
+</li>
+<li>
+<p>Señal de insuficiencia de RAM.</p>
+</li>
+</ul>
+<hr />
+<h1 id="15-burst-balance">15. Burst Balance (%)<a class="headerlink" href="#15-burst-balance" title="Permanent link">&para;</a></h1>
+<p>(Volúmenes GP2 y algunos GP3)</p>
+<h2 id="que-mide_14">¿Qué mide?<a class="headerlink" href="#que-mide_14" title="Permanent link">&para;</a></h2>
+<p>Créditos disponibles de rendimiento.</p>
+<h2 id="valores-recomendados_8">Valores recomendados<a class="headerlink" href="#valores-recomendados_8" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt;80%</td>
+<td>Excelente</td>
+</tr>
+<tr>
+<td>50-80%</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>&lt;20%</td>
+<td>Riesgo</td>
+</tr>
+<tr>
+<td>0%</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<h2 id="penalizaciones_14">Penalizaciones<a class="headerlink" href="#penalizaciones_14" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Limitación automática del rendimiento de disco.</p>
+</li>
+<li>
+<p>Lecturas y escrituras lentas.</p>
+</li>
+</ul>
+<hr />
+<h1 id="16-replica-lag">16. Replica Lag<a class="headerlink" href="#16-replica-lag" title="Permanent link">&para;</a></h1>
+<p>(Solo réplicas)</p>
+<h2 id="que-mide_15">¿Qué mide?<a class="headerlink" href="#que-mide_15" title="Permanent link">&para;</a></h2>
+<p>Retraso entre principal y réplica.</p>
+<h2 id="valores-recomendados_9">Valores recomendados<a class="headerlink" href="#valores-recomendados_9" title="Permanent link">&para;</a></h2>
+<p>Ideal:</p>
+<ul>
+<li>Segundos.</li>
+</ul>
+<p>Alarma:</p>
+<ul>
+<li>Minutos.</li>
+</ul>
+<h2 id="penalizaciones_15">Penalizaciones<a class="headerlink" href="#penalizaciones_15" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Datos desactualizados.</p>
+</li>
+<li>
+<p>Problemas en DR (Disaster Recovery).</p>
+</li>
+<li>
+<p>Riesgo de inconsistencia.</p>
+</li>
+</ul>
+<hr />
+<h1 id="17-deadlocks">17. Deadlocks<a class="headerlink" href="#17-deadlocks" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_16">¿Qué mide?<a class="headerlink" href="#que-mide_16" title="Permanent link">&para;</a></h2>
+<p>Número de bloqueos mutuos.</p>
+<h2 id="valores-recomendados_10">Valores recomendados<a class="headerlink" href="#valores-recomendados_10" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Cero o muy pocos.</li>
+</ul>
+<h2 id="que-revisar_11">Qué revisar<a class="headerlink" href="#que-revisar_11" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Transacciones largas.</li>
+<li>Accesos concurrentes.</li>
+</ul>
+<h2 id="penalizaciones_16">Penalizaciones<a class="headerlink" href="#penalizaciones_16" title="Permanent link">&para;</a></h2>
+<ul>
+<li>
+<p>Errores de aplicación.</p>
+</li>
+<li>
+<p>Cancelación automática de transacciones.</p>
+</li>
+</ul>
+<hr />
+<h1 id="18-backup-storage-used">18. Backup Storage Used<a class="headerlink" href="#18-backup-storage-used" title="Permanent link">&para;</a></h1>
+<h2 id="que-mide_17">¿Qué mide?<a class="headerlink" href="#que-mide_17" title="Permanent link">&para;</a></h2>
+<p>Espacio consumido por backups automáticos.</p>
+<h2 id="que-revisar_12">Qué revisar<a class="headerlink" href="#que-revisar_12" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Crecimiento continuo.</li>
+<li>Retención excesiva.</li>
+</ul>
+<h2 id="penalizaciones_17">Penalizaciones<a class="headerlink" href="#penalizaciones_17" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Coste adicional.</li>
+</ul>
+<hr />
+<h1 id="alertas-recomendadas-para-produccion">Alertas recomendadas para producción<a class="headerlink" href="#alertas-recomendadas-para-produccion" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Alarma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU Utilization</td>
+<td>&gt;80% durante 15 min</td>
+</tr>
+<tr>
+<td>Freeable Memory</td>
+<td>&lt;500 MB</td>
+</tr>
+<tr>
+<td>Free Storage Space</td>
+<td>&lt;15%</td>
+</tr>
+<tr>
+<td>Disk Queue Depth</td>
+<td>&gt;10</td>
+</tr>
+<tr>
+<td>Read Latency</td>
+<td>&gt;20 ms</td>
+</tr>
+<tr>
+<td>Write Latency</td>
+<td>&gt;20 ms</td>
+</tr>
+<tr>
+<td>Burst Balance</td>
+<td>&lt;20%</td>
+</tr>
+<tr>
+<td>Replica Lag</td>
+<td>&gt;60 segundos</td>
+</tr>
+<tr>
+<td>Connections</td>
+<td>&gt;80% del límite</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="categorizacion">Categorización<a class="headerlink" href="#categorizacion" title="Permanent link">&para;</a></h1>
+<h3 id="indicadores-de-rendimiento">Indicadores de rendimiento<a class="headerlink" href="#indicadores-de-rendimiento" title="Permanent link">&para;</a></h3>
+<ul>
+<li>CPU Utilization</li>
+<li>Read/Write IOPS</li>
+<li>Read/Write Throughput</li>
+<li>Read/Write Latency</li>
+<li>Disk Queue Depth</li>
+</ul>
+<h3 id="indicadores-de-capacidad">Indicadores de capacidad<a class="headerlink" href="#indicadores-de-capacidad" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Free Storage Space</li>
+<li>Freeable Memory</li>
+<li>Connections</li>
+<li>Swap Usage</li>
+</ul>
+<h3 id="indicadores-de-costes">Indicadores de costes<a class="headerlink" href="#indicadores-de-costes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Backup Storage Used</li>
+<li>Burst Balance</li>
+<li>Infrautilización de CPU</li>
+</ul>
+<h3 id="indicadores-de-disponibilidad">Indicadores de disponibilidad<a class="headerlink" href="#indicadores-de-disponibilidad" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Replica Lag</li>
+<li>Deadlocks</li>
+<li>Latency</li>
+<li>Connections</li>
+</ul>
+<h1 id="indicadores-de-necesidad-de-escalado">Indicadores de necesidad de escalado<a class="headerlink" href="#indicadores-de-necesidad-de-escalado" title="Permanent link">&para;</a></h1>
+<p>Estos son los indicadores que más rápidamente anticipan la necesidad de escalar una instancia RDS.</p>
+<ul>
+<li>
+<p>CPU &gt; 80%</p>
+</li>
+<li>
+<p>RAM libre muy baja</p>
+</li>
+<li>
+<p>Swap creciendo</p>
+</li>
+<li>
+<p>Latencias elevadas</p>
+</li>
+<li>
+<p>Queue Depth alta</p>
+</li>
+<li>
+<p>Storage &lt; 15%</p>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

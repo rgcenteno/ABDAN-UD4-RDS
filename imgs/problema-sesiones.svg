@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c62828"/></marker>
+  </defs>
+  <rect width="900" height="460" fill="#ffffff"/>
+  <text x="450" y="32" text-anchor="middle" font-size="20" font-weight="bold" fill="#222">Sesiones PHP almacenadas localmente tras un balanceador de carga</text>
+
+  <!-- Cliente -->
+  <rect x="30" y="180" width="130" height="90" rx="10" fill="#eceff1" stroke="#546e7a" stroke-width="2"/>
+  <text x="95" y="215" text-anchor="middle" font-size="15" font-weight="bold" fill="#263238">Navegador</text>
+  <text x="95" y="238" text-anchor="middle" font-size="12" fill="#263238">Cookie:</text>
+  <text x="95" y="255" text-anchor="middle" font-size="12" fill="#263238">PHPSESSID=abc123</text>
+
+  <!-- ALB -->
+  <rect x="250" y="185" width="150" height="80" rx="10" fill="#ede7f6" stroke="#5e35b1" stroke-width="2"/>
+  <text x="325" y="220" text-anchor="middle" font-size="15" font-weight="bold" fill="#311b92">Balanceador</text>
+  <text x="325" y="242" text-anchor="middle" font-size="12" fill="#311b92">(ALB / Auto Scaling)</text>
+
+  <!-- EC2 A -->
+  <rect x="520" y="60" width="330" height="150" rx="10" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+  <text x="685" y="90" text-anchor="middle" font-size="15" font-weight="bold" fill="#e65100">Instancia EC2 A</text>
+  <rect x="545" y="105" width="280" height="85" rx="6" fill="#ffffff" stroke="#ef6c00" stroke-dasharray="5,4"/>
+  <text x="685" y="130" text-anchor="middle" font-size="12" fill="#333">/var/lib/php/session/</text>
+  <text x="685" y="152" text-anchor="middle" font-size="12" font-weight="bold" fill="#2e7d32">sess_abc123 ✔</text>
+  <text x="685" y="172" text-anchor="middle" font-size="12" fill="#333">usuario=ana · carrito=[3 artículos]</text>
+
+  <!-- EC2 B -->
+  <rect x="520" y="250" width="330" height="150" rx="10" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+  <text x="685" y="280" text-anchor="middle" font-size="15" font-weight="bold" fill="#e65100">Instancia EC2 B</text>
+  <rect x="545" y="295" width="280" height="85" rx="6" fill="#ffffff" stroke="#ef6c00" stroke-dasharray="5,4"/>
+  <text x="685" y="320" text-anchor="middle" font-size="12" fill="#333">/var/lib/php/session/</text>
+  <text x="685" y="342" text-anchor="middle" font-size="12" font-weight="bold" fill="#c62828">sess_abc123 ✘ no existe</text>
+  <text x="685" y="362" text-anchor="middle" font-size="12" fill="#333">→ sesión nueva y vacía</text>
+
+  <!-- Flechas -->
+  <line x1="160" y1="225" x2="246" y2="225" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="400" y1="210" x2="516" y2="140" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+  <text x="395" y="122" font-size="12" fill="#333">Petición 1</text>
+  <text x="395" y="138" font-size="11" fill="#555">(inicio de sesión)</text>
+  <line x1="400" y1="240" x2="516" y2="320" stroke="#c62828" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#r)"/>
+  <text x="420" y="315" font-size="12" fill="#c62828">Petición 2</text>
+  <text x="420" y="331" font-size="11" fill="#c62828">(contexto perdido)</text>
+
+  <text x="450" y="440" text-anchor="middle" font-size="13" fill="#444">Cada instancia guarda las sesiones en su propio disco: si la petición llega a otra instancia, la sesión no existe.</text>
+</svg>

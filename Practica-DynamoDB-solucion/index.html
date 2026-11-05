@@ -1,0 +1,1576 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Practica-DynamoDB/">
+      
+      
+        <link rel="next" href="../practica-rds-dynamodb-sesiones/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Solución - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#solucion-paso-a-paso-consola-aws" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Solución
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supervisión
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Tips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Comandos útiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-1-grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 1. Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-2-endpoint-de-dynamodb-en-la-subred-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 2. Endpoint de DynamoDB en la subred privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-3-tabla-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 3. Tabla DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-4-instancia-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 4. Instancia cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 5. Trabajar con DynamoDB a través del endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 5. Trabajar con DynamoDB a través del endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#50-conectarse-a-la-ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.0 Conectarse a la EC2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-preparar-la-cli-y-las-variables-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Preparar la CLI y las variables del endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-comprobar-la-resolucion-dns-y-el-puerto-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Comprobar la resolución DNS y el puerto 443
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-listar-y-describir-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Listar y describir tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-insertar-dos-productos-put-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Insertar dos productos (put-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-leer-un-producto-por-su-clave-completa-get-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Leer un producto por su clave completa (get-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-consultar-todos-los-portatiles-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Consultar todos los portátiles (query)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-restar-stock-solo-si-hay-suficiente-update-item-condicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Restar stock solo si hay suficiente (update-item condicional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-productos-de-mas-de-300-scan-con-filtro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Productos de más de 300 € (scan con filtro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-borrar-un-periferico-delete-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Borrar un periférico (delete-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atajo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atajo opcional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-6-hacer-la-tabla-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 6. Hacer la tabla privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-7-preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 7. Preguntas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 7. Preguntas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas-de-reflexion-con-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas de reflexión (con solución)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-1-grupos-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 1. Grupos de seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-2-endpoint-de-dynamodb-en-la-subred-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 2. Endpoint de DynamoDB en la subred privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-3-tabla-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 3. Tabla DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-4-instancia-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 4. Instancia cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 5. Trabajar con DynamoDB a través del endpoint
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 5. Trabajar con DynamoDB a través del endpoint">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#50-conectarse-a-la-ec2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.0 Conectarse a la EC2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#51-preparar-la-cli-y-las-variables-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Preparar la CLI y las variables del endpoint
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-comprobar-la-resolucion-dns-y-el-puerto-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Comprobar la resolución DNS y el puerto 443
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-listar-y-describir-tablas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Listar y describir tablas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-insertar-dos-productos-put-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Insertar dos productos (put-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-leer-un-producto-por-su-clave-completa-get-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Leer un producto por su clave completa (get-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-consultar-todos-los-portatiles-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 Consultar todos los portátiles (query)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-restar-stock-solo-si-hay-suficiente-update-item-condicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 Restar stock solo si hay suficiente (update-item condicional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58-productos-de-mas-de-300-scan-con-filtro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8 Productos de más de 300 € (scan con filtro)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-borrar-un-periferico-delete-item" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9 Borrar un periférico (delete-item)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#atajo-opcional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Atajo opcional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-6-hacer-la-tabla-privada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 6. Hacer la tabla privada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tarea-7-preguntas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tarea 7. Preguntas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tarea 7. Preguntas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preguntas-de-reflexion-con-solucion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preguntas de reflexión (con solución)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="solucion-paso-a-paso-consola-aws">Solución paso a paso (consola AWS)<a class="headerlink" href="#solucion-paso-a-paso-consola-aws" title="Permanent link">&para;</a></h1>
+<h2 id="tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc">Tarea 0. Preparar la red (Sólo si no tienes creado LabVPC)<a class="headerlink" href="#tarea-0-preparar-la-red-solo-si-no-tienes-creado-labvpc" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Descarga el fichero <a href="https://rgcenteno.github.io/ABDAN-PracticasUD3/#script-que-crea-vpc-con-subred-publica-y-subred-privada">inicializar-entorno.sh</a>.</li>
+<li>Inicia el Learner Lab y abre la consola. Comprueba arriba a la derecha que la región es <strong>N. Virginia (us-east-1)</strong>.</li>
+<li>Abre <strong>CloudShell</strong> (icono <code>&gt;_</code> de la barra superior). En <em>Actions → Upload file</em> sube <code>inicializar-entorno.sh</code>.</li>
+<li>Ejecuta:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>inicializar-entorno.sh
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./inicializar-entorno.sh
+</span></code></pre></div>
+<ol>
+<li>Tarda 2-3 minutos porque espera al NAT Gateway. Copia el resumen final a un fichero de notas.</li>
+<li>En <strong>VPC → Your VPCs</strong> verifica <code>LabVPC</code> (10.0.0.0/16). En <strong>Subnets</strong>, <code>PublicSubnet</code> y <code>PrivateSubnet</code> en la misma AZ. En <strong>Route tables</strong>, la pública tiene <code>0.0.0.0/0 → igw-…</code> y la privada <code>0.0.0.0/0 → nat-…</code>.</li>
+</ol>
+<blockquote>
+<p>Nota: el script asigna IP pública automática en <code>PublicSubnet</code>. El NAT Gateway no es necesario para esta práctica (el endpoint no lo usa), pero se mantiene porque forma parte del entorno base. Recuerda que tiene coste por hora.</p>
+</blockquote>
+<h2 id="tarea-1-grupos-de-seguridad">Tarea 1. Grupos de seguridad<a class="headerlink" href="#tarea-1-grupos-de-seguridad" title="Permanent link">&para;</a></h2>
+<p><strong>SG-EC2-Publica</strong></p>
+<ol>
+<li><strong>VPC → Security groups → Create security group</strong>.</li>
+<li><em>Security group name</em>: <code>SG-EC2-Publica</code>. <em>Description</em>: <code>SSH a la EC2 cliente</code>. <em>VPC</em>: <code>LabVPC</code>.</li>
+<li><em>Inbound rules → Add rule</em>: Type <strong>SSH</strong>, Source <strong>My IP</strong>.</li>
+<li><em>Add rule</em>: Type <strong>SSH</strong>, Source <strong>Custom</strong> y escribe <code>com.amazonaws.us-east-1.ec2-instance-connect</code> (es una <em>prefix list</em> gestionada por AWS; permite conectarse desde el navegador).</li>
+<li><em>Outbound rules</em>: deja la regla por defecto (todo el tráfico). <strong>Create security group</strong>.</li>
+</ol>
+<p><strong>SG-Endpoint-DynamoDB</strong></p>
+<ol>
+<li><strong>Create security group</strong>. Nombre <code>SG-Endpoint-DynamoDB</code>, descripción <code>HTTPS desde la EC2 al endpoint</code>, VPC <code>LabVPC</code>.</li>
+<li><em>Inbound rules → Add rule</em>: Type <strong>HTTPS</strong> (TCP 443), Source <strong>Custom</strong> y selecciona <code>SG-EC2-Publica</code> (empieza a escribir <code>sg-</code> y elige por nombre).</li>
+<li><strong>Create security group</strong>.</li>
+</ol>
+<p>Referenciar un grupo de seguridad como origen, en lugar de un CIDR, hace que solo las instancias con ese grupo puedan hablar con el endpoint.</p>
+<h2 id="tarea-2-endpoint-de-dynamodb-en-la-subred-privada">Tarea 2. Endpoint de DynamoDB en la subred privada<a class="headerlink" href="#tarea-2-endpoint-de-dynamodb-en-la-subred-privada" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>VPC → PrivateLink and Lattice → Endpoints → Create endpoint</strong>.</li>
+<li><em>Name tag</em>: <code>vpce-dynamodb-privado</code>. <em>Type</em> (o <em>Service category</em>): <strong>AWS services</strong>.</li>
+<li>En el buscador de servicios escribe <code>dynamodb</code>. Aparecen dos filas con el mismo nombre <code>com.amazonaws.us-east-1.dynamodb</code>: elige la de <strong>Type = Interface</strong> (la otra es <em>Gateway</em>).</li>
+<li><em>VPC</em>: <code>LabVPC</code>.</li>
+<li><em>Additional settings</em>: deja <strong>desmarcado</strong> <em>Enable DNS name</em>. DynamoDB no admite DNS privado en endpoints de interfaz; se accede con el nombre DNS propio del endpoint (<a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/privatelink-interface-endpoints.html">documentación AWS</a>).</li>
+<li><em>Subnets</em>: marca la AZ donde está la red y elige <strong>PrivateSubnet</strong>. <em>IP address type</em>: IPv4.</li>
+<li><em>Security groups</em>: marca solo <code>SG-Endpoint-DynamoDB</code>.</li>
+<li><em>Policy</em>: <strong>Full access</strong> (la restricción la haremos en la tabla, tarea 6).</li>
+<li><strong>Create endpoint</strong> y espera a que el estado pase de <em>Pending</em> a <strong>Available</strong> (1-2 minutos).</li>
+<li>En la pestaña <strong>Details</strong>, anota el <em>Endpoint ID</em> (<code>vpce-0abc…</code>) y el <strong>primer nombre DNS</strong> (el regional, sin letra de zona), con este formato: <code>vpce-0abc123def456-xyz789.dynamodb.us-east-1.vpce.amazonaws.com</code>. Si aparece con <code>*.</code> delante, quítalo.</li>
+<li>En la pestaña <strong>Subnets</strong> verás la ENI y su IP privada, por ejemplo <code>10.0.2.57</code>. Esa es la "presencia" de DynamoDB en la subred privada.</li>
+</ol>
+<h2 id="tarea-3-tabla-dynamodb">Tarea 3. Tabla DynamoDB<a class="headerlink" href="#tarea-3-tabla-dynamodb" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Abre <strong>DynamoDB → Tables → Create table</strong>.</li>
+<li><em>Table name</em>: <code>Productos</code>.</li>
+<li><em>Partition key</em>: <code>categoria</code>, tipo <strong>String</strong>.</li>
+<li><em>Sort key</em>: <code>id_producto</code>, tipo <strong>String</strong>.</li>
+<li><em>Table settings</em>: <strong>Customize settings</strong> → <em>Read/write capacity settings</em>: <strong>On-demand</strong>. Deja el resto por defecto.</li>
+<li><strong>Create table</strong> y espera al estado <strong>Active</strong>.</li>
+<li>Ve a <strong>Explore items</strong> → selecciona <code>Productos</code> → <strong>Create item</strong>.</li>
+<li>Pulsa <strong>JSON view</strong> con <em>View DynamoDB JSON</em> desactivado, pega el primer elemento y <strong>Create item</strong>. Repite con los otros dos:</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portatiles"</span><span class="p">,</span><span class="w"> </span><span class="nt">"id_producto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P-001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portátil 14\" i5"</span><span class="p">,</span><span class="w"> </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">749</span><span class="p">,</span><span class="w"> </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portatiles"</span><span class="p">,</span><span class="w"> </span><span class="nt">"id_producto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P-002"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portátil 16\" i7"</span><span class="p">,</span><span class="w"> </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">1099</span><span class="p">,</span><span class="w"> </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Monitores"</span><span class="p">,</span><span class="w"> </span><span class="nt">"id_producto"</span><span class="p">:</span><span class="w"> </span><span class="s2">"M-001"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Monitor 27\" QHD"</span><span class="p">,</span><span class="w"> </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="mi">289</span><span class="p">,</span><span class="w"> </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span><span class="p">}</span>
+</span></code></pre></div>
+<p>Alternativa sin JSON: en <em>Form</em>, rellena las claves y usa <strong>Add new attribute</strong> para <code>nombre</code> (String), <code>precio</code> (Number) y <code>stock</code> (Number).</p>
+<ol>
+<li>Comprueba en <em>Explore items</em> que hay 3 elementos.</li>
+</ol>
+<h2 id="tarea-4-instancia-cliente">Tarea 4. Instancia cliente<a class="headerlink" href="#tarea-4-instancia-cliente" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>EC2 → Instances → Launch instances</strong>.</li>
+<li><em>Name</em>: <code>EC2-Cliente-DynamoDB</code>. <em>AMI</em>: <strong>Amazon Linux 2023</strong>. <em>Instance type</em>: <code>t3.micro</code>. <em>Key pair</em>: <code>vockey</code>.</li>
+<li><em>Network settings → Edit</em>: VPC <code>LabVPC</code>, Subnet <code>PublicSubnet</code>, <em>Auto-assign public IP</em> <strong>Enable</strong>. <em>Firewall</em>: <strong>Select existing security group</strong> → <code>SG-EC2-Publica</code>.</li>
+<li><em>Advanced details → IAM instance profile</em>: <code>LabInstanceProfile</code>. Sin este rol la EC2 no tiene credenciales para llamar a DynamoDB.</li>
+<li><strong>Launch instance</strong> y espera a <em>Running</em> con <em>Status check</em> 2/2.</li>
+</ol>
+<blockquote>
+<p>En una cuenta propia (fuera del Learner Lab) habría que crear antes un rol IAM para EC2 con la política <code>AmazonDynamoDBFullAccess</code> o, mejor, una política limitada a la tabla <code>Productos</code>.</p>
+</blockquote>
+<h2 id="tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint">Tarea 5. Trabajar con DynamoDB a través del endpoint<a class="headerlink" href="#tarea-5-trabajar-con-dynamodb-a-traves-del-endpoint" title="Permanent link">&para;</a></h2>
+<p>Todos los comandos de esta tarea se ejecutan <strong>dentro de la EC2</strong> con la AWS CLI v2, que ya viene instalada en Amazon Linux 2023. Las credenciales las proporciona el rol <code>LabRole</code> a través de <code>LabInstanceProfile</code>, así que no hay que ejecutar <code>aws configure</code> con claves.</p>
+<h3 id="50-conectarse-a-la-ec2">5.0 Conectarse a la EC2<a class="headerlink" href="#50-conectarse-a-la-ec2" title="Permanent link">&para;</a></h3>
+<p><strong>Opción A, desde el navegador:</strong> selecciona la instancia → <strong>Connect → EC2 Instance Connect → Connect</strong>.</p>
+<p><strong>Opción B, por SSH desde tu equipo:</strong> en el Learner Lab, <em>AWS Details → Download PEM</em> descarga <code>labsuser.pem</code> (la clave privada de <code>vockey</code>). Obtén la IP pública desde CloudShell y conéctate:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w"> </span>En<span class="w"> </span>CloudShell:<span class="w"> </span>IP<span class="w"> </span>pública<span class="w"> </span>de<span class="w"> </span>la<span class="w"> </span>instancia<span class="w"> </span>por<span class="w"> </span>su<span class="w"> </span>etiqueta<span class="w"> </span>Name
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s2">"Name=tag:Name,Values=EC2-Cliente-DynamoDB"</span><span class="w"> </span><span class="s2">"Name=instance-state-name,Values=running"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Reservations[].Instances[].PublicIpAddress'</span><span class="w"> </span>--output<span class="w"> </span>text
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="w"> </span>En<span class="w"> </span>tu<span class="w"> </span>equipo<span class="w"> </span><span class="o">(</span>Linux,<span class="w"> </span>macOS<span class="w"> </span>o<span class="w"> </span>PowerShell<span class="w"> </span>de<span class="w"> </span>Windows<span class="o">)</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>labsuser.pem
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>ssh<span class="w"> </span>-i<span class="w"> </span>labsuser.pem<span class="w"> </span>ec2-user@&lt;IP_PUBLICA&gt;
+</span></code></pre></div>
+<p>La regla SSH desde <em>My IP</em> de <code>SG-EC2-Publica</code> es la que permite esta conexión.</p>
+<h3 id="51-preparar-la-cli-y-las-variables-del-endpoint">5.1 Preparar la CLI y las variables del endpoint<a class="headerlink" href="#51-preparar-la-cli-y-las-variables-del-endpoint" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>region<span class="w"> </span>us-east-1<span class="w">    </span>región<span class="w"> </span>por<span class="w"> </span>defecto
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>configure<span class="w"> </span><span class="nb">set</span><span class="w"> </span>output<span class="w"> </span>json<span class="w">         </span>formato<span class="w"> </span>de<span class="w"> </span>salida<span class="w"> </span>por<span class="w"> </span>defecto
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w">           </span>¿con<span class="w"> </span>qué<span class="w"> </span>identidad<span class="w"> </span>trabajo?
+</span></code></pre></div>
+<p>Salida esperada (el ARN debe contener <code>assumed-role/LabRole</code>):</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">    </span><span class="nt">"UserId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AROA...:i-0123456789abcdef0"</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="nt">"Account"</span><span class="p">:</span><span class="w"> </span><span class="s2">"123456789012"</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">"Arn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:sts::123456789012:assumed-role/LabRole/i-0123456789abcdef0"</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>En lugar de copiar a mano el nombre DNS del endpoint, se puede obtener con la CLI:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="w"> </span>ID<span class="w"> </span>del<span class="w"> </span>endpoint<span class="w"> </span>a<span class="w"> </span>partir<span class="w"> </span>de<span class="w"> </span>su<span class="w"> </span>etiqueta<span class="w"> </span>Name
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">VPCE_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpc-endpoints<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--filters<span class="w"> </span><span class="s2">"Name=tag:Name,Values=vpce-dynamodb-privado"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'VpcEndpoints[0].VpcEndpointId'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w"> </span>Primer<span class="w"> </span>nombre<span class="w"> </span><span class="nv">DNS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>el<span class="w"> </span>regional<span class="w"> </span><span class="o">(</span>se<span class="w"> </span>quita<span class="w"> </span>un<span class="w"> </span>posible<span class="w"> </span><span class="s2">"*."</span><span class="w"> </span>inicial<span class="o">)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">VPCE_DNS</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpc-endpoints<span class="w"> </span>--vpc-endpoint-ids<span class="w"> </span><span class="nv">$VPCE_ID</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'VpcEndpoints[0].DnsEntries[0].DnsName'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="nv">VPCE_DNS</span><span class="o">=</span><span class="si">${</span><span class="nv">VPCE_DNS</span><span class="p">#</span><span class="se">\*</span><span class="p">.</span><span class="si">}</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="nv">EP</span><span class="o">=</span><span class="s2">"https://</span><span class="nv">$VPCE_DNS</span><span class="s2">"</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="nb">echo</span><span class="w"> </span><span class="nv">$VPCE_ID</span><span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$EP</span>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w"> </span>Guardar<span class="w"> </span>las<span class="w"> </span>variables<span class="w"> </span>para<span class="w"> </span>próximas<span class="w"> </span>sesiones
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"export VPCE_ID=</span><span class="nv">$VPCE_ID</span><span class="s2"> VPCE_DNS=</span><span class="nv">$VPCE_DNS</span><span class="s2"> EP=</span><span class="nv">$EP</span><span class="s2">"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</span></code></pre></div>
+<p>Si <code>describe-vpc-endpoints</code> devuelve <code>None</code> o un error de permisos, asigna las variables a mano con los valores anotados en la tarea 2: <code>VPCE_DNS="vpce-...dynamodb.us-east-1.vpce.amazonaws.com"</code>.</p>
+<h3 id="52-comprobar-la-resolucion-dns-y-el-puerto-443">5.2 Comprobar la resolución DNS y el puerto 443<a class="headerlink" href="#52-comprobar-la-resolucion-dns-y-el-puerto-443" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>getent<span class="w"> </span>hosts<span class="w"> </span><span class="nv">$VPCE_DNS</span>
+</span></code></pre></div>
+<p>Salida esperada: una IP de la subred privada, la misma que viste en la pestaña <em>Subnets</em> del endpoint.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>10.0.2.57       vpce-0abc123def456-xyz789.dynamodb.us-east-1.vpce.amazonaws.com
+</span></code></pre></div>
+<p>Comprueba además que el grupo de seguridad del endpoint deja pasar HTTPS (sin instalar nada, con la redirección <code>/dev/tcp</code> de bash):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>timeout<span class="w"> </span><span class="m">5</span><span class="w"> </span>bash<span class="w"> </span>-c<span class="w"> </span><span class="s2">"&lt;/dev/tcp/</span><span class="nv">$VPCE_DNS</span><span class="s2">/443"</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Puerto 443 accesible"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"Sin conexión: revisa SG-Endpoint-DynamoDB"</span>
+</span></code></pre></div>
+<h3 id="53-listar-y-describir-tablas">5.3 Listar y describir tablas<a class="headerlink" href="#53-listar-y-describir-tablas" title="Permanent link">&para;</a></h3>
+<p>El parámetro <code>--endpoint-url</code> hace que la CLI envíe la petición al endpoint privado en vez de al endpoint público <code>dynamodb.us-east-1.amazonaws.com</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>list-tables<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="nt">"TableNames"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">        </span><span class="s2">"Productos"</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="p">]</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>describe-table<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Table.{Estado:TableStatus,Claves:KeySchema,Modo:BillingModeSummary.BillingMode}'</span>
+</span></code></pre></div>
+<p>Debe mostrar <code>ACTIVE</code>, la clave <code>categoria</code> como <code>HASH</code> (partición), <code>id_producto</code> como <code>RANGE</code> (ordenación) y el modo <code>PAY_PER_REQUEST</code> (bajo demanda). La opción <code>--query</code> usa JMESPath para filtrar la respuesta.</p>
+<h3 id="54-insertar-dos-productos-put-item">5.4 Insertar dos productos (<code>put-item</code>)<a class="headerlink" href="#54-insertar-dos-productos-put-item" title="Permanent link">&para;</a></h3>
+<p>La CLI usa el formato <em>DynamoDB JSON</em>: cada valor indica su tipo (<code>S</code> = String, <code>N</code> = Number). Los números van entre comillas, como texto.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>put-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span>--item<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="s1">    "categoria":   {"S": "Perifericos"},</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="s1">    "id_producto": {"S": "PE-001"},</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="s1">    "nombre":      {"S": "Teclado mecanico"},</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="s1">    "precio":      {"N": "79.90"},</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="s1">    "stock":       {"N": "15"}</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>--condition-expression<span class="w"> </span><span class="s2">"attribute_not_exists(id_producto)"</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>put-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span>--item<span class="w"> </span><span class="s1">'{</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="s1">    "categoria":   {"S": "Perifericos"},</span>
+</span><span id="__span-15-14"><a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="s1">    "id_producto": {"S": "PE-002"},</span>
+</span><span id="__span-15-15"><a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="s1">    "nombre":      {"S": "Raton inalambrico"},</span>
+</span><span id="__span-15-16"><a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="s1">    "precio":      {"N": "24.50"},</span>
+</span><span id="__span-15-17"><a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="s1">    "stock":       {"N": "40"}</span>
+</span><span id="__span-15-18"><a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="s1">  }'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-15-19"><a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">  </span>--condition-expression<span class="w"> </span><span class="s2">"attribute_not_exists(id_producto)"</span>
+</span></code></pre></div>
+<p>Si todo va bien, <code>put-item</code> no muestra nada. <code>put-item</code> sobrescribe un elemento con la misma clave; la condición <code>attribute_not_exists</code> lo evita. Si repites el comando, obtendrás <code>ConditionalCheckFailedException</code>.</p>
+<p><strong>Alternativa: varios elementos a la vez con <code>batch-write-item</code></strong> (hasta 25 por llamada), leyendo un fichero:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>perifericos.json<span class="w"> </span><span class="s">&lt;&lt; 'EOF'</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="s">{</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="s">  "Productos": [</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="s">    {"PutRequest": {"Item": {"categoria": {"S": "Perifericos"}, "id_producto": {"S": "PE-003"}, "nombre": {"S": "Webcam Full HD"}, "precio": {"N": "49.00"}, "stock": {"N": "8"}}}}</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="s">  ]</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="s">}</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="s">EOF</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>batch-write-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--request-items<span class="w"> </span>file://perifericos.json
+</span></code></pre></div>
+<p>Salida esperada: <code>{"UnprocessedItems": {}}</code>, es decir, ningún elemento pendiente. (Este elemento extra es opcional; los resultados de abajo suponen que <strong>no</strong> lo has insertado.)</p>
+<h3 id="55-leer-un-producto-por-su-clave-completa-get-item">5.5 Leer un producto por su clave completa (<code>get-item</code>)<a class="headerlink" href="#55-leer-un-producto-por-su-clave-completa-get-item" title="Permanent link">&para;</a></h3>
+<p><code>get-item</code> necesita la clave primaria completa: partición <strong>y</strong> ordenación.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">'{"categoria": {"S": "Portatiles"}, "id_producto": {"S": "P-001"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span>--consistent-read
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">    </span><span class="nt">"Item"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">        </span><span class="nt">"categoria"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"S"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portatiles"</span><span class="p">},</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">        </span><span class="nt">"id_producto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"S"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P-001"</span><span class="p">},</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">        </span><span class="nt">"nombre"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"S"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Portátil 14\" i5"</span><span class="p">},</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">        </span><span class="nt">"precio"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"N"</span><span class="p">:</span><span class="w"> </span><span class="s2">"749"</span><span class="p">},</span>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">        </span><span class="nt">"stock"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"N"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="p">}</span>
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p><code>--consistent-read</code> fuerza una lectura fuertemente consistente (devuelve siempre el último dato escrito). Para traer solo algunos atributos, añade <code>--projection-expression "nombre, precio"</code>.</p>
+<h3 id="56-consultar-todos-los-portatiles-query">5.6 Consultar todos los portátiles (<code>query</code>)<a class="headerlink" href="#56-consultar-todos-los-portatiles-query" title="Permanent link">&para;</a></h3>
+<p><code>query</code> lee únicamente los elementos de una partición. La condición sobre la clave usa marcadores (<code>:c</code>) cuyos valores se pasan aparte:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>query<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span>--key-condition-expression<span class="w"> </span><span class="s2">"categoria = :c"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":c": {"S": "Portatiles"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>--projection-expression<span class="w"> </span><span class="s2">"id_producto, nombre, precio, stock"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+</span></code></pre></div>
+<p>Devuelve P-001 y P-002, con <code>Count = 2</code> y <code>ScannedCount = 2</code>: solo se han leído los elementos de esa partición. Variantes útiles:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="w"> </span>Solo<span class="w"> </span>contar
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>query<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>--key-condition-expression<span class="w"> </span><span class="s2">"categoria = :c"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":c": {"S": "Portatiles"}}'</span><span class="w"> </span>--select<span class="w"> </span>COUNT
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w"> </span>Condición<span class="w"> </span>sobre<span class="w"> </span>la<span class="w"> </span>clave<span class="w"> </span>de<span class="w"> </span>ordenación:<span class="w"> </span>periféricos<span class="w"> </span>cuyo<span class="w"> </span>id<span class="w"> </span>empieza<span class="w"> </span>por<span class="w"> </span><span class="s2">"PE-"</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>query<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span>--key-condition-expression<span class="w"> </span><span class="s2">"categoria = :c AND begins_with(id_producto, :p)"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":c": {"S": "Perifericos"}, ":p": {"S": "PE-"}}'</span>
+</span></code></pre></div>
+<h3 id="57-restar-stock-solo-si-hay-suficiente-update-item-condicional">5.7 Restar stock solo si hay suficiente (<code>update-item</code> condicional)<a class="headerlink" href="#57-restar-stock-solo-si-hay-suficiente-update-item-condicional" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>update-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">'{"categoria": {"S": "Portatiles"}, "id_producto": {"S": "P-002"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>--update-expression<span class="w"> </span><span class="s2">"SET stock = stock - :n"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span>--condition-expression<span class="w"> </span><span class="s2">"stock &gt;= :n"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":n": {"N": "2"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span>--return-values<span class="w"> </span>UPDATED_NEW
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ejecución</th>
+<th>Stock antes</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.ª</td>
+<td>4</td>
+<td><code>{"Attributes": {"stock": {"N": "2"}}}</code></td>
+</tr>
+<tr>
+<td>2.ª</td>
+<td>2</td>
+<td><code>{"Attributes": {"stock": {"N": "0"}}}</code></td>
+</tr>
+<tr>
+<td>3.ª</td>
+<td>0</td>
+<td><code>ConditionalCheckFailedException</code>: la condición no se cumple y el elemento no cambia</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>--update-expression</code> describe el cambio (<code>SET</code>, <code>REMOVE</code>, <code>ADD</code>).</li>
+<li><code>--condition-expression</code> hace la escritura atómica y condicional: evita vender stock que no existe.</li>
+<li><code>--return-values UPDATED_NEW</code> devuelve solo los atributos modificados, con su nuevo valor.</li>
+</ul>
+<p>Para dejar el stock en 4 y que los resultados siguientes coincidan:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>update-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">'{"categoria": {"S": "Portatiles"}, "id_producto": {"S": "P-002"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span>--update-expression<span class="w"> </span><span class="s2">"SET stock = :s"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":s": {"N": "4"}}'</span>
+</span></code></pre></div>
+<h3 id="58-productos-de-mas-de-300-scan-con-filtro">5.8 Productos de más de 300 € (<code>scan</code> con filtro)<a class="headerlink" href="#58-productos-de-mas-de-300-scan-con-filtro" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span>--filter-expression<span class="w"> </span><span class="s2">"precio &gt; :p"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span>--expression-attribute-values<span class="w"> </span><span class="s1">'{":p": {"N": "300"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span>--projection-expression<span class="w"> </span><span class="s2">"categoria, id_producto, nombre, precio"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">  </span>--output<span class="w"> </span>table
+</span></code></pre></div>
+<p>Devuelve P-001 (749) y P-002 (1099). Fíjate en los contadores: <code>Count = 2</code> pero <code>ScannedCount = 5</code>. El <code>scan</code> ha leído (y cobrado) toda la tabla y luego ha descartado lo que no cumple el filtro. Por eso <code>query</code> es preferible siempre que se pueda usar.</p>
+<h3 id="59-borrar-un-periferico-delete-item">5.9 Borrar un periférico (<code>delete-item</code>)<a class="headerlink" href="#59-borrar-un-periferico-delete-item" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>delete-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">'{"categoria": {"S": "Perifericos"}, "id_producto": {"S": "PE-002"}}'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span>--return-values<span class="w"> </span>ALL_OLD
+</span></code></pre></div>
+<p><code>--return-values ALL_OLD</code> muestra el elemento tal como era antes de borrarlo. Para verificar el borrado:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>get-item<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span>--key<span class="w"> </span><span class="s1">'{"categoria": {"S": "Perifericos"}, "id_producto": {"S": "PE-002"}}'</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w"> </span>Sin<span class="w"> </span>salida:<span class="w"> </span>el<span class="w"> </span>elemento<span class="w"> </span>ya<span class="w"> </span>no<span class="w"> </span>existe
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span>--select<span class="w"> </span>COUNT
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w"> </span><span class="s2">"Count"</span>:<span class="w"> </span><span class="m">4</span>
+</span></code></pre></div>
+<h3 id="atajo-opcional">Atajo opcional<a class="headerlink" href="#atajo-opcional" title="Permanent link">&para;</a></h3>
+<p>Para no repetir <code>--endpoint-url</code> en cada comando, se puede crear un alias. Úsalo solo después de haber entendido los comandos completos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nb">alias</span><span class="w"> </span><span class="nv">ddb</span><span class="o">=</span><span class="s2">"aws dynamodb --endpoint-url </span><span class="nv">$EP</span><span class="s2">"</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>ddb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span>--select<span class="w"> </span>COUNT
+</span></code></pre></div>
+<h2 id="tarea-6-hacer-la-tabla-privada">Tarea 6. Hacer la tabla privada<a class="headerlink" href="#tarea-6-hacer-la-tabla-privada" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora, la tabla también se puede usar sin pasar por el endpoint. Compruébalo en la EC2:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span>--select<span class="w"> </span>COUNT<span class="w">    </span>sin<span class="w"> </span>--endpoint-url:<span class="w"> </span>funciona,<span class="w"> </span>sale<span class="w"> </span>por<span class="w"> </span>el<span class="w"> </span>Internet<span class="w"> </span>Gateway
+</span></code></pre></div>
+<ol>
+<li>Obtén tu ID de cuenta (menú de usuario, arriba a la derecha) y el ID del endpoint (<code>vpce-…</code>).</li>
+<li><strong>DynamoDB → Tables → Productos → pestaña Permissions → Create table policy</strong> (política basada en recursos).</li>
+<li>Pega esta política, sustituyendo <code>CUENTA</code> y <code>vpce-XXXXXXXX</code>:</li>
+</ol>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SoloDesdeEndpointPrivado"</span><span class="p">,</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">      </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">        </span><span class="s2">"dynamodb:GetItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:BatchGetItem"</span><span class="p">,</span>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">        </span><span class="s2">"dynamodb:PutItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:UpdateItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:DeleteItem"</span><span class="p">,</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">        </span><span class="s2">"dynamodb:BatchWriteItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Query"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Scan"</span>
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:CUENTA:table/Productos"</span><span class="p">,</span>
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:CUENTA:table/Productos/index/*"</span>
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">        </span><span class="nt">"StringNotEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:SourceVpce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vpce-XXXXXXXX"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="p">}</span>
+</span></code></pre></div>
+<ol>
+<li><strong>Create policy</strong>. Solo se deniegan operaciones de datos, no las de administración: así puedes seguir editando o borrando la política desde la consola.</li>
+<li>Comprobaciones:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="w"> </span>Con<span class="w"> </span>endpoint:<span class="w"> </span>funciona
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--endpoint-url<span class="w"> </span><span class="nv">$EP</span><span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span>--select<span class="w"> </span>COUNT
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w"> </span>Sin<span class="w"> </span>endpoint:<span class="w"> </span>AccessDeniedException<span class="w"> </span>...<span class="w"> </span>with<span class="w"> </span>an<span class="w"> </span>explicit<span class="w"> </span>deny<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>resource-based<span class="w"> </span>policy
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>scan<span class="w"> </span>--table-name<span class="w"> </span>Productos<span class="w"> </span>--select<span class="w"> </span>COUNT
+</span></code></pre></div>
+<ol>
+<li>En la consola, <strong>Explore items → Productos</strong>: también aparece un error de acceso denegado. La consola llama a DynamoDB desde Internet, no desde tu endpoint.</li>
+</ol>
+<blockquote>
+<p>Si el Learner Lab no permite crear políticas de recursos, documenta el error obtenido y responde a la pregunta 5 de forma teórica.</p>
+</blockquote>
+<h2 id="tarea-7-preguntas">Tarea 7. Preguntas<a class="headerlink" href="#tarea-7-preguntas" title="Permanent link">&para;</a></h2>
+<h3 id="preguntas-de-reflexion-con-solucion">Preguntas de reflexión (con solución)<a class="headerlink" href="#preguntas-de-reflexion-con-solucion" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>¿Por qué no podemos "meter" la tabla DynamoDB en <code>PrivateSubnet</code> como hacemos con una EC2?</strong> DynamoDB es un servicio gestionado y regional: AWS opera los servidores fuera de nuestra VPC. Lo que sí podemos colocar en la subred es un endpoint de interfaz, una ENI con IP privada que da acceso al servicio por la red de AWS.</li>
+<li><strong>¿Qué ocurre si quitas la regla HTTPS de <code>SG-Endpoint-DynamoDB</code>?</strong> Las llamadas con <code>--endpoint-url</code> se quedan esperando hasta agotar el tiempo (<em>timeout</em>), porque el grupo de seguridad bloquea el tráfico al puerto 443 de la ENI.</li>
+<li><strong>¿Por qué, antes de la tarea 6, funcionaba <code>aws dynamodb scan</code> sin <code>--endpoint-url</code>?</strong> Sin DNS privado, el nombre <code>dynamodb.us-east-1.amazonaws.com</code> resuelve a IPs públicas. La EC2 está en una subred pública y sale por el Internet Gateway. La petición está autenticada (rol <code>LabRole</code>), así que DynamoDB la acepta.</li>
+<li><strong>Diferencias entre endpoint de tipo Gateway e Interface para DynamoDB.</strong> El <em>Gateway</em> es gratuito, se asocia a tablas de rutas (añade una ruta a la <em>prefix list</em> de DynamoDB), no tiene IP ni grupo de seguridad y no es accesible desde fuera de la VPC. El de <em>Interface</em> crea una ENI con IP privada en la subred, admite grupos de seguridad, se puede usar desde redes locales (VPN o Direct Connect) y tiene coste por hora y por GB.</li>
+<li><strong>¿Qué aporta la condición <code>aws:SourceVpce</code> en la política de la tabla?</strong> Convierte la ruta de red en un requisito de acceso: aunque alguien tenga credenciales válidas, no puede leer ni escribir datos si la petición no entra por ese endpoint.</li>
+<li><strong>¿Por qué la consulta de la tarea 5.5 es <code>Query</code> y la de 5.7 es <code>Scan</code>? ¿Cuál es más eficiente?</strong> <code>Query</code> usa la clave de partición y solo lee esa partición. <code>Scan</code> recorre toda la tabla y filtra después, consumiendo más capacidad. Para buscar por precio de forma eficiente habría que crear un índice secundario global (GSI).</li>
+<li><strong>¿Es necesario el NAT Gateway para esta práctica?</strong> No. La EC2 está en la subred pública y el endpoint no necesita salida a Internet. El NAT solo serviría a instancias de la subred privada que necesiten Internet.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
