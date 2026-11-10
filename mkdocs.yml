@@ -44,11 +44,18 @@ markdown_extensions:
 nav:
   - Inicio: "index.md"
 
-  - Creación de sistema RDS:
-      - Configuración inicial, credenciales: "Crear-RDS-01.md"
-      - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
-      - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
-      - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
+  - Amazon RDS y Aurora:
+      - Visión general de Amazon RDS: "RDS-Introduccion.md"
+      - Creación de sistema RDS:
+          - Configuración inicial, credenciales: "Crear-RDS-01.md"
+          - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
+          - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
+          - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
+      - Amazon Aurora:
+          - Arquitectura: "Aurora-01.md"
+          - Aurora MySQL y Aurora PostgreSQL: "Aurora-02.md"
+          - Opciones de despliegue y escalado: "Aurora-03.md"
+      - Securización y control de acceso: "RDS-Seguridad.md"
 
   - Amazon DynamoDB:
       - Introducción y modelo clave-valor: "DynamoDB-01.md"
@@ -58,7 +65,6 @@ nav:
       - Acceso y securización: "DynamoDB-05.md"
 
   - Supervisión: "Supervision-RDS.md"
-  - Comandos útiles: "Tips.md"
 
   - Prácticas:
       - DynamoDB: "Practica-DynamoDB.md"
