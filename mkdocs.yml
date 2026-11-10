@@ -50,6 +50,13 @@ nav:
       - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
       - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
 
+  - Amazon DynamoDB:
+      - Introducción y modelo clave-valor: "DynamoDB-01.md"
+      - Características: "DynamoDB-02.md"
+      - Arquitectura: "DynamoDB-03.md"
+      - Clave primaria, clave de ordenación y tipos de atributos: "DynamoDB-04.md"
+      - Acceso y securización: "DynamoDB-05.md"
+
   - Supervisión: "Supervision-RDS.md"
   - Comandos útiles: "Tips.md"
 
