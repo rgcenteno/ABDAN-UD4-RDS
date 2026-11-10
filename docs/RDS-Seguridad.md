@@ -333,7 +333,7 @@ Cifrar no es lo mismo que **verificar**. Un cliente que cifra pero no verifica e
 | `mysql` | `--ssl-mode=REQUIRED` | `--ssl-mode=VERIFY_IDENTITY --ssl-ca=global-bundle.pem` |
 | `psql`  | `sslmode=require`     | `sslmode=verify-full sslrootcert=global-bundle.pem`     |
 
-Los comandos del apartado *Comandos útiles* utilizan `--ssl-mode=REQUIRED`, suficiente en el laboratorio; en producción debe utilizarse la verificación completa.
+En el laboratorio puede bastar con `--ssl-mode=REQUIRED`, pero en producción debe utilizarse la verificación completa. La [chuleta de comandos](Chuleta.md#clientes-de-base-de-datos) recoge ambas formas de conexión.
 
 !!! note "Rotación de la autoridad de certificación"
     Los certificados de la CA de RDS tienen fecha de caducidad. Cuando AWS publica una nueva CA, el administrador debe **actualizar el certificado de la instancia** (opción *Autoridad de certificación* al modificarla) y **distribuir el nuevo paquete** a los clientes que verifican el servidor.

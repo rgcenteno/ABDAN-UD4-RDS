@@ -51,6 +51,7 @@ nav:
           - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
           - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
           - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
+      - RDS Proxy: "RDS-Proxy.md"
       - Amazon Aurora:
           - Arquitectura: "Aurora-01.md"
           - Aurora MySQL y Aurora PostgreSQL: "Aurora-02.md"
@@ -64,7 +65,14 @@ nav:
       - Clave primaria, clave de ordenación y tipos de atributos: "DynamoDB-04.md"
       - Acceso y securización: "DynamoDB-05.md"
 
+  - Administración de bases de datos:
+      - Región, residencia de los datos y replicación: "BD-Region.md"
+      - Infraestructura como código: "BD-IaC.md"
+      - "Ciclo de vida: modificaciones, copias y recuperación": "BD-CicloVida.md"
+      - Monitorización del rendimiento y optimización: "BD-Rendimiento.md"
+
   - Supervisión: "Supervision-RDS.md"
+  - Chuleta de comandos: "Chuleta.md"
 
   - Prácticas:
       - DynamoDB: "Practica-DynamoDB.md"
