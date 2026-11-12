@@ -1,549 +1,319 @@
-# AWS RDS Monitoring: Guía de Métricas para Operaciones
+# Referencia de métricas de RDS
 
-## Introducción
+Este anexo recoge las **métricas de Amazon CloudWatch** que publica Amazon RDS y que se consultan en la pestaña **Supervisión** (*Monitoring*) de cada instancia. Para cada métrica se indica qué mide, qué valores pueden considerarse orientativos, qué conviene revisar cuando se desvía y qué consecuencias tiene ignorarla.
 
-El apartado **Supervisión (Monitoring)** de Amazon RDS permite analizar el estado, rendimiento y consumo de la instancia de base de datos. La mayoría de los problemas de rendimiento, costes o indisponibilidad pueden detectarse revisando periódicamente estas métricas.
+Es un documento de **consulta**. El método para analizar un problema de rendimiento (medir, identificar la causa, actuar y verificar), el análisis de las consultas con Database Insights y `EXPLAIN` y la monitorización de DynamoDB se explican en el apartado [Monitorización del rendimiento y optimización](BD-Rendimiento.md).
 
-**Objetivo del administrador SysOps:**
+La revisión periódica de estas métricas permite al administrador:
 
 - Detectar cuellos de botella.
 - Identificar recursos infrautilizados o saturados.
-- Anticipar escalados.
-- Evitar degradaciones de servicio.
-- Optimizar costes.
+- Anticipar la necesidad de escalar.
+- Evitar degradaciones del servicio.
+- Optimizar los costes.
+
+!!! note "Valores orientativos"
+    Los umbrales de este anexo son **orientativos**. Cada sistema debe compararse con su propio comportamiento habitual (su *línea base*): un 60 % de CPU puede ser normal en una instancia y una anomalía en otra.
 
 ---
 
-# 1. CPU Utilization (%)
+## Resumen
 
-## ¿Qué mide?
-
-Porcentaje de uso de CPU de la instancia RDS.
-
-## Valores recomendados
-
-| Valor          | Estado     |
-| -------------- | ---------- |
-| 0-40%          | Normal     |
-| 40-70%         | Vigilancia |
-| 70-85%         | Alto       |
-| >85% sostenido | Crítico    |
-
-## Qué revisar
-
-- Picos continuos.
-- Consultas lentas.
-- Procesos de mantenimiento.
-- Falta de índices.
-
-## Penalizaciones
-
-* Latencias elevadas.
-- Consultas más lentas.
-
-- Puede forzar escalado vertical.
-
-- Incremento de costes.
+| Categoría | Métricas |
+| --- | --- |
+| **Rendimiento** | `CPUUtilization`, `ReadIOPS`/`WriteIOPS`, `ReadThroughput`/`WriteThroughput`, `ReadLatency`/`WriteLatency`, `DiskQueueDepth` |
+| **Capacidad** | `FreeStorageSpace`, `FreeableMemory`, `SwapUsage`, `DatabaseConnections`, `CPUCreditBalance`, `BurstBalance` |
+| **Red** | `NetworkReceiveThroughput`, `NetworkTransmitThroughput` |
+| **Disponibilidad y replicación** | `ReplicaLag`, `Deadlocks` |
+| **Coste** | `TotalBackupStorageBilled`, infrautilización de CPU y memoria |
 
 ---
 
-# 2. Database Connections
+## Métricas de rendimiento
 
-## ¿Qué mide?
+### Utilización de CPU (`CPUUtilization`)
 
-Número de conexiones activas a la base de datos.
+**Qué mide**: porcentaje de uso de la CPU de la instancia.
 
-## Valores recomendados
+| Valor | Estado |
+| --- | --- |
+| 0–40 % | Normal |
+| 40–70 % | Vigilancia |
+| 70–85 % | Alto |
+| > 85 % sostenido | Crítico |
 
-Dependen del motor y tamaño de instancia.
+**Qué revisar**: picos continuos, consultas lentas, procesos de mantenimiento, índices ausentes.
 
-Como referencia:
+**Consecuencias**: latencias elevadas, consultas más lentas, necesidad de escalar verticalmente e incremento de costes.
 
-- Menos del 70% del máximo → Correcto.
-- Más del 80% → Revisar.
+### Operaciones de lectura por segundo (`ReadIOPS`)
 
-### Valores máximos orientativos:
+**Qué mide**: número medio de operaciones de lectura en disco por segundo.
 
-| Instancia    | Max Connections |
-| ------------ | --------------- |
-| db.t3.micro  | ~60             |
-| db.t3.small  | ~150            |
-| db.t3.medium | ~300            |
-| db.t3.large  | ~600            |
-| db.r5.large  | ~1000           |
-| db.r5.xlarge | ~2000           |
+**Valores**: no existe un valor universal; debe ser coherente con la carga. Hay que compararlo con las IOPS que admite el volumen (por ejemplo, el valor base de `gp3` o las IOPS aprovisionadas).
 
-## Qué revisar
+**Qué revisar**: un aumento puede indicar falta de memoria para la caché, recorridos completos de tablas o índices ausentes.
 
-- Aplicaciones que no cierran conexiones.
-- Pooling mal configurado.
-- Picos de usuarios.
+**Consecuencias**: saturación del almacenamiento, aumento de la latencia y mayor coste si se aprovisionan IOPS adicionales.
 
-## Penalizaciones
+### Operaciones de escritura por segundo (`WriteIOPS`)
 
-- Rechazo de nuevas conexiones.
+**Qué mide**: número medio de operaciones de escritura en disco por segundo.
 
-- Errores de aplicación.
+**Valores**: deben mantenerse estables para la carga esperada.
 
-- Saturación de memoria.
+**Qué revisar**: procesos por lotes, replicación, aplicaciones que escriben en exceso.
 
----
+**Consecuencias**: cuellos de botella de disco y aumento del tiempo de respuesta.
 
-# 3. Freeable Memory
+### Rendimiento de lectura (`ReadThroughput`)
 
-## ¿Qué mide?
+**Qué mide**: bytes leídos del disco por segundo.
 
-Memoria RAM disponible para procesos nuevos.
+**Valores**: dependen de la aplicación.
 
-## Valores recomendados
+**Qué revisar**: si aumenta mucho, consultas pesadas, exportaciones o problemas de indexación.
 
-Debe mantenerse siempre con margen. No debe tener un valor cercano a 0.
+**Consecuencias**: saturación del almacenamiento y aumento de la latencia.
 
-## Qué revisar
+### Rendimiento de escritura (`WriteThroughput`)
 
-- Conexiones excesivas.
-- Grandes operaciones de ordenación.
-- Cachés mal dimensionadas.
+**Qué mide**: bytes escritos en disco por segundo.
 
-## Penalizaciones
+**Valores**: deben ser acordes al patrón de uso del negocio.
 
-- Uso intensivo de swap.
+**Qué revisar**: importaciones masivas, aplicaciones mal diseñadas, registros excesivos.
 
-- Consultas lentas.
+**Consecuencias**: saturación del volumen y retrasos en la confirmación de transacciones (`COMMIT`).
 
-- Posibles reinicios.
+### Latencia de lectura (`ReadLatency`)
 
----
+**Qué mide**: tiempo medio que tarda cada operación de lectura en disco.
 
-# 4. Free Storage Space
+| Latencia | Estado |
+| --- | --- |
+| < 10 ms | Excelente |
+| 10–20 ms | Buena |
+| 20–50 ms | Revisar |
+| > 50 ms | Problema |
 
-## ¿Qué mide?
+**Consecuencias**: consultas lentas y retrasos percibidos por los usuarios.
 
-Almacenamiento disponible en la instancia.
+### Latencia de escritura (`WriteLatency`)
 
-## Valores recomendados
+**Qué mide**: tiempo medio que tarda cada operación de escritura en disco.
 
-Mantener:
+| Latencia | Estado |
+| --- | --- |
+| < 10 ms | Ideal |
+| > 20–30 ms sostenido | Crítico |
 
-- \> 20% libre.
+**Consecuencias**: lentitud de las transacciones, bloqueos y retrasos en la replicación.
 
-Alarma recomendada:
+### Profundidad de la cola de disco (`DiskQueueDepth`)
 
-- 15% libre.
+**Qué mide**: número de operaciones de E/S que esperan acceso al disco.
 
-Crítico:
+| Valor | Estado |
+| --- | --- |
+| Cercano a 0 | Ideal |
+| > 10 sostenido | Alarma |
 
-- <10%.
+**Qué indica**: el almacenamiento no puede seguir el ritmo de la carga.
 
-## Qué revisar
-
-- Crecimiento de tablas.
-- Logs.
-- Backups temporales.
-
-## Penalizaciones
-
-- Parada del crecimiento de datos.
-
-- Errores de escritura.
-
-- Posible caída del servicio.
+**Consecuencias**: aumento de la latencia y saturación de las IOPS.
 
 ---
 
-# 5. Read IOPS
+## Métricas de capacidad
 
-## ¿Qué mide?
+### Espacio de almacenamiento libre (`FreeStorageSpace`)
 
-Operaciones de lectura por segundo.
+**Qué mide**: almacenamiento disponible en la instancia, en bytes.
 
-## Valores óptimos
+| Espacio libre | Estado |
+| --- | --- |
+| > 20 % | Correcto |
+| 15 % | Umbral de alarma recomendado |
+| < 10 % | Crítico |
 
-No existe un valor universal.
+**Qué revisar**: crecimiento de las tablas, registros, objetos temporales. Conviene activar el **autoescalado del almacenamiento** (véase [Ciclo de vida](BD-CicloVida.md)).
 
-Debe ser coherente con la carga.
+**Consecuencias**: imposibilidad de seguir almacenando datos, errores de escritura y posible caída del servicio.
 
-## Qué revisar
+### Memoria disponible (`FreeableMemory`)
 
-Picos elevados pueden indicar:
+**Qué mide**: memoria RAM disponible en la instancia.
 
-- Falta de caché.
-- Escaneos completos de tablas.
-- Índices ausentes.
+**Valores**: debe mantenerse siempre con margen; un valor cercano a 0 es crítico.
 
-## Penalizaciones
+**Qué revisar**: exceso de conexiones, grandes operaciones de ordenación, cachés mal dimensionadas.
 
-- Saturación del almacenamiento.
+**Consecuencias**: uso intensivo de *swap*, consultas lentas y posibles reinicios.
 
-- Incremento de latencia.
+### Uso de memoria de intercambio (`SwapUsage`)
 
-- Mayor coste en IOPS aprovisionadas.
+**Qué mide**: memoria de intercambio (*swap*) utilizada.
 
----
+**Valores**: idealmente 0; cualquier uso significativo debe revisarse.
 
-# 6. Write IOPS
+**Consecuencias**: caída importante del rendimiento. Es una señal de memoria insuficiente.
 
-## ¿Qué mide?
+### Conexiones a la base de datos (`DatabaseConnections`)
 
-Operaciones de escritura por segundo.
+**Qué mide**: número de conexiones de clientes abiertas.
 
-## Valores óptimos
+**Valores**: dependen del motor y de la clase de instancia, porque el máximo (`max_connections`) se calcula por defecto en función de la memoria de la clase.
 
-Deben mantenerse estables para la carga esperada.
+| Uso respecto al máximo | Estado |
+| --- | --- |
+| < 70 % | Correcto |
+| > 80 % | Revisar |
 
-## Qué revisar
+Valores máximos orientativos en RDS for MySQL con la configuración predeterminada:
 
-- Procesos batch.
-- Replicaciones.
-- Aplicaciones que escriben excesivamente.
+| Clase | `max_connections` aproximado |
+| --- | --- |
+| db.t3.micro | ~60 |
+| db.t3.small | ~150 |
+| db.t3.medium | ~300 |
+| db.t3.large | ~600 |
+| db.r5.large | ~1 000 |
+| db.r5.xlarge | ~2 000 |
 
-## Penalizaciones
+**Qué revisar**: aplicaciones que no cierran conexiones, agrupación de conexiones mal configurada, picos de usuarios. **RDS Proxy** es la solución habitual ante muchas conexiones cortas (véase [RDS Proxy](RDS-Proxy.md)).
 
-- Cuellos de botella de disco.
+**Consecuencias**: rechazo de nuevas conexiones, errores de aplicación y saturación de la memoria.
 
-- Incremento de tiempo de respuesta.
+### Créditos de CPU (`CPUCreditBalance`)
 
----
+*(Solo clases ampliables `db.t3`, `db.t4g`)*
 
-# 7. Read Throughput
+**Qué mide**: créditos acumulados que permiten superar el rendimiento base de la CPU.
 
-## ¿Qué mide?
+**Valores**: un saldo que tiende a 0 indica que la instancia trabaja por encima de su rendimiento base de forma sostenida.
 
-Cantidad de datos leídos por segundo (MB/s).
+**Consecuencias**: si los créditos se agotan, la CPU queda limitada a su rendimiento base (o se factura el uso adicional en modo ilimitado). Es la métrica a vigilar en las instancias pequeñas de los laboratorios.
 
-## Valores óptimos
+### Saldo de ráfaga del almacenamiento (`BurstBalance`)
 
-Dependen totalmente de la aplicación.
+*(Solo volúmenes `gp2`)*
 
-## Qué revisar
+**Qué mide**: porcentaje de créditos de E/S disponibles para superar el rendimiento base del volumen.
 
-Si aumenta mucho:
+| Valor | Estado |
+| --- | --- |
+| > 80 % | Excelente |
+| 50–80 % | Normal |
+| < 20 % | Riesgo |
+| 0 % | Crítico |
 
-- Consultas pesadas.
-- Exportaciones.
-- Problemas de índices.
-
-## Penalizaciones
-
-- Saturación de almacenamiento.
-
-- Latencia.
-
----
-
-# 8. Write Throughput
-
-## ¿Qué mide?
-
-Datos escritos por segundo.
-
-## Valores óptimos
-
-Debe ser acorde al patrón de negocio.
-
-## Qué revisar
-
-- Importaciones masivas.
-- Aplicaciones mal diseñadas.
-- Logs excesivos.
-
-## Penalizaciones
-
-- Saturación del volumen.
-
-- Retrasos en confirmaciones (commit).
+**Consecuencias**: limitación automática del rendimiento del disco y lecturas y escrituras lentas. Los volúmenes `gp3` no utilizan créditos, por lo que migrar a `gp3` elimina este problema.
 
 ---
 
-# 9. Read Latency
+## Métricas de red
 
-## ¿Qué mide?
+### Tráfico de red recibido (`NetworkReceiveThroughput`)
 
-Tiempo medio de lectura.
+**Qué mide**: tráfico de red entrante, incluido el de los clientes y el de la replicación.
 
-## Valores recomendados
+**Qué revisar**: réplicas, consultas remotas, aplicaciones con mucho tráfico.
 
-| Latencia | Estado    |
-| -------- | --------- |
-| <10 ms   | Excelente |
-| 10-20 ms | Buena     |
-| 20-50 ms | Revisar   |
-| >50 ms   | Problema  |
+**Consecuencias**: posibles cuellos de botella de red.
 
-## Penalizaciones
+### Tráfico de red enviado (`NetworkTransmitThroughput`)
 
-- Consultas lentas.
+**Qué mide**: tráfico de red saliente.
 
-- Usuarios perciben retrasos.
+**Qué revisar**: respuestas SQL muy grandes (por ejemplo, `SELECT *` sin paginar) y exportaciones masivas.
+
+**Consecuencias**: saturación de la red y mayor latencia de respuesta.
 
 ---
 
-# 10. Write Latency
+## Métricas de disponibilidad y replicación
 
-## ¿Qué mide?
+### Retraso de réplica (`ReplicaLag`)
 
-Tiempo medio de escritura.
+*(Solo réplicas de lectura)*
 
-## Valores recomendados
+**Qué mide**: retraso, en segundos, entre la instancia principal y la réplica.
 
-Ideal:
+| Valor | Estado |
+| --- | --- |
+| Segundos | Normal |
+| Minutos | Alarma |
 
-- Menos de 10 ms.
+**Consecuencias**: datos desactualizados en las lecturas, problemas en la recuperación ante desastres y riesgo de inconsistencias.
 
-Crítico:
+### Interbloqueos (`Deadlocks`)
 
-- Más de 20-30 ms sostenidos.
+**Qué mide**: número de interbloqueos entre transacciones por segundo. Está disponible como métrica de CloudWatch en Aurora MySQL; en RDS for MySQL y MariaDB, los interbloqueos se consultan con `SHOW ENGINE INNODB STATUS` o en Database Insights.
 
-## Penalizaciones
+**Valores**: cero o muy pocos.
 
-- Lentitud en transacciones.
+**Qué revisar**: transacciones largas y accesos concurrentes a las mismas filas en distinto orden.
 
-- Bloqueos.
-
-- Retrasos en replicación.
-
----
-
-# 11. Disk Queue Depth
-
-## ¿Qué mide?
-
-Número de operaciones esperando acceso al disco.
-
-## Valores recomendados
-
-Ideal:
-
-- Cercano a 0.
-
-Alarma:
-
-- \>10 sostenido.
-
-## Qué indica
-
-El almacenamiento no puede seguir el ritmo.
-
-## Penalizaciones
-
-- Aumento de latencia.
-
-- Saturación de IOPS.
+**Consecuencias**: errores de aplicación y cancelación automática de transacciones.
 
 ---
 
-# 12. Network Receive Throughput
+## Métricas de coste
 
-## ¿Qué mide?
+### Almacenamiento de copias de seguridad (`TotalBackupStorageBilled`)
 
-Tráfico de red recibido.
+**Qué mide**: almacenamiento de copias de seguridad facturado (copias automáticas e instantáneas manuales que superan el almacenamiento gratuito).
 
-## Qué revisar
+**Qué revisar**: crecimiento continuo, periodos de retención excesivos, instantáneas manuales olvidadas.
 
-- Réplicas.
-- Consultas remotas.
-- Aplicaciones con mucho tráfico.
+**Consecuencias**: coste adicional.
 
-## Penalizaciones
+### Infrautilización
 
-- Posibles cuellos de botella de red.
+Una CPU que se mantiene de forma sostenida por debajo del 10–20 % y una memoria libre abundante indican que la instancia está **sobredimensionada**. Reducir la clase es una de las optimizaciones de coste más sencillas.
 
 ---
 
-# 13. Network Transmit Throughput
+## Alarmas recomendadas para producción
 
-## ¿Qué mide?
+| Métrica | Condición de alarma |
+| --- | --- |
+| `CPUUtilization` | > 80 % durante 15 minutos |
+| `FreeableMemory` | < 500 MB (o < 10 % de la memoria de la clase en instancias pequeñas) |
+| `FreeStorageSpace` | < 15 % del almacenamiento asignado (la métrica se expresa en bytes) |
+| `DiskQueueDepth` | > 10 |
+| `ReadLatency` | > 20 ms |
+| `WriteLatency` | > 20 ms |
+| `BurstBalance` | < 20 % (solo `gp2`) |
+| `CPUCreditBalance` | próximo a 0 (solo clases `db.t`) |
+| `ReplicaLag` | > 60 segundos |
+| `DatabaseConnections` | > 80 % de `max_connections` |
 
-Tráfico enviado por la instancia.
-
-## Qué revisar
-
-- Grandes respuestas SQL.
-- Exportaciones masivas.
-
-## Penalizaciones
-
-- Saturación de red.
-
-- Mayor latencia de respuesta.
-
----
-
-# 14. Swap Usage
-
-## ¿Qué mide?
-
-Uso de memoria swap.
-
-## Valores recomendados
-
-Ideal:
-
-- 0 MB.
-
-## Qué revisar
-
-Cualquier uso significativo.
-
-## Penalizaciones
-
-- Caída importante del rendimiento.
-
-- Señal de insuficiencia de RAM.
+La creación de alarmas con la AWS CLI se muestra en [Monitorización del rendimiento y optimización](BD-Rendimiento.md#alarmas) y en la [chuleta de comandos](Chuleta.md#amazon-cloudwatch).
 
 ---
 
-# 15. Burst Balance (%)
+## Indicadores de necesidad de escalado
 
-(Volúmenes GP2 y algunos GP3)
+Los indicadores que antes anticipan la necesidad de escalar una instancia RDS son:
 
-## ¿Qué mide?
+- CPU por encima del 80 % de forma sostenida, o créditos de CPU agotados.
+- Memoria libre muy baja.
+- Uso de *swap* creciente.
+- Latencias elevadas.
+- Cola de disco alta.
+- Almacenamiento libre por debajo del 15 %.
 
-Créditos disponibles de rendimiento.
-
-## Valores recomendados
-
-| Valor  | Estado    |
-| ------ | --------- |
-| >80%   | Excelente |
-| 50-80% | Normal    |
-| <20%   | Riesgo    |
-| 0%     | Crítico   |
-
-## Penalizaciones
-
-- Limitación automática del rendimiento de disco.
-
-- Lecturas y escrituras lentas.
+Antes de escalar conviene comprobar, con las herramientas del apartado de rendimiento, que el problema no se resuelve con una optimización más barata, como crear un índice.
 
 ---
 
-# 16. Replica Lag
+## Referencias
 
-(Solo réplicas)
-
-## ¿Qué mide?
-
-Retraso entre principal y réplica.
-
-## Valores recomendados
-
-Ideal:
-
-- Segundos.
-
-Alarma:
-
-- Minutos.
-
-## Penalizaciones
-
-- Datos desactualizados.
-
-- Problemas en DR (Disaster Recovery).
-
-- Riesgo de inconsistencia.
-
----
-
-# 17. Deadlocks
-
-## ¿Qué mide?
-
-Número de bloqueos mutuos.
-
-## Valores recomendados
-
-- Cero o muy pocos.
-
-## Qué revisar
-
-- Transacciones largas.
-- Accesos concurrentes.
-
-## Penalizaciones
-
-- Errores de aplicación.
-
-- Cancelación automática de transacciones.
-
----
-
-# 18. Backup Storage Used
-
-## ¿Qué mide?
-
-Espacio consumido por backups automáticos.
-
-## Qué revisar
-
-- Crecimiento continuo.
-- Retención excesiva.
-
-## Penalizaciones
-
-- Coste adicional.
-
----
-
-# Alertas recomendadas para producción
-
-| Métrica            | Alarma              |
-| ------------------ | ------------------- |
-| CPU Utilization    | >80% durante 15 min |
-| Freeable Memory    | <500 MB             |
-| Free Storage Space | <15%                |
-| Disk Queue Depth   | >10                 |
-| Read Latency       | >20 ms              |
-| Write Latency      | >20 ms              |
-| Burst Balance      | <20%                |
-| Replica Lag        | >60 segundos        |
-| Connections        | >80% del límite     |
-
----
-
-# Categorización
-
-### Indicadores de rendimiento
-
-- CPU Utilization
-- Read/Write IOPS
-- Read/Write Throughput
-- Read/Write Latency
-- Disk Queue Depth
-
-### Indicadores de capacidad
-
-- Free Storage Space
-- Freeable Memory
-- Connections
-- Swap Usage
-
-### Indicadores de costes
-
-- Backup Storage Used
-- Burst Balance
-- Infrautilización de CPU
-
-### Indicadores de disponibilidad
-
-- Replica Lag
-- Deadlocks
-- Latency
-- Connections
-
-# Indicadores de necesidad de escalado
-
-Estos son los indicadores que más rápidamente anticipan la necesidad de escalar una instancia RDS.
-
-- CPU > 80%
-
-- RAM libre muy baja
-
-- Swap creciendo
-
-- Latencias elevadas
-
-- Queue Depth alta
-
-- Storage < 15%
+- AWS. *Amazon CloudWatch metrics for Amazon RDS* — [Métricas de CloudWatch para RDS](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-metrics.html)
+- AWS. *Amazon CloudWatch metrics for Amazon Aurora* — [Métricas de CloudWatch para Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraMonitoring.Metrics.html)
+- AWS. *Viewing metrics in the Amazon RDS console* — [Pestaña Supervisión](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.html)
+- AWS. *Maximum number of database connections* — [`max_connections`](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html#RDS_Limits.MaxConnections)
+- AWS. *Burstable performance instances* — [Créditos de CPU](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html)
+- AWS. *Amazon RDS DB instance storage* — [Tipos de almacenamiento y BurstBalance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html)

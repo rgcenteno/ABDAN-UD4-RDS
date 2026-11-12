@@ -8,135 +8,32 @@ En entornos profesionales, una base de datos no debe considerarse únicamente co
 
 ---
 
-## La importancia de la monitorización
+## Opciones de supervisión en el asistente de creación
 
-Toda base de datos experimenta cambios continuos en su carga de trabajo. El número de usuarios conectados, el volumen de consultas ejecutadas, la utilización de memoria o la actividad de almacenamiento pueden variar significativamente a lo largo del tiempo.
-
-Sin mecanismos adecuados de supervisión resulta imposible determinar si la infraestructura está funcionando correctamente o identificar las causas de una degradación del rendimiento.
-
-La monitorización permite responder a preguntas fundamentales como:
+Toda base de datos experimenta cambios continuos en su carga de trabajo: el número de usuarios conectados, el volumen de consultas, la utilización de memoria o la actividad del almacenamiento varían a lo largo del tiempo. Sin mecanismos de supervisión resulta imposible saber si el sistema funciona correctamente o por qué se degrada su rendimiento. La monitorización permite responder a preguntas como:
 
 - ¿Está la CPU trabajando al límite de su capacidad?
 - ¿Existe falta de memoria disponible?
-- ¿Se están produciendo bloqueos en el almacenamiento?
+- ¿Se están produciendo cuellos de botella en el almacenamiento?
 - ¿Las consultas responden dentro de los tiempos esperados?
 - ¿Existen tendencias de crecimiento que requieran ampliar recursos?
 
-La respuesta a estas cuestiones es esencial para garantizar la estabilidad y la eficiencia del sistema.
+Al crear la instancia, el asistente solicita tres decisiones relacionadas con la supervisión. Su uso y su interpretación se desarrollan en el apartado [Monitorización del rendimiento y optimización](BD-Rendimiento.md), y las métricas de CloudWatch se describen una a una en la [Referencia de métricas de RDS](Supervision-RDS.md).
 
----
+| Opción | Qué activa | Valor en la práctica evaluable |
+| --- | --- | --- |
+| **Database Insights** (modalidad estándar o avanzada) | Análisis de la carga de la base de datos: sesiones activas, eventos de espera y sentencias SQL que más recursos consumen. La modalidad estándar está incluida; la avanzada amplía la retención del historial y los análisis disponibles, con coste adicional | Estándar, con 7 días de retención |
+| **Monitorización mejorada** | Métricas del sistema operativo de la instancia (CPU, memoria, procesos, E/S, red) con una granularidad de 1 a 60 segundos, publicadas en CloudWatch Logs | Deshabilitada (minimiza costes) |
+| **Exportación de registros** a CloudWatch Logs | Envío de los registros del motor para su consulta centralizada | Opcional |
 
-## Database Insights
+### Registros que pueden exportarse
 
-Amazon RDS incorpora funcionalidades avanzadas de observabilidad agrupadas bajo el nombre de Database Insights.
-
-Su objetivo es proporcionar una visión detallada del comportamiento de la base de datos mediante métricas históricas y herramientas de análisis orientadas a la identificación de problemas de rendimiento.
-
-Mientras que las métricas tradicionales muestran el estado general del sistema, Database Insights permite profundizar en las causas concretas que provocan una degradación del servicio.
-
-Esta información facilita enormemente las tareas de diagnóstico y optimización, especialmente en entornos con una elevada complejidad operativa.
-
----
-
-### Modalidad estándar y modalidad avanzada
-
-Amazon RDS ofrece diferentes niveles de capacidad analítica.
-
-La **modalidad estándar** proporciona acceso a métricas detalladas sobre el funcionamiento de la base de datos y permite analizar el comportamiento general del sistema durante un periodo determinado.
-
-Por su parte, **la modalidad avanzada** amplía las capacidades de observación, incorporando información más detallada y periodos de retención más amplios para el análisis histórico.
-
-La elección entre ambas opciones depende de factores como la criticidad del sistema, la necesidad de análisis avanzados y el presupuesto disponible para la operación del servicio.
-
----
-
-## Retención de métricas
-
-Una de las decisiones asociadas a la monitorización consiste en determinar **cuánto tiempo se conservarán** los datos históricos.
-
-La retención de métricas permite comparar el comportamiento actual con periodos anteriores y detectar tendencias que podrían pasar desapercibidas en una observación puntual.
-
-Gracias a esta información es posible identificar aumentos progresivos de carga, variaciones estacionales en el uso del sistema o degradaciones graduales del rendimiento.
-
-La conservación de históricos también facilita las tareas de auditoría y la planificación de futuras ampliaciones de infraestructura.
-
----
-
-## Monitorización mejorada
-
-Además de las métricas estándar proporcionadas por RDS, AWS permite habilitar la denominada monitorización mejorada.
-
-Este servicio proporciona acceso a información más detallada sobre el sistema operativo subyacente que ejecuta la instancia.
-
-Mientras que las métricas convencionales muestran indicadores generales de la base de datos, la monitorización mejorada **permite conocer con mayor precisión** cómo se están utilizando los recursos físicos asignados.
-
-Entre otros aspectos, ofrece información relacionada con:
-
-- Uso de CPU.
-- Consumo de memoria.
-- Actividad de los procesos internos.
-- Operaciones de entrada y salida.
-- Utilización de red.
-
-Esta visibilidad adicional resulta especialmente útil cuando es necesario determinar si un problema de rendimiento tiene su origen en la propia base de datos o en limitaciones de la infraestructura donde se ejecuta.
-
----
-
-## CloudWatch como plataforma de observabilidad
-
-Las métricas generadas por Amazon RDS pueden integrarse con Amazon CloudWatch, el servicio de monitorización centralizado de AWS.
-
-CloudWatch actúa como una plataforma unificada donde se recopilan, almacenan y representan datos procedentes de múltiples servicios.
-
-Gracias a esta integración es posible construir paneles de supervisión, generar alertas automáticas y correlacionar eventos que afectan simultáneamente a distintas partes de una arquitectura.
-
-En infraestructuras empresariales complejas, esta visión global resulta fundamental para comprender el comportamiento conjunto de aplicaciones, servidores, redes y bases de datos.
-
-La incorporación de recursos de monitorización y observabilidad constituye una práctica habitual dentro de la administración moderna de infraestructuras cloud.---
-
-## Exportación de registros
-
-Además de las métricas numéricas, una fuente esencial de información para el administrador son los registros o *logs*.
-
-Los registros almacenan eventos generados durante el funcionamiento normal de la base de datos y permiten reconstruir lo ocurrido cuando se produce una incidencia.
-
-La integración con CloudWatch posibilita centralizar estos registros y analizarlos mediante herramientas específicas de búsqueda y visualización.
-
----
-
-### Registro de errores
-
-El registro de errores contiene información sobre **problemas detectados** por el motor MariaDB durante su funcionamiento.
-
-Cuando una base de datos experimenta fallos inesperados, errores de configuración o incidencias internas, este registro suele constituir el primer punto de análisis para el administrador.
-
----
-
-### Registro general
-
-El registro general almacena información sobre las operaciones realizadas por los clientes que interactúan con la base de datos.
-
-Aunque proporciona una visión muy completa de la actividad del sistema, también **puede generar una cantidad considerable de información**, por lo que su utilización debe evaluarse en función de las necesidades concretas de cada entorno.
-
----
-
-### Registro de auditoría
-
-El registro de auditoría permite mantener **trazabilidad** sobre las acciones realizadas dentro de la plataforma.
-
-Este tipo de información resulta especialmente relevante en organizaciones sujetas a requisitos normativos o políticas de control de accesos que exigen conocer quién realizó una determinada operación y en qué momento se produjo.
-
----
-
-### Registro de consultas lentas
-
-**Uno de los registros más valiosos desde el punto de vista del rendimiento** es el registro de consultas lentas.
-
-Su finalidad consiste en identificar aquellas consultas SQL cuya ejecución supera determinados umbrales de tiempo.
-
-Analizando estas consultas es posible detectar problemas de diseño, índices inadecuados o patrones de acceso ineficientes que afectan negativamente al rendimiento global del sistema.
-
-La optimización basada en el análisis de consultas lentas constituye una de las técnicas más habituales de mejora del rendimiento en bases de datos relacionales.
+| Registro | Contenido | Observaciones |
+| --- | --- | --- |
+| **De errores** | Problemas detectados por el motor: fallos de arranque, errores de configuración, incidencias internas | Primer punto de análisis ante una incidencia |
+| **General** | Todas las sentencias y conexiones de los clientes | Genera mucho volumen; solo para diagnósticos puntuales |
+| **De auditoría** | Quién realizó cada operación y cuándo | Necesario en organizaciones sujetas a requisitos normativos; en MariaDB y MySQL se habilita con el complemento de auditoría del grupo de opciones |
+| **De consultas lentas** | Sentencias cuya ejecución supera un umbral de tiempo | Uno de los más valiosos para el rendimiento; su configuración y análisis se explican en el apartado de rendimiento |
 
 ---
 

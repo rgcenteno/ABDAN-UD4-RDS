@@ -4,7 +4,7 @@
 
 **Amazon Relational Database Service (Amazon RDS)** es el servicio de AWS que permite desplegar, operar y escalar bases de datos relacionales en la nube sin necesidad de administrar el hardware, el sistema operativo ni la instalación del motor. Bajo el nombre RDS se agrupa en realidad una **familia de servicios**: por un lado, los motores comerciales y de código abierto que AWS ofrece en su versión «estándar» y, por otro, **Amazon Aurora**, un motor relacional diseñado por AWS para la nube y compatible con MySQL y PostgreSQL.
 
-En este apartado se presenta una visión de conjunto del servicio. Los apartados de **Creación de sistema RDS** describen en detalle cada decisión de configuración de una instancia; los apartados dedicados a **Aurora** analizan su arquitectura y sus variantes; y el apartado de **securización** profundiza en el control de acceso.
+En este apartado se presenta una visión de conjunto del servicio. A continuación, el apartado de **elección de la región** recoge la decisión previa a cualquier despliegue; los apartados de **Creación de sistema RDS** describen en detalle cada decisión de configuración de una instancia; el apartado de **securización** profundiza en el control de acceso; el de **RDS Proxy** analiza la gestión de conexiones; y los apartados dedicados a **Aurora** estudian su arquitectura y sus variantes.
 
 ---
 
@@ -83,7 +83,7 @@ RDS ofrece tres modalidades de despliegue con distintos niveles de disponibilida
 Además de estas modalidades, pueden crearse **réplicas de lectura** (*read replicas*), que se alimentan mediante replicación asíncrona nativa del motor y sirven para **escalar las lecturas**, incluso en otras regiones. Una réplica de lectura puede **promocionarse** a instancia independiente, por ejemplo como parte de un plan de recuperación ante desastres.
 
 !!! warning "No confundir alta disponibilidad con escalado"
-    Como se explicó en el apartado de capacidad, la *standby* de una instancia Multi-AZ **no atiende consultas**: su única función es tomar el relevo en caso de fallo. Para repartir la carga de lectura se necesitan réplicas de lectura, un clúster Multi-AZ o Aurora.
+    Como se desarrollará en el apartado de capacidad, la *standby* de una instancia Multi-AZ **no atiende consultas**: su única función es tomar el relevo en caso de fallo. Para repartir la carga de lectura se necesitan réplicas de lectura, un clúster Multi-AZ o Aurora.
 
 ---
 
@@ -108,8 +108,8 @@ En términos generales, RDS «estándar» es adecuado para cargas pequeñas o me
 ## Herramientas de operación habituales
 
 - **Implementaciones azul/verde** (*Blue/Green Deployments*): crean una copia sincronizada del entorno (verde) sobre la que aplicar cambios, como una actualización de versión principal, y permiten conmutar en segundos con mínima interrupción.
-- **RDS Proxy**: grupo de conexiones gestionado, ya presentado en el apartado de redes, que reduce la sobrecarga de conexiones y acelera la conmutación por error.
-- **Database Insights y Performance Insights**: análisis de la carga de la base de datos, descritos en el apartado de monitorización.
+- **RDS Proxy**: grupo de conexiones gestionado que reduce la sobrecarga de conexiones y acelera la conmutación por error. Se presenta en el apartado de redes y se estudia en su propio apartado.
+- **Database Insights** (antes Performance Insights): análisis de la carga de la base de datos, descrito en el apartado de monitorización del rendimiento.
 - **AWS Backup**: gestión centralizada de copias de seguridad y retención.
 - **AWS DMS**: migración homogénea o heterogénea de datos hacia RDS y Aurora.
 

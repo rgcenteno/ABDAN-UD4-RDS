@@ -36,7 +36,7 @@ aws ec2 authorize-security-group-ingress --group-id <sg-bd> \
 
 ```bash
 aws rds create-db-instance \
-  --db-instance-identifier tienda-db-server \
+  --db-instance-identifier mydb-server \
   --engine mysql --db-instance-class db.t3.micro \
   --allocated-storage 20 --max-allocated-storage 100 --storage-type gp3 \
   --storage-encrypted \
@@ -46,9 +46,9 @@ aws rds create-db-instance \
   --no-publicly-accessible \
   --backup-retention-period 7
 
-aws rds wait db-instance-available --db-instance-identifier tienda-db-server
+aws rds wait db-instance-available --db-instance-identifier mydb-server
 
-aws rds describe-db-instances --db-instance-identifier tienda-db-server \
+aws rds describe-db-instances --db-instance-identifier mydb-server \
   --query "DBInstances[0].[DBInstanceStatus,Endpoint.Address,DBInstanceClass,MultiAZ,StorageEncrypted]" \
   --output table
 
@@ -60,7 +60,7 @@ aws rds describe-db-engine-versions --engine mysql \
 ### Contraseña del usuario maestro en Secrets Manager
 
 ```bash
-SECRETO=$(aws rds describe-db-instances --db-instance-identifier tienda-db-server \
+SECRETO=$(aws rds describe-db-instances --db-instance-identifier mydb-server \
   --query "DBInstances[0].MasterUserSecret.SecretArn" --output text)
 aws secretsmanager get-secret-value --secret-id "$SECRETO" \
   --query SecretString --output text
@@ -70,23 +70,23 @@ aws secretsmanager get-secret-value --secret-id "$SECRETO" \
 
 ```bash
 # Cambiar la clase (con interrupción) de inmediato
-aws rds modify-db-instance --db-instance-identifier tienda-db-server \
+aws rds modify-db-instance --db-instance-identifier mydb-server \
   --db-instance-class db.t3.small --apply-immediately
 
 # Ver cambios pendientes
-aws rds describe-db-instances --db-instance-identifier tienda-db-server \
+aws rds describe-db-instances --db-instance-identifier mydb-server \
   --query "DBInstances[0].PendingModifiedValues"
 
 # Activar Multi-AZ y la protección contra eliminación
-aws rds modify-db-instance --db-instance-identifier tienda-db-server \
+aws rds modify-db-instance --db-instance-identifier mydb-server \
   --multi-az --deletion-protection --apply-immediately
 
-aws rds reboot-db-instance --db-instance-identifier tienda-db-server
-aws rds stop-db-instance  --db-instance-identifier tienda-db-server   # se reinicia sola a los 7 días
-aws rds start-db-instance --db-instance-identifier tienda-db-server
+aws rds reboot-db-instance --db-instance-identifier mydb-server
+aws rds stop-db-instance  --db-instance-identifier mydb-server   # se reinicia sola a los 7 días
+aws rds start-db-instance --db-instance-identifier mydb-server
 
 # Eventos recientes (útil para diagnosticar)
-aws rds describe-events --source-identifier tienda-db-server \
+aws rds describe-events --source-identifier mydb-server \
   --source-type db-instance --duration 60
 ```
 
@@ -100,33 +100,33 @@ aws rds modify-db-parameter-group --db-parameter-group-name tienda-mysql84 \
   --parameters "ParameterName=require_secure_transport,ParameterValue=ON,ApplyMethod=immediate" \
                "ParameterName=slow_query_log,ParameterValue=1,ApplyMethod=immediate"
 
-aws rds modify-db-instance --db-instance-identifier tienda-db-server \
+aws rds modify-db-instance --db-instance-identifier mydb-server \
   --db-parameter-group-name tienda-mysql84 --apply-immediately
 ```
 
 ### Copias de seguridad y restauración
 
 ```bash
-aws rds create-db-snapshot --db-instance-identifier tienda-db-server \
+aws rds create-db-snapshot --db-instance-identifier mydb-server \
   --db-snapshot-identifier tienda-antes-cambio
 
-aws rds describe-db-snapshots --db-instance-identifier tienda-db-server \
+aws rds describe-db-snapshots --db-instance-identifier mydb-server \
   --query "DBSnapshots[].[DBSnapshotIdentifier,SnapshotCreateTime,Status]" --output table
 
 # Último instante restaurable
-aws rds describe-db-instances --db-instance-identifier tienda-db-server \
+aws rds describe-db-instances --db-instance-identifier mydb-server \
   --query "DBInstances[0].LatestRestorableTime"
 
 # Restaurar a un momento dado (crea una instancia NUEVA)
 aws rds restore-db-instance-to-point-in-time \
-  --source-db-instance-identifier tienda-db-server \
-  --target-db-instance-identifier tienda-db-restaurada \
+  --source-db-instance-identifier mydb-server \
+  --target-db-instance-identifier mydb-restaurada \
   --restore-time 2026-11-10T09:45:00Z \
   --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd>
 
 # Restaurar desde una instantánea
 aws rds restore-db-instance-from-db-snapshot \
-  --db-instance-identifier tienda-db-desde-snap \
+  --db-instance-identifier mydb-desde-snap \
   --db-snapshot-identifier tienda-antes-cambio \
   --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd>
 
@@ -139,17 +139,17 @@ aws rds copy-db-snapshot --region us-west-2 --source-region us-east-1 \
 ### Eliminar
 
 ```bash
-aws rds modify-db-instance --db-instance-identifier tienda-db-server \
+aws rds modify-db-instance --db-instance-identifier mydb-server \
   --no-deletion-protection --apply-immediately
-aws rds delete-db-instance --db-instance-identifier tienda-db-server \
+aws rds delete-db-instance --db-instance-identifier mydb-server \
   --final-db-snapshot-identifier tienda-final          # o --skip-final-snapshot en laboratorios
 ```
 
 ### Registros
 
 ```bash
-aws rds describe-db-log-files --db-instance-identifier tienda-db-server --output table
-aws rds download-db-log-file-portion --db-instance-identifier tienda-db-server \
+aws rds describe-db-log-files --db-instance-identifier mydb-server --output table
+aws rds download-db-log-file-portion --db-instance-identifier mydb-server \
   --log-file-name slowquery/mysql-slowquery.log --output text
 ```
 
@@ -159,26 +159,26 @@ aws rds download-db-log-file-portion --db-instance-identifier tienda-db-server \
 
 ```bash
 # Clúster (almacenamiento) + instancia de escritura
-aws rds create-db-cluster --db-cluster-identifier tienda-aurora \
+aws rds create-db-cluster --db-cluster-identifier mydb-aurora \
   --engine aurora-mysql --master-username admin --manage-master-user-password \
   --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd> \
   --storage-encrypted
 
-aws rds create-db-instance --db-instance-identifier tienda-aurora-1 \
-  --db-cluster-identifier tienda-aurora --engine aurora-mysql \
+aws rds create-db-instance --db-instance-identifier mydb-aurora-1 \
+  --db-cluster-identifier mydb-aurora --engine aurora-mysql \
   --db-instance-class db.t4g.medium
 
 # Añadir una réplica
-aws rds create-db-instance --db-instance-identifier tienda-aurora-2 \
-  --db-cluster-identifier tienda-aurora --engine aurora-mysql \
+aws rds create-db-instance --db-instance-identifier mydb-aurora-2 \
+  --db-cluster-identifier mydb-aurora --engine aurora-mysql \
   --db-instance-class db.t4g.medium
 
 # Puntos de enlace de escritura y lectura
-aws rds describe-db-clusters --db-cluster-identifier tienda-aurora \
+aws rds describe-db-clusters --db-cluster-identifier mydb-aurora \
   --query "DBClusters[0].[Endpoint,ReaderEndpoint]" --output table
 
 # Forzar una conmutación por error (pruebas)
-aws rds failover-db-cluster --db-cluster-identifier tienda-aurora
+aws rds failover-db-cluster --db-cluster-identifier mydb-aurora
 ```
 
 ---
@@ -192,7 +192,7 @@ aws rds create-db-proxy --db-proxy-name tienda-proxy --engine-family MYSQL \
   --vpc-security-group-ids <sg-proxy> --require-tls
 
 aws rds register-db-proxy-targets --db-proxy-name tienda-proxy \
-  --db-instance-identifiers tienda-db-server
+  --db-instance-identifiers mydb-server
 
 aws rds describe-db-proxies --db-proxy-name tienda-proxy \
   --query "DBProxies[0].[Status,Endpoint]" --output table
@@ -305,9 +305,9 @@ aws dynamodb delete-table --table-name Productos
 
 ```bash
 aws kms create-key --description "Clave para las bases de datos"
-aws kms create-alias --alias-name alias/tienda-bd --target-key-id <key-id>
+aws kms create-alias --alias-name alias/mi-clave-bd --target-key-id <key-id>
 aws kms enable-key-rotation --key-id <key-id>
-aws kms list-aliases --query "Aliases[?starts_with(AliasName,'alias/tienda')]"
+aws kms list-aliases --query "Aliases[?starts_with(AliasName,'alias/mi-clave')]"
 aws kms schedule-key-deletion --key-id <key-id> --pending-window-in-days 7
 ```
 
@@ -317,13 +317,13 @@ aws kms schedule-key-deletion --key-id <key-id> --pending-window-in-days 7
 
 ```bash
 aws cloudformation validate-template --template-body file://bd.yaml
-aws cloudformation deploy --stack-name tienda-bd --template-file bd.yaml \
+aws cloudformation deploy --stack-name mi-pila-bd --template-file bd.yaml \
   --parameter-overrides SubredesBD=<subnet-a>,<subnet-b> GrupoSeguridadBD=<sg-bd>
-aws cloudformation describe-stacks --stack-name tienda-bd \
+aws cloudformation describe-stacks --stack-name mi-pila-bd \
   --query "Stacks[0].Outputs" --output table
-aws cloudformation describe-stack-events --stack-name tienda-bd --max-items 15
-aws cloudformation detect-stack-drift --stack-name tienda-bd
-aws cloudformation delete-stack --stack-name tienda-bd
+aws cloudformation describe-stack-events --stack-name mi-pila-bd --max-items 15
+aws cloudformation detect-stack-drift --stack-name mi-pila-bd
+aws cloudformation delete-stack --stack-name mi-pila-bd
 ```
 
 ---
@@ -333,7 +333,7 @@ aws cloudformation delete-stack --stack-name tienda-bd
 ```bash
 # CPU media de la última hora en intervalos de 5 minutos
 aws cloudwatch get-metric-statistics --namespace AWS/RDS --metric-name CPUUtilization \
-  --dimensions Name=DBInstanceIdentifier,Value=tienda-db-server \
+  --dimensions Name=DBInstanceIdentifier,Value=mydb-server \
   --start-time $(date -u -d '-1 hour' +%FT%TZ) --end-time $(date -u +%FT%TZ) \
   --period 300 --statistics Average --output table
 
@@ -344,9 +344,9 @@ aws cloudwatch get-metric-statistics --namespace AWS/DynamoDB --metric-name Thro
   --period 300 --statistics Sum
 
 # Alarma de espacio libre bajo (menos de 2 GiB)
-aws cloudwatch put-metric-alarm --alarm-name tienda-db-espacio \
+aws cloudwatch put-metric-alarm --alarm-name mydb-espacio \
   --namespace AWS/RDS --metric-name FreeStorageSpace \
-  --dimensions Name=DBInstanceIdentifier,Value=tienda-db-server \
+  --dimensions Name=DBInstanceIdentifier,Value=mydb-server \
   --statistic Average --period 300 --evaluation-periods 1 \
   --threshold 2147483648 --comparison-operator LessThanThreshold
 ```

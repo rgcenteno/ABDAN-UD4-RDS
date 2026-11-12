@@ -6,6 +6,9 @@ Hasta ahora, las bases de datos de este módulo se han creado desde la **consola
 
 La **infraestructura como código** (*Infrastructure as Code*, IaC) resuelve estos problemas describiendo la infraestructura en **ficheros de texto** que se versionan, se revisan y se aplican de forma automática.
 
+!!! warning "Alcance de este apartado"
+    La infraestructura como código se presenta aquí **a nivel informativo**, para disponer de un ejemplo de pila de despliegue de bases de datos con una clave de cifrado propia. El manejo y la evaluación de la IaC se abordan con mayor profundidad en el módulo **Despliegue de servicios administrados en la nube**.
+
 ---
 
 ## Formas de administrar los recursos en AWS
@@ -116,7 +119,7 @@ Resources:
   ClaveBD:
     Type: AWS::KMS::Key
     Properties:
-      Description: Clave para las bases de datos de la tienda
+      Description: Clave para las bases de datos del ejemplo
       EnableKeyRotation: true
       PendingWindowInDays: 7
       KeyPolicy:
@@ -132,7 +135,7 @@ Resources:
   AliasClaveBD:
     Type: AWS::KMS::Alias
     Properties:
-      AliasName: alias/tienda-bd
+      AliasName: alias/mi-clave-bd
       TargetKeyId: !Ref ClaveBD
 
   # 2. Grupo de subredes
@@ -148,7 +151,7 @@ Resources:
     DeletionPolicy: Snapshot          # al borrar la pila se crea una instantánea final
     UpdateReplacePolicy: Snapshot     # si un cambio sustituye la instancia, también
     Properties:
-      DBInstanceIdentifier: tienda-db-server
+      DBInstanceIdentifier: mi-base-datos
       Engine: mysql
       DBInstanceClass: !Ref ClaseInstancia
       AllocatedStorage: "20"
@@ -170,19 +173,19 @@ Resources:
         - { Key: entorno, Value: desarrollo }
 
   # 4. Tabla DynamoDB cifrada con la misma clave
-  TablaSesiones:
+  TablaCache:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
     UpdateReplacePolicy: Retain
     Properties:
-      TableName: sessions
+      TableName: cache
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
-        - { AttributeName: id, AttributeType: S }
+        - { AttributeName: clave, AttributeType: S }
       KeySchema:
-        - { AttributeName: id, KeyType: HASH }
+        - { AttributeName: clave, KeyType: HASH }
       TimeToLiveSpecification:
-        AttributeName: expires
+        AttributeName: caduca
         Enabled: true
       SSESpecification:
         SSEEnabled: true
@@ -199,7 +202,11 @@ Outputs:
   SecretoUsuarioMaestro:
     Description: ARN del secreto con la contraseña del usuario maestro
     Value: !GetAtt BaseDatos.MasterUserSecret.SecretArn
+  ArnTablaDynamoDB:
+    Description: ARN de la tabla DynamoDB cache
+    Value: !GetAtt TablaCache.Arn
   ClaveKMS:
+    Description: ARN de la clave de KMS
     Value: !GetAtt ClaveBD.Arn
 ```
 
@@ -219,27 +226,35 @@ aws cloudformation validate-template --template-body file://bd.yaml
 
 # Crear o actualizar la pila
 aws cloudformation deploy \
-  --stack-name tienda-bd \
+  --stack-name mi-pila-bd \
   --template-file bd.yaml \
   --parameter-overrides \
       SubredesBD=subnet-0aaa,subnet-0bbb \
       GrupoSeguridadBD=sg-0ccc
 
 # Consultar las salidas
-aws cloudformation describe-stacks --stack-name tienda-bd \
+aws cloudformation describe-stacks --stack-name mi-pila-bd \
   --query "Stacks[0].Outputs" --output table
 
 # Ver el progreso o los errores
-aws cloudformation describe-stack-events --stack-name tienda-bd \
+aws cloudformation describe-stack-events --stack-name mi-pila-bd \
   --query "StackEvents[].[LogicalResourceId,ResourceStatus,ResourceStatusReason]" --output table
 ```
+
+!!! info "Parámetros del despliegue"
+    Los valores de `--parameter-overrides` deben sustituirse por los del propio entorno:
+
+    - `subnet-0aaa,subnet-0bbb` es la **lista de subredes**, separadas por comas y sin espacios, que formarán parte del **grupo de subredes** de la base de datos. Deben ser subredes privadas situadas en al menos dos zonas de disponibilidad distintas.
+    - `sg-0ccc` es el **grupo de seguridad que se ha creado previamente para la base de datos MySQL**, el que admite el puerto 3306 únicamente desde los servidores de aplicación.
+
+    Los identificadores reales pueden consultarse en la consola de VPC o con `aws ec2 describe-subnets` y `aws ec2 describe-security-groups`.
 
 Para modificar la infraestructura (por ejemplo, cambiar la clase de la instancia) **se edita la plantilla** y se vuelve a ejecutar `deploy`. CloudFormation crea un conjunto de cambios, calcula la diferencia y aplica solo lo necesario. Con `--no-execute-changeset` se puede revisar el conjunto de cambios antes de ejecutarlo.
 
 Para eliminar todos los recursos:
 
 ```bash
-aws cloudformation delete-stack --stack-name tienda-bd
+aws cloudformation delete-stack --stack-name mi-pila-bd
 ```
 
 Si la protección contra eliminación está activada, la eliminación de la pila fallará hasta que se cambie el parámetro a `"false"` y se actualice la pila: es precisamente el comportamiento que se busca en producción.
@@ -255,18 +270,18 @@ El mismo diseño en Terraform (fragmento):
 
 ```hcl
 resource "aws_kms_key" "bd" {
-  description             = "Clave para las bases de datos de la tienda"
+  description             = "Clave para las bases de datos del ejemplo"
   enable_key_rotation     = true
   deletion_window_in_days = 7
 }
 
 resource "aws_kms_alias" "bd" {
-  name          = "alias/tienda-bd"
+  name          = "alias/mi-clave-bd"
   target_key_id = aws_kms_key.bd.key_id
 }
 
-resource "aws_db_instance" "tienda" {
-  identifier                  = "tienda-db-server"
+resource "aws_db_instance" "mi_base_datos" {
+  identifier                  = "mi-base-datos"
   engine                      = "mysql"
   instance_class              = "db.t4g.micro"
   allocated_storage           = 20
@@ -281,16 +296,16 @@ resource "aws_db_instance" "tienda" {
   publicly_accessible         = false
   backup_retention_period     = 7
   deletion_protection         = false
-  final_snapshot_identifier   = "tienda-db-final"
+  final_snapshot_identifier   = "mi-base-datos-final"
 }
 
-resource "aws_dynamodb_table" "sessions" {
-  name         = "sessions"
+resource "aws_dynamodb_table" "cache" {
+  name         = "cache"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "id"
+  hash_key     = "clave"
 
   attribute {
-    name = "id"
+    name = "clave"
     type = "S"
   }
 

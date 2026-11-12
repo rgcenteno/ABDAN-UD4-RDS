@@ -2,7 +2,7 @@
 
 ![image](imgs/BD-ciclo-optimizacion.png)
 
-El apartado de **Supervisión** describe las métricas de CloudWatch que indican el estado de una instancia: CPU, memoria, IOPS, latencia, conexiones. Estas métricas dicen **que** algo va mal, pero no siempre **por qué**. Este apartado baja al nivel de las **operaciones de inserción, actualización y consulta**: cómo identificar las sentencias que consumen más recursos, cómo analizarlas y qué optimizaciones sencillas pueden aplicarse, tanto en RDS y Aurora como en DynamoDB, para cumplir los requisitos de **rendimiento** y de **coste**.
+Las métricas de CloudWatch indican el estado de una instancia: CPU, memoria, IOPS, latencia, conexiones. Se describen una a una, con valores orientativos, en el anexo [Referencia de métricas de RDS](Supervision-RDS.md). Estas métricas dicen **que** algo va mal, pero no siempre **por qué**. Este apartado baja al nivel de las **operaciones de inserción, actualización y consulta**: cómo identificar las sentencias que consumen más recursos, cómo analizarlas y qué optimizaciones sencillas pueden aplicarse, tanto en RDS y Aurora como en DynamoDB, para cumplir los requisitos de **rendimiento** y de **coste**.
 
 El trabajo de optimización sigue siempre el mismo ciclo: **medir → identificar la causa → aplicar un cambio → volver a medir**. Optimizar sin medir lleva a cambios que no resuelven el problema o que lo trasladan a otro sitio.
 
@@ -12,7 +12,7 @@ El trabajo de optimización sigue siempre el mismo ciclo: **medir → identifica
 
 | Nivel | Herramienta | Qué responde |
 | --- | --- | --- |
-| Instancia | **Métricas de CloudWatch** (apartado *Supervisión*) | ¿Está saturada la CPU, la memoria, el disco o la red? |
+| Instancia | **Métricas de CloudWatch** ([Referencia de métricas de RDS](Supervision-RDS.md)) | ¿Está saturada la CPU, la memoria, el disco o la red? |
 | Sistema operativo | **Monitorización mejorada** | ¿Qué procesos consumen CPU y memoria? Métricas cada 1–60 s |
 | Base de datos | **CloudWatch Database Insights** (antes Performance Insights) | ¿Qué sentencias generan la carga y qué están esperando? |
 | Sentencia | **Registro de consultas lentas**, `performance_schema`, `pg_stat_statements` | ¿Qué consultas tardan más y cuántas veces se ejecutan? |
@@ -216,7 +216,7 @@ Además:
 ## Ejemplo de diagnóstico completo
 
 1. **Síntoma**: tras crecer el catálogo hasta cientos de miles de productos, el personal de la tienda indica que el panel de productos con stock bajo tarda varios segundos en horas punta.
-2. **Métricas** (*Supervisión*): `CPUUtilization` sostenida por encima del 85 %; `ReadIOPS` elevadas.
+2. **Métricas** (pestaña *Supervisión* de la instancia): `CPUUtilization` sostenida por encima del 85 %; `ReadIOPS` elevadas.
 3. **Database Insights**: la carga supera el número de vCPU y el evento de espera principal es `CPU`. La sentencia principal es `SELECT codigo, nombre, stock FROM producto WHERE stock < ?`, que se ejecuta continuamente desde el panel de reposición de existencias.
 4. **`EXPLAIN`**: recorrido completo de la tabla (`type = ALL`).
 5. **Acción**: crear el índice `idx_producto_stock`.

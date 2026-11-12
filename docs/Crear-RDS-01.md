@@ -64,6 +64,9 @@ Aunque su utilización no modifica el funcionamiento lógico de la base de datos
 
 Cada instancia de Amazon RDS debe disponer de un identificador único dentro de la cuenta y la región donde se despliega.
 
+!!! note "La región se decide antes"
+    La instancia se crea en la región seleccionada en la consola (esquina superior derecha) o configurada en la AWS CLI. Los criterios para elegirla y los requisitos de residencia de los datos se explican en el apartado [Elección de la región y residencia de los datos](BD-Region.md).
+
 Este identificador no corresponde al nombre de la base de datos que almacenará las tablas y registros, sino al propio servicio administrado por AWS. Puede entenderse como el nombre con el que la plataforma identifica el servidor de base de datos dentro de la infraestructura del cliente.
 
 La elección de nombres descriptivos facilita enormemente las tareas de administración posteriores, especialmente cuando una organización mantiene múltiples entornos de trabajo.

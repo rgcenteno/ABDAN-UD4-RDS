@@ -219,7 +219,7 @@ AWS recomienda este mecanismo cuando el número de **conexiones nuevas por segun
 
 ### RDS Proxy como punto de control
 
-Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad:
+Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad. Su funcionamiento completo se estudia en el apartado [RDS Proxy](RDS-Proxy.md), a continuación de este:
 
 - El proxy obtiene las credenciales de la base de datos de **Secrets Manager**; las aplicaciones no necesitan conocerlas.
 - Puede **exigir autenticación de IAM** a los clientes aunque la base de datos utilice contraseñas.
@@ -354,7 +354,7 @@ En el laboratorio puede bastar con `--ssl-mode=REQUIRED`, pero en producción de
 
 ## 8. Protección de los datos y de las instantáneas
 
-- **Protección contra eliminación**: impide borrar la instancia o el clúster hasta que se desactive (descrita en el apartado de monitorización y copias de seguridad).
+- **Protección contra eliminación**: impide borrar la instancia o el clúster hasta que se desactive (descrita en el último apartado de creación).
 - **Copias de seguridad automáticas** con un periodo de retención adecuado y, para requisitos de cumplimiento, **AWS Backup** con almacenes bloqueados (*Vault Lock*), que impiden borrar copias incluso a los administradores.
 - **Instantáneas compartidas**: las instantáneas manuales pueden compartirse con otras cuentas e incluso hacerse **públicas** (solo si no están cifradas). Una instantánea pública permite a cualquier cuenta de AWS restaurar la base de datos completa, por lo que la acción `rds:ModifyDBSnapshotAttribute` debe restringirse y vigilarse.
 

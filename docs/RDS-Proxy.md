@@ -101,7 +101,7 @@ Por defecto, el punto de enlace del proxy envía todo el tráfico a la instancia
 
 ## RDS Proxy y la seguridad
 
-Además de su función de rendimiento, RDS Proxy es una pieza de seguridad, como se adelantó en el apartado de securización:
+Además de su función de rendimiento, RDS Proxy es una pieza de seguridad, como se adelantó en el apartado [Securización y control de acceso](RDS-Seguridad.md#rds-proxy-como-punto-de-control):
 
 | Capacidad | Descripción |
 | --- | --- |
