@@ -1,0 +1,2213 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../BD-CicloVida/">
+      
+      
+        <link rel="next" href="../Supervision-RDS/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Monitorización del rendimiento y optimización - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#monitorizacion-del-rendimiento-y-optimizacion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Monitorización del rendimiento y optimización
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-herramientas-de-monitorizacion-en-rds-y-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Herramientas de monitorización en RDS y Aurora
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Herramientas de monitorización en RDS y Aurora">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloudwatch-database-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch Database Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-consultas-lentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de consultas lentas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estadisticas-de-sentencias-en-el-motor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estadísticas de sentencias en el motor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analizar-una-consulta-con-explain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analizar una consulta con EXPLAIN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alarmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarmas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-monitorizacion-de-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Monitorización de DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-optimizaciones-no-complejas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Optimizaciones no complejas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Optimizaciones no complejas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rediseno-del-esquema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rediseño del esquema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribucion-de-los-datos-y-de-la-carga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribución de los datos y de la carga
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coste
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplo-de-diagnostico-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo de diagnóstico completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-herramientas-de-monitorizacion-en-rds-y-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Herramientas de monitorización en RDS y Aurora
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Herramientas de monitorización en RDS y Aurora">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloudwatch-database-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CloudWatch Database Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-consultas-lentas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de consultas lentas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estadisticas-de-sentencias-en-el-motor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estadísticas de sentencias en el motor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analizar-una-consulta-con-explain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analizar una consulta con EXPLAIN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alarmas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarmas
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-monitorizacion-de-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Monitorización de DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-optimizaciones-no-complejas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Optimizaciones no complejas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Optimizaciones no complejas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuración
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rediseno-del-esquema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rediseño del esquema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribucion-de-los-datos-y-de-la-carga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribución de los datos y de la carga
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coste
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejemplo-de-diagnostico-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ejemplo de diagnóstico completo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="monitorizacion-del-rendimiento-y-optimizacion">Monitorización del rendimiento y optimización<a class="headerlink" href="#monitorizacion-del-rendimiento-y-optimizacion" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/BD-ciclo-optimizacion.png" /></p>
+<p>Las métricas de CloudWatch indican el estado de una instancia: CPU, memoria, IOPS, latencia, conexiones. Se describen una a una, con valores orientativos, en el anexo <a href="../Supervision-RDS/">Referencia de métricas de RDS</a>. Estas métricas dicen <strong>que</strong> algo va mal, pero no siempre <strong>por qué</strong>. Este apartado baja al nivel de las <strong>operaciones de inserción, actualización y consulta</strong>: cómo identificar las sentencias que consumen más recursos, cómo analizarlas y qué optimizaciones sencillas pueden aplicarse, tanto en RDS y Aurora como en DynamoDB, para cumplir los requisitos de <strong>rendimiento</strong> y de <strong>coste</strong>.</p>
+<p>El trabajo de optimización sigue siempre el mismo ciclo: <strong>medir → identificar la causa → aplicar un cambio → volver a medir</strong>. Optimizar sin medir lleva a cambios que no resuelven el problema o que lo trasladan a otro sitio.</p>
+<hr />
+<h2 id="1-herramientas-de-monitorizacion-en-rds-y-aurora">1. Herramientas de monitorización en RDS y Aurora<a class="headerlink" href="#1-herramientas-de-monitorizacion-en-rds-y-aurora" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Nivel</th>
+<th>Herramienta</th>
+<th>Qué responde</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Instancia</td>
+<td><strong>Métricas de CloudWatch</strong> (<a href="../Supervision-RDS/">Referencia de métricas de RDS</a>)</td>
+<td>¿Está saturada la CPU, la memoria, el disco o la red?</td>
+</tr>
+<tr>
+<td>Sistema operativo</td>
+<td><strong>Monitorización mejorada</strong></td>
+<td>¿Qué procesos consumen CPU y memoria? Métricas cada 1–60 s</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td><strong>CloudWatch Database Insights</strong> (antes Performance Insights)</td>
+<td>¿Qué sentencias generan la carga y qué están esperando?</td>
+</tr>
+<tr>
+<td>Sentencia</td>
+<td><strong>Registro de consultas lentas</strong>, <code>performance_schema</code>, <code>pg_stat_statements</code></td>
+<td>¿Qué consultas tardan más y cuántas veces se ejecutan?</td>
+</tr>
+<tr>
+<td>Plan de ejecución</td>
+<td><code>EXPLAIN</code> / <code>EXPLAIN ANALYZE</code></td>
+<td>¿Cómo ejecuta el motor una consulta concreta?</td>
+</tr>
+<tr>
+<td>Alertas</td>
+<td><strong>Alarmas de CloudWatch</strong></td>
+<td>Avisar cuando una métrica supera un umbral</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cloudwatch-database-insights">CloudWatch Database Insights<a class="headerlink" href="#cloudwatch-database-insights" title="Permanent link">&para;</a></h3>
+<p>Database Insights representa la <strong>carga de la base de datos</strong> (<em>DB load</em>), medida en <strong>sesiones activas medias</strong> (AAS): el número medio de sesiones que, en cada instante, están ejecutando algo o esperando un recurso.</p>
+<ul>
+<li>La gráfica muestra una línea con el <strong>número de vCPU</strong> de la instancia. Si la carga se mantiene <strong>por encima</strong> de esa línea, hay más trabajo del que la instancia puede atender y las sesiones están haciendo cola.</li>
+<li>La carga puede <strong>desglosarse</strong> por:<ul>
+<li><strong>Eventos de espera</strong>: en qué se pierde el tiempo. Por ejemplo, <code>CPU</code>, <code>io/table/sql/handler</code> (lectura de tablas), <code>synch/mutex</code> o bloqueos de filas (<code>lock</code>).</li>
+<li><strong>Sentencias SQL principales</strong> (<em>Top SQL</em>): qué consultas generan la mayor parte de la carga.</li>
+<li><strong>Usuarios, hosts y bases de datos</strong>.</li>
+</ul>
+</li>
+<li>Dispone de dos modalidades: <strong>estándar</strong> (incluida) y <strong>avanzada</strong> (con coste), que añade mayor retención del historial y análisis adicionales.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Evento de espera predominante</th>
+<th>Interpretación habitual</th>
+<th>Acción típica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>Consultas que procesan muchas filas en memoria</td>
+<td>Índices, reescritura de consultas, clase mayor</td>
+</tr>
+<tr>
+<td>Lectura de disco (E/S)</td>
+<td>Datos que no caben en la caché</td>
+<td>Índices, más memoria, almacenamiento más rápido</td>
+</tr>
+<tr>
+<td>Bloqueos de fila o tabla</td>
+<td>Transacciones que compiten por los mismos datos</td>
+<td>Transacciones más cortas, revisar el orden de acceso</td>
+</tr>
+<tr>
+<td>Conexiones / red</td>
+<td>Exceso de conexiones o resultados muy grandes</td>
+<td>RDS Proxy, paginar resultados, evitar <code>SELECT *</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="registro-de-consultas-lentas">Registro de consultas lentas<a class="headerlink" href="#registro-de-consultas-lentas" title="Permanent link">&para;</a></h3>
+<p>El registro de consultas lentas guarda las sentencias que superan un tiempo de ejecución. Se activa en el <strong>grupo de parámetros</strong> y se exporta a <strong>CloudWatch Logs</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Motor</th>
+<th>Parámetros</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL / MariaDB</td>
+<td><code>slow_query_log = 1</code>, <code>long_query_time = 1</code> (segundos), <code>log_output = FILE</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>log_min_duration_statement = 1000</code> (milisegundos)</td>
+</tr>
+</tbody>
+</table>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-parameter-group<span class="w"> </span>--db-parameter-group-name<span class="w"> </span>tienda-mysql84<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="s2">"ParameterName=slow_query_log,ParameterValue=1,ApplyMethod=immediate"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">               </span><span class="s2">"ParameterName=long_query_time,ParameterValue=1,ApplyMethod=immediate"</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>tienda-db-server<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--cloudwatch-logs-export-configuration<span class="w"> </span><span class="s1">'{"EnableLogTypes":["slowquery"]}'</span>
+</span></code></pre></div>
+<p>Una vez en CloudWatch Logs, <strong>Logs Insights</strong> permite consultar los registros. Por ejemplo, las consultas lentas más frecuentes de la última hora:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>fields @timestamp, @message
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>| filter @message like /Query_time/
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| sort @timestamp desc
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| limit 20
+</span></code></pre></div>
+<h3 id="estadisticas-de-sentencias-en-el-motor">Estadísticas de sentencias en el motor<a class="headerlink" href="#estadisticas-de-sentencias-en-el-motor" title="Permanent link">&para;</a></h3>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- MySQL: sentencias con mayor tiempo total de ejecución</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">DIGEST_TEXT</span><span class="p">,</span><span class="w"> </span><span class="n">COUNT_STAR</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ejecuciones</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">       </span><span class="n">ROUND</span><span class="p">(</span><span class="n">SUM_TIMER_WAIT</span><span class="o">/</span><span class="mi">1</span><span class="n">e12</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">segundos_totales</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">       </span><span class="n">SUM_ROWS_EXAMINED</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">filas_examinadas</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">FROM</span><span class="w"> </span><span class="n">performance_schema</span><span class="p">.</span><span class="n">events_statements_summary_by_digest</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">SUM_TIMER_WAIT</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">-- PostgreSQL (extensión pg_stat_statements)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">query</span><span class="p">,</span><span class="w"> </span><span class="n">calls</span><span class="p">,</span><span class="w"> </span><span class="n">round</span><span class="p">(</span><span class="n">total_exec_time</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">ms_totales</span><span class="p">,</span><span class="w"> </span><span class="k">rows</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_statements</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_exec_time</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Una consulta que se ejecuta miles de veces con un coste moderado puede consumir más recursos que una consulta muy lenta que se ejecuta una vez al día. Por eso conviene ordenar por <strong>tiempo total</strong> y no solo por tiempo medio.</p>
+<h3 id="analizar-una-consulta-con-explain">Analizar una consulta con <code>EXPLAIN</code><a class="headerlink" href="#analizar-una-consulta-con-explain" title="Permanent link">&para;</a></h3>
+<p><code>EXPLAIN</code> muestra el <strong>plan de ejecución</strong>: qué tablas se leen, en qué orden, con qué índices y cuántas filas se estiman. Se toma como ejemplo la tabla <code>producto</code> de la base de datos <code>tienda</code> utilizada en la práctica evaluable (script <code>00-ud5.sql</code>), que contiene <strong>1 023 productos</strong> y tiene índices sobre <code>id_producto</code> (clave primaria), <code>codigo</code> (único), <code>proveedor</code> e <code>id_categoria</code> (claves foráneas).</p>
+<p><strong>Consulta que aprovecha un índice existente.</strong> El listado de productos de una categoría usa el índice <code>FK_categoria</code>, creado para la clave foránea:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">codigo</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id_categoria</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>key</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ref</code></td>
+<td><code>FK_categoria</code></td>
+<td>148</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p><code>type = ref</code> indica que el motor accede directamente a las filas de esa categoría mediante el índice: examina unas 148 filas, las que realmente cumplen la condición.</p>
+<p><strong>Consulta sin índice.</strong> Un informe habitual en una tienda es el de productos con <strong>stock bajo</strong>, pero la columna <code>stock</code> no está indexada:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">codigo</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">60</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>key</th>
+<th>rows</th>
+<th>filtered</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ALL</code></td>
+<td><code>NULL</code></td>
+<td>≈ 1 023</td>
+<td>33.33</td>
+<td>Using where</td>
+</tr>
+</tbody>
+</table>
+<p><code>type = ALL</code> indica un <strong>recorrido completo de la tabla</strong>: el motor lee todos los productos para devolver solo 36. La columna <code>filtered</code> es una estimación del porcentaje de filas que cumplirán la condición; sin índice, el optimizador desconoce la distribución real de los valores y aplica un valor por defecto. Tras crear un índice sobre <code>stock</code>:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_producto_stock</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="p">(</span><span class="n">stock</span><span class="p">);</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">EXPLAIN</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="n">codigo</span><span class="p">,</span><span class="w"> </span><span class="n">nombre</span><span class="p">,</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">producto</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">stock</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">60</span><span class="p">;</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>key</th>
+<th>rows</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>range</code></td>
+<td><code>idx_producto_stock</code></td>
+<td>36</td>
+<td>Using index condition</td>
+</tr>
+</tbody>
+</table>
+<p><code>type = range</code> indica que el motor recorre solo el <strong>tramo del índice</strong> que cumple la condición. Las cifras de <code>rows</code> son estimaciones del optimizador y pueden variar ligeramente según las estadísticas de la tabla.</p>
+<p>Con 1 023 filas la diferencia apenas se percibe, pero el coste de un recorrido completo <strong>crece con el tamaño de la tabla</strong>, mientras que el de una búsqueda por índice se mantiene casi constante: con cientos de miles de productos, o con la consulta ejecutándose miles de veces por hora, el índice marca la diferencia.</p>
+<p>El número de filas examinadas se reduce drásticamente. <code>EXPLAIN ANALYZE</code> (MySQL 8 y PostgreSQL) ejecuta además la consulta y muestra los <strong>tiempos reales</strong> de cada paso.</p>
+<div class="admonition note">
+<p class="admonition-title">Escrituras e índices</p>
+<p>Cada índice acelera las lecturas que lo aprovechan, pero <strong>ralentiza las inserciones, actualizaciones y borrados</strong>, que deben mantenerlo actualizado, y ocupa espacio. Deben crearse índices para los patrones de consulta frecuentes, no para todas las columnas.</p>
+</div>
+<h3 id="alarmas">Alarmas<a class="headerlink" href="#alarmas" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span>--alarm-name<span class="w"> </span>tienda-db-cpu-alta<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/RDS<span class="w"> </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>DBInstanceIdentifier,Value<span class="o">=</span>tienda-db-server<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--statistic<span class="w"> </span>Average<span class="w"> </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span>--evaluation-periods<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">80</span><span class="w"> </span>--comparison-operator<span class="w"> </span>GreaterThanThreshold<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:us-east-1:111122223333:avisos-bd
+</span></code></pre></div>
+<p>La alarma se activa cuando la CPU media supera el 80 % durante tres periodos consecutivos de cinco minutos y envía una notificación a un tema de Amazon SNS.</p>
+<hr />
+<h2 id="2-monitorizacion-de-dynamodb">2. Monitorización de DynamoDB<a class="headerlink" href="#2-monitorizacion-de-dynamodb" title="Permanent link">&para;</a></h2>
+<p>DynamoDB no tiene CPU ni memoria que supervisar; las métricas relevantes se refieren a la <strong>capacidad consumida</strong>, las <strong>limitaciones</strong> y la <strong>latencia</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Métrica de CloudWatch</th>
+<th>Qué indica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ConsumedReadCapacityUnits</code> / <code>ConsumedWriteCapacityUnits</code></td>
+<td>Capacidad realmente utilizada (base del coste en modo bajo demanda)</td>
+</tr>
+<tr>
+<td><code>ProvisionedReadCapacityUnits</code> / <code>ProvisionedWriteCapacityUnits</code></td>
+<td>Capacidad aprovisionada (solo modo aprovisionado)</td>
+</tr>
+<tr>
+<td><code>ThrottledRequests</code>, <code>ReadThrottleEvents</code>, <code>WriteThrottleEvents</code></td>
+<td>Peticiones rechazadas por superar la capacidad: <strong>deben ser cero o casi cero</strong></td>
+</tr>
+<tr>
+<td><code>SuccessfulRequestLatency</code></td>
+<td>Latencia de las operaciones correctas, por tipo de operación</td>
+</tr>
+<tr>
+<td><code>SystemErrors</code> / <code>UserErrors</code></td>
+<td>Errores del servicio (HTTP 500) o de la petición (HTTP 400, como validaciones o permisos)</td>
+</tr>
+<tr>
+<td><code>ReturnedItemCount</code> frente a <code>ScannedCount</code> (en la respuesta)</td>
+<td>Eficiencia de <code>Query</code> y <code>Scan</code> con filtros</td>
+</tr>
+</tbody>
+</table>
+<p>Además:</p>
+<ul>
+<li><strong>CloudWatch Contributor Insights para DynamoDB</strong> muestra las <strong>claves de partición más accedidas</strong> y las más limitadas, lo que permite detectar <strong>particiones calientes</strong>.</li>
+<li>Los contadores <code>Count</code> y <code>ScannedCount</code> que devuelven <code>Query</code> y <code>Scan</code>, como se observó en la práctica, indican cuántos elementos se leyeron frente a cuántos se devolvieron.</li>
+</ul>
+<hr />
+<h2 id="3-optimizaciones-no-complejas">3. Optimizaciones no complejas<a class="headerlink" href="#3-optimizaciones-no-complejas" title="Permanent link">&para;</a></h2>
+<h3 id="configuracion">Configuración<a class="headerlink" href="#configuracion" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Optimización</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ajustar la clase de instancia</strong> (<em>right-sizing</em>)</td>
+<td>Si la CPU se mantiene baja y la memoria libre es alta, una clase menor reduce el coste. Si la carga supera de forma sostenida el número de vCPU, se necesita una clase mayor</td>
+</tr>
+<tr>
+<td><strong>Memoria para la caché</strong></td>
+<td>El parámetro <code>innodb_buffer_pool_size</code> (MySQL) o <code>shared_buffers</code> (PostgreSQL) determina cuántos datos se mantienen en memoria. RDS lo calcula en función de la memoria de la clase; ampliar la clase amplía la caché</td>
+</tr>
+<tr>
+<td><strong>Conexiones</strong></td>
+<td>Ajustar <code>max_connections</code> y usar <strong>RDS Proxy</strong> cuando hay muchas conexiones cortas</td>
+</tr>
+<tr>
+<td><strong>Almacenamiento</strong></td>
+<td>Pasar de <code>gp2</code> a <code>gp3</code>, que permite ajustar IOPS y rendimiento con independencia del tamaño; usar <code>io2</code> solo para cargas con E/S intensiva y sostenida</td>
+</tr>
+<tr>
+<td><strong>Optimized Reads / Optimized Writes</strong></td>
+<td>Funcionalidades de RDS y Aurora que usan almacenamiento NVMe local o evitan escrituras dobles en determinadas clases de instancia</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rediseno-del-esquema">Rediseño del esquema<a class="headerlink" href="#rediseno-del-esquema" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Optimización</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Índices adecuados</strong></td>
+<td>Índices sobre las columnas de los <code>WHERE</code>, <code>JOIN</code> y <code>ORDER BY</code> frecuentes; índices compuestos en el orden adecuado</td>
+</tr>
+<tr>
+<td><strong>Índices de cobertura</strong></td>
+<td>Un índice que incluye todas las columnas de la consulta evita leer la tabla</td>
+</tr>
+<tr>
+<td><strong>Tipos de datos ajustados</strong></td>
+<td><code>INT</code> en lugar de <code>BIGINT</code> cuando basta, <code>VARCHAR</code> con longitud razonable, fechas como tipo fecha y no como texto</td>
+</tr>
+<tr>
+<td><strong>Evitar <code>SELECT *</code></strong></td>
+<td>Recuperar solo las columnas necesarias reduce E/S y tráfico de red</td>
+</tr>
+<tr>
+<td><strong>Paginación</strong></td>
+<td><code>LIMIT</code> con criterios de búsqueda por clave en lugar de <code>OFFSET</code> elevados</td>
+</tr>
+<tr>
+<td><strong>Desnormalización selectiva</strong></td>
+<td>Almacenar un dato derivado (por ejemplo, el total de un pedido) cuando evita uniones costosas y frecuentes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="distribucion-de-los-datos-y-de-la-carga">Distribución de los datos y de la carga<a class="headerlink" href="#distribucion-de-los-datos-y-de-la-carga" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Optimización</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Réplicas de lectura</strong></td>
+<td>Desviar las consultas de solo lectura (informes, búsquedas) a réplicas o al punto de enlace de lectura de Aurora</td>
+</tr>
+<tr>
+<td><strong>Caché</strong></td>
+<td><strong>Amazon ElastiCache</strong> (Valkey, Redis OSS o Memcached) delante de RDS, o <strong>DAX</strong> delante de DynamoDB, para datos que se leen con mucha frecuencia y cambian poco</td>
+</tr>
+<tr>
+<td><strong>Particionado de tablas</strong></td>
+<td>Particiones por rango de fechas en MySQL o PostgreSQL para tablas históricas muy grandes, que permiten eliminar datos antiguos borrando una partición</td>
+</tr>
+<tr>
+<td><strong>Archivado</strong></td>
+<td>Trasladar datos antiguos a almacenamiento más barato (exportación a S3)</td>
+</tr>
+<tr>
+<td><strong>DynamoDB: rediseño de claves</strong></td>
+<td>Clave de partición con alta cardinalidad; fragmentación de escrituras ante particiones calientes</td>
+</tr>
+<tr>
+<td><strong>DynamoDB: índices en lugar de <code>Scan</code></strong></td>
+<td>Un GSI convierte un <code>Scan</code> filtrado en una <code>Query</code>; proyectar solo los atributos necesarios</td>
+</tr>
+</tbody>
+</table>
+<h3 id="coste">Coste<a class="headerlink" href="#coste" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Servicio</th>
+<th>Medida de ahorro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDS / Aurora</td>
+<td>Instancias <strong>Graviton</strong> (<code>db.t4g</code>, <code>db.m7g</code>, <code>db.r7g</code>…), con mejor relación precio-rendimiento que las equivalentes x86</td>
+</tr>
+<tr>
+<td>RDS / Aurora</td>
+<td><strong>Instancias reservadas</strong> (1 o 3 años) para cargas estables</td>
+</tr>
+<tr>
+<td>RDS / Aurora</td>
+<td><strong>Detener</strong> las instancias de desarrollo fuera del horario de uso; Aurora Serverless con mínimo 0 ACU para cargas intermitentes</td>
+</tr>
+<tr>
+<td>RDS / Aurora</td>
+<td>Eliminar <strong>instantáneas manuales</strong> obsoletas y ajustar la retención de copias</td>
+</tr>
+<tr>
+<td>RDS / Aurora</td>
+<td>Mantener versiones del motor con soporte estándar para evitar el coste de <strong>Extended Support</strong></td>
+</tr>
+<tr>
+<td>Aurora</td>
+<td>Elegir <strong>Standard</strong> o <strong>I/O-Optimized</strong> según el peso del gasto en E/S (umbral orientativo del 25 %)</td>
+</tr>
+<tr>
+<td>DynamoDB</td>
+<td><strong>Bajo demanda</strong> para tráfico variable; <strong>aprovisionado con autoescalado</strong> (y capacidad reservada) para tráfico estable</td>
+</tr>
+<tr>
+<td>DynamoDB</td>
+<td>Clase <strong>Standard-IA</strong> para tablas con mucho almacenamiento y poco acceso; <strong>TTL</strong> para eliminar datos caducados sin coste de escritura</td>
+</tr>
+<tr>
+<td>Todos</td>
+<td><strong>Etiquetas</strong> de asignación de costes y <strong>AWS Cost Explorer</strong> para identificar qué base de datos genera cada gasto</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="ejemplo-de-diagnostico-completo">Ejemplo de diagnóstico completo<a class="headerlink" href="#ejemplo-de-diagnostico-completo" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Síntoma</strong>: tras crecer el catálogo hasta cientos de miles de productos, el personal de la tienda indica que el panel de productos con stock bajo tarda varios segundos en horas punta.</li>
+<li><strong>Métricas</strong> (pestaña <em>Supervisión</em> de la instancia): <code>CPUUtilization</code> sostenida por encima del 85 %; <code>ReadIOPS</code> elevadas.</li>
+<li><strong>Database Insights</strong>: la carga supera el número de vCPU y el evento de espera principal es <code>CPU</code>. La sentencia principal es <code>SELECT codigo, nombre, stock FROM producto WHERE stock &lt; ?</code>, que se ejecuta continuamente desde el panel de reposición de existencias.</li>
+<li><strong><code>EXPLAIN</code></strong>: recorrido completo de la tabla (<code>type = ALL</code>).</li>
+<li><strong>Acción</strong>: crear el índice <code>idx_producto_stock</code>.</li>
+<li><strong>Verificación</strong>: la CPU baja al 20 %, la consulta desaparece del registro de consultas lentas y la carga queda por debajo de la línea de vCPU.</li>
+<li><strong>Optimización de coste</strong>: con la nueva carga, la instancia está sobredimensionada y puede pasar a una clase menor.</li>
+</ol>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Monitoring DB load with Amazon CloudWatch Database Insights on Amazon RDS</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PerfInsights.html">Database Insights</a></li>
+<li>AWS. <em>Monitoring OS metrics with Enhanced Monitoring</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.html">Monitorización mejorada</a></li>
+<li>AWS. <em>Publishing MySQL logs to Amazon CloudWatch Logs</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.MySQLDB.PublishtoCloudWatchLogs.html">Registros de MySQL</a></li>
+<li>AWS. <em>Amazon RDS for PostgreSQL database log files</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_LogAccess.Concepts.PostgreSQL.html">Registros de PostgreSQL</a></li>
+<li>AWS. <em>Analyzing log data with CloudWatch Logs Insights</em> — <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/AnalyzingLogData.html">Logs Insights</a></li>
+<li>MySQL. <em>EXPLAIN Statement</em> — <a href="https://dev.mysql.com/doc/refman/8.4/en/explain.html">Manual de referencia de MySQL 8.4</a></li>
+<li>PostgreSQL. <em>Using EXPLAIN</em> — <a href="https://www.postgresql.org/docs/current/using-explain.html">Documentación de PostgreSQL</a></li>
+<li>PostgreSQL. <em>pg_stat_statements</em> — <a href="https://www.postgresql.org/docs/current/pgstatstatements.html">Documentación de PostgreSQL</a></li>
+<li>AWS. <em>Using Amazon CloudWatch alarms</em> — <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/AlarmThatSendsEmail.html">Alarmas</a></li>
+<li>AWS. <em>DynamoDB metrics and dimensions</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/metrics-dimensions.html">Métricas de DynamoDB</a></li>
+<li>AWS. <em>Using CloudWatch Contributor Insights for DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/contributorinsights_HowItWorks.html">Contributor Insights</a></li>
+<li>AWS. <em>Best practices for Amazon RDS</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html">Buenas prácticas</a></li>
+<li>AWS. <em>Amazon ElastiCache</em> — <a href="https://docs.aws.amazon.com/AmazonElastiCache/latest/dg/WhatIs.html">ElastiCache</a></li>
+<li>AWS. <em>Amazon RDS Reserved Instances</em> — <a href="https://aws.amazon.com/rds/reserved-instances/">Instancias reservadas</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

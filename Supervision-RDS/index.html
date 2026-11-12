@@ -1,0 +1,2559 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../BD-Rendimiento/">
+      
+      
+        <link rel="next" href="../Chuleta/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Anexo: referencia de métricas de RDS - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#referencia-de-metricas-de-rds" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Anexo: referencia de métricas de RDS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de rendimiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de rendimiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#utilizacion-de-cpu-cpuutilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilización de CPU (CPUUtilization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operaciones-de-lectura-por-segundo-readiops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operaciones de lectura por segundo (ReadIOPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operaciones-de-escritura-por-segundo-writeiops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operaciones de escritura por segundo (WriteIOPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-de-lectura-readthroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendimiento de lectura (ReadThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-de-escritura-writethroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendimiento de escritura (WriteThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latencia-de-lectura-readlatency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latencia de lectura (ReadLatency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latencia-de-escritura-writelatency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latencia de escritura (WriteLatency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profundidad-de-la-cola-de-disco-diskqueuedepth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profundidad de la cola de disco (DiskQueueDepth)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-capacidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de capacidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de capacidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#espacio-de-almacenamiento-libre-freestoragespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Espacio de almacenamiento libre (FreeStorageSpace)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memoria-disponible-freeablememory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memoria disponible (FreeableMemory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uso-de-memoria-de-intercambio-swapusage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso de memoria de intercambio (SwapUsage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexiones-a-la-base-de-datos-databaseconnections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexiones a la base de datos (DatabaseConnections)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creditos-de-cpu-cpucreditbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Créditos de CPU (CPUCreditBalance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saldo-de-rafaga-del-almacenamiento-burstbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saldo de ráfaga del almacenamiento (BurstBalance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de red
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de red">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trafico-de-red-recibido-networkreceivethroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tráfico de red recibido (NetworkReceiveThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trafico-de-red-enviado-networktransmitthroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tráfico de red enviado (NetworkTransmitThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-disponibilidad-y-replicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de disponibilidad y replicación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de disponibilidad y replicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retraso-de-replica-replicalag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retraso de réplica (ReplicaLag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interbloqueos-deadlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interbloqueos (Deadlocks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-coste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de coste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de coste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento-de-copias-de-seguridad-totalbackupstoragebilled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento de copias de seguridad (TotalBackupStorageBilled)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrautilizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrautilización
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alarmas-recomendadas-para-produccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarmas recomendadas para producción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indicadores-de-necesidad-de-escalado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicadores de necesidad de escalado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#resumen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-rendimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de rendimiento
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de rendimiento">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#utilizacion-de-cpu-cpuutilization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Utilización de CPU (CPUUtilization)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operaciones-de-lectura-por-segundo-readiops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operaciones de lectura por segundo (ReadIOPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operaciones-de-escritura-por-segundo-writeiops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operaciones de escritura por segundo (WriteIOPS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-de-lectura-readthroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendimiento de lectura (ReadThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rendimiento-de-escritura-writethroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendimiento de escritura (WriteThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latencia-de-lectura-readlatency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latencia de lectura (ReadLatency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#latencia-de-escritura-writelatency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latencia de escritura (WriteLatency)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#profundidad-de-la-cola-de-disco-diskqueuedepth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profundidad de la cola de disco (DiskQueueDepth)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-capacidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de capacidad
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de capacidad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#espacio-de-almacenamiento-libre-freestoragespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Espacio de almacenamiento libre (FreeStorageSpace)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memoria-disponible-freeablememory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memoria disponible (FreeableMemory)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uso-de-memoria-de-intercambio-swapusage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uso de memoria de intercambio (SwapUsage)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexiones-a-la-base-de-datos-databaseconnections" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexiones a la base de datos (DatabaseConnections)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creditos-de-cpu-cpucreditbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Créditos de CPU (CPUCreditBalance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#saldo-de-rafaga-del-almacenamiento-burstbalance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Saldo de ráfaga del almacenamiento (BurstBalance)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-red" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de red
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de red">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trafico-de-red-recibido-networkreceivethroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tráfico de red recibido (NetworkReceiveThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trafico-de-red-enviado-networktransmitthroughput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tráfico de red enviado (NetworkTransmitThroughput)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-disponibilidad-y-replicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de disponibilidad y replicación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de disponibilidad y replicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retraso-de-replica-replicalag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retraso de réplica (ReplicaLag)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interbloqueos-deadlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interbloqueos (Deadlocks)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metricas-de-coste" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Métricas de coste
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Métricas de coste">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento-de-copias-de-seguridad-totalbackupstoragebilled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento de copias de seguridad (TotalBackupStorageBilled)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrautilizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrautilización
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alarmas-recomendadas-para-produccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alarmas recomendadas para producción
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#indicadores-de-necesidad-de-escalado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicadores de necesidad de escalado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="referencia-de-metricas-de-rds">Referencia de métricas de RDS<a class="headerlink" href="#referencia-de-metricas-de-rds" title="Permanent link">&para;</a></h1>
+<p>Este anexo recoge las <strong>métricas de Amazon CloudWatch</strong> que publica Amazon RDS y que se consultan en la pestaña <strong>Supervisión</strong> (<em>Monitoring</em>) de cada instancia. Para cada métrica se indica qué mide, qué valores pueden considerarse orientativos, qué conviene revisar cuando se desvía y qué consecuencias tiene ignorarla.</p>
+<p>Es un documento de <strong>consulta</strong>. El método para analizar un problema de rendimiento (medir, identificar la causa, actuar y verificar), el análisis de las consultas con Database Insights y <code>EXPLAIN</code> y la monitorización de DynamoDB se explican en el apartado <a href="../BD-Rendimiento/">Monitorización del rendimiento y optimización</a>.</p>
+<p>La revisión periódica de estas métricas permite al administrador:</p>
+<ul>
+<li>Detectar cuellos de botella.</li>
+<li>Identificar recursos infrautilizados o saturados.</li>
+<li>Anticipar la necesidad de escalar.</li>
+<li>Evitar degradaciones del servicio.</li>
+<li>Optimizar los costes.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Valores orientativos</p>
+<p>Los umbrales de este anexo son <strong>orientativos</strong>. Cada sistema debe compararse con su propio comportamiento habitual (su <em>línea base</em>): un 60 % de CPU puede ser normal en una instancia y una anomalía en otra.</p>
+</div>
+<hr />
+<h2 id="resumen">Resumen<a class="headerlink" href="#resumen" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Categoría</th>
+<th>Métricas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rendimiento</strong></td>
+<td><code>CPUUtilization</code>, <code>ReadIOPS</code>/<code>WriteIOPS</code>, <code>ReadThroughput</code>/<code>WriteThroughput</code>, <code>ReadLatency</code>/<code>WriteLatency</code>, <code>DiskQueueDepth</code></td>
+</tr>
+<tr>
+<td><strong>Capacidad</strong></td>
+<td><code>FreeStorageSpace</code>, <code>FreeableMemory</code>, <code>SwapUsage</code>, <code>DatabaseConnections</code>, <code>CPUCreditBalance</code>, <code>BurstBalance</code></td>
+</tr>
+<tr>
+<td><strong>Red</strong></td>
+<td><code>NetworkReceiveThroughput</code>, <code>NetworkTransmitThroughput</code></td>
+</tr>
+<tr>
+<td><strong>Disponibilidad y replicación</strong></td>
+<td><code>ReplicaLag</code>, <code>Deadlocks</code></td>
+</tr>
+<tr>
+<td><strong>Coste</strong></td>
+<td><code>TotalBackupStorageBilled</code>, infrautilización de CPU y memoria</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="metricas-de-rendimiento">Métricas de rendimiento<a class="headerlink" href="#metricas-de-rendimiento" title="Permanent link">&para;</a></h2>
+<h3 id="utilizacion-de-cpu-cpuutilization">Utilización de CPU (<code>CPUUtilization</code>)<a class="headerlink" href="#utilizacion-de-cpu-cpuutilization" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: porcentaje de uso de la CPU de la instancia.</p>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0–40 %</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>40–70 %</td>
+<td>Vigilancia</td>
+</tr>
+<tr>
+<td>70–85 %</td>
+<td>Alto</td>
+</tr>
+<tr>
+<td>&gt; 85 % sostenido</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qué revisar</strong>: picos continuos, consultas lentas, procesos de mantenimiento, índices ausentes.</p>
+<p><strong>Consecuencias</strong>: latencias elevadas, consultas más lentas, necesidad de escalar verticalmente e incremento de costes.</p>
+<h3 id="operaciones-de-lectura-por-segundo-readiops">Operaciones de lectura por segundo (<code>ReadIOPS</code>)<a class="headerlink" href="#operaciones-de-lectura-por-segundo-readiops" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: número medio de operaciones de lectura en disco por segundo.</p>
+<p><strong>Valores</strong>: no existe un valor universal; debe ser coherente con la carga. Hay que compararlo con las IOPS que admite el volumen (por ejemplo, el valor base de <code>gp3</code> o las IOPS aprovisionadas).</p>
+<p><strong>Qué revisar</strong>: un aumento puede indicar falta de memoria para la caché, recorridos completos de tablas o índices ausentes.</p>
+<p><strong>Consecuencias</strong>: saturación del almacenamiento, aumento de la latencia y mayor coste si se aprovisionan IOPS adicionales.</p>
+<h3 id="operaciones-de-escritura-por-segundo-writeiops">Operaciones de escritura por segundo (<code>WriteIOPS</code>)<a class="headerlink" href="#operaciones-de-escritura-por-segundo-writeiops" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: número medio de operaciones de escritura en disco por segundo.</p>
+<p><strong>Valores</strong>: deben mantenerse estables para la carga esperada.</p>
+<p><strong>Qué revisar</strong>: procesos por lotes, replicación, aplicaciones que escriben en exceso.</p>
+<p><strong>Consecuencias</strong>: cuellos de botella de disco y aumento del tiempo de respuesta.</p>
+<h3 id="rendimiento-de-lectura-readthroughput">Rendimiento de lectura (<code>ReadThroughput</code>)<a class="headerlink" href="#rendimiento-de-lectura-readthroughput" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: bytes leídos del disco por segundo.</p>
+<p><strong>Valores</strong>: dependen de la aplicación.</p>
+<p><strong>Qué revisar</strong>: si aumenta mucho, consultas pesadas, exportaciones o problemas de indexación.</p>
+<p><strong>Consecuencias</strong>: saturación del almacenamiento y aumento de la latencia.</p>
+<h3 id="rendimiento-de-escritura-writethroughput">Rendimiento de escritura (<code>WriteThroughput</code>)<a class="headerlink" href="#rendimiento-de-escritura-writethroughput" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: bytes escritos en disco por segundo.</p>
+<p><strong>Valores</strong>: deben ser acordes al patrón de uso del negocio.</p>
+<p><strong>Qué revisar</strong>: importaciones masivas, aplicaciones mal diseñadas, registros excesivos.</p>
+<p><strong>Consecuencias</strong>: saturación del volumen y retrasos en la confirmación de transacciones (<code>COMMIT</code>).</p>
+<h3 id="latencia-de-lectura-readlatency">Latencia de lectura (<code>ReadLatency</code>)<a class="headerlink" href="#latencia-de-lectura-readlatency" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: tiempo medio que tarda cada operación de lectura en disco.</p>
+<table>
+<thead>
+<tr>
+<th>Latencia</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10 ms</td>
+<td>Excelente</td>
+</tr>
+<tr>
+<td>10–20 ms</td>
+<td>Buena</td>
+</tr>
+<tr>
+<td>20–50 ms</td>
+<td>Revisar</td>
+</tr>
+<tr>
+<td>&gt; 50 ms</td>
+<td>Problema</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Consecuencias</strong>: consultas lentas y retrasos percibidos por los usuarios.</p>
+<h3 id="latencia-de-escritura-writelatency">Latencia de escritura (<code>WriteLatency</code>)<a class="headerlink" href="#latencia-de-escritura-writelatency" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: tiempo medio que tarda cada operación de escritura en disco.</p>
+<table>
+<thead>
+<tr>
+<th>Latencia</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10 ms</td>
+<td>Ideal</td>
+</tr>
+<tr>
+<td>&gt; 20–30 ms sostenido</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Consecuencias</strong>: lentitud de las transacciones, bloqueos y retrasos en la replicación.</p>
+<h3 id="profundidad-de-la-cola-de-disco-diskqueuedepth">Profundidad de la cola de disco (<code>DiskQueueDepth</code>)<a class="headerlink" href="#profundidad-de-la-cola-de-disco-diskqueuedepth" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: número de operaciones de E/S que esperan acceso al disco.</p>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cercano a 0</td>
+<td>Ideal</td>
+</tr>
+<tr>
+<td>&gt; 10 sostenido</td>
+<td>Alarma</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qué indica</strong>: el almacenamiento no puede seguir el ritmo de la carga.</p>
+<p><strong>Consecuencias</strong>: aumento de la latencia y saturación de las IOPS.</p>
+<hr />
+<h2 id="metricas-de-capacidad">Métricas de capacidad<a class="headerlink" href="#metricas-de-capacidad" title="Permanent link">&para;</a></h2>
+<h3 id="espacio-de-almacenamiento-libre-freestoragespace">Espacio de almacenamiento libre (<code>FreeStorageSpace</code>)<a class="headerlink" href="#espacio-de-almacenamiento-libre-freestoragespace" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: almacenamiento disponible en la instancia, en bytes.</p>
+<table>
+<thead>
+<tr>
+<th>Espacio libre</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 20 %</td>
+<td>Correcto</td>
+</tr>
+<tr>
+<td>15 %</td>
+<td>Umbral de alarma recomendado</td>
+</tr>
+<tr>
+<td>&lt; 10 %</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qué revisar</strong>: crecimiento de las tablas, registros, objetos temporales. Conviene activar el <strong>autoescalado del almacenamiento</strong> (véase <a href="../BD-CicloVida/">Ciclo de vida</a>).</p>
+<p><strong>Consecuencias</strong>: imposibilidad de seguir almacenando datos, errores de escritura y posible caída del servicio.</p>
+<h3 id="memoria-disponible-freeablememory">Memoria disponible (<code>FreeableMemory</code>)<a class="headerlink" href="#memoria-disponible-freeablememory" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: memoria RAM disponible en la instancia.</p>
+<p><strong>Valores</strong>: debe mantenerse siempre con margen; un valor cercano a 0 es crítico.</p>
+<p><strong>Qué revisar</strong>: exceso de conexiones, grandes operaciones de ordenación, cachés mal dimensionadas.</p>
+<p><strong>Consecuencias</strong>: uso intensivo de <em>swap</em>, consultas lentas y posibles reinicios.</p>
+<h3 id="uso-de-memoria-de-intercambio-swapusage">Uso de memoria de intercambio (<code>SwapUsage</code>)<a class="headerlink" href="#uso-de-memoria-de-intercambio-swapusage" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: memoria de intercambio (<em>swap</em>) utilizada.</p>
+<p><strong>Valores</strong>: idealmente 0; cualquier uso significativo debe revisarse.</p>
+<p><strong>Consecuencias</strong>: caída importante del rendimiento. Es una señal de memoria insuficiente.</p>
+<h3 id="conexiones-a-la-base-de-datos-databaseconnections">Conexiones a la base de datos (<code>DatabaseConnections</code>)<a class="headerlink" href="#conexiones-a-la-base-de-datos-databaseconnections" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: número de conexiones de clientes abiertas.</p>
+<p><strong>Valores</strong>: dependen del motor y de la clase de instancia, porque el máximo (<code>max_connections</code>) se calcula por defecto en función de la memoria de la clase.</p>
+<table>
+<thead>
+<tr>
+<th>Uso respecto al máximo</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 70 %</td>
+<td>Correcto</td>
+</tr>
+<tr>
+<td>&gt; 80 %</td>
+<td>Revisar</td>
+</tr>
+</tbody>
+</table>
+<p>Valores máximos orientativos en RDS for MySQL con la configuración predeterminada:</p>
+<table>
+<thead>
+<tr>
+<th>Clase</th>
+<th><code>max_connections</code> aproximado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>db.t3.micro</td>
+<td>~60</td>
+</tr>
+<tr>
+<td>db.t3.small</td>
+<td>~150</td>
+</tr>
+<tr>
+<td>db.t3.medium</td>
+<td>~300</td>
+</tr>
+<tr>
+<td>db.t3.large</td>
+<td>~600</td>
+</tr>
+<tr>
+<td>db.r5.large</td>
+<td>~1 000</td>
+</tr>
+<tr>
+<td>db.r5.xlarge</td>
+<td>~2 000</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Qué revisar</strong>: aplicaciones que no cierran conexiones, agrupación de conexiones mal configurada, picos de usuarios. <strong>RDS Proxy</strong> es la solución habitual ante muchas conexiones cortas (véase <a href="../RDS-Proxy/">RDS Proxy</a>).</p>
+<p><strong>Consecuencias</strong>: rechazo de nuevas conexiones, errores de aplicación y saturación de la memoria.</p>
+<h3 id="creditos-de-cpu-cpucreditbalance">Créditos de CPU (<code>CPUCreditBalance</code>)<a class="headerlink" href="#creditos-de-cpu-cpucreditbalance" title="Permanent link">&para;</a></h3>
+<p><em>(Solo clases ampliables <code>db.t3</code>, <code>db.t4g</code>)</em></p>
+<p><strong>Qué mide</strong>: créditos acumulados que permiten superar el rendimiento base de la CPU.</p>
+<p><strong>Valores</strong>: un saldo que tiende a 0 indica que la instancia trabaja por encima de su rendimiento base de forma sostenida.</p>
+<p><strong>Consecuencias</strong>: si los créditos se agotan, la CPU queda limitada a su rendimiento base (o se factura el uso adicional en modo ilimitado). Es la métrica a vigilar en las instancias pequeñas de los laboratorios.</p>
+<h3 id="saldo-de-rafaga-del-almacenamiento-burstbalance">Saldo de ráfaga del almacenamiento (<code>BurstBalance</code>)<a class="headerlink" href="#saldo-de-rafaga-del-almacenamiento-burstbalance" title="Permanent link">&para;</a></h3>
+<p><em>(Solo volúmenes <code>gp2</code>)</em></p>
+<p><strong>Qué mide</strong>: porcentaje de créditos de E/S disponibles para superar el rendimiento base del volumen.</p>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&gt; 80 %</td>
+<td>Excelente</td>
+</tr>
+<tr>
+<td>50–80 %</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>&lt; 20 %</td>
+<td>Riesgo</td>
+</tr>
+<tr>
+<td>0 %</td>
+<td>Crítico</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Consecuencias</strong>: limitación automática del rendimiento del disco y lecturas y escrituras lentas. Los volúmenes <code>gp3</code> no utilizan créditos, por lo que migrar a <code>gp3</code> elimina este problema.</p>
+<hr />
+<h2 id="metricas-de-red">Métricas de red<a class="headerlink" href="#metricas-de-red" title="Permanent link">&para;</a></h2>
+<h3 id="trafico-de-red-recibido-networkreceivethroughput">Tráfico de red recibido (<code>NetworkReceiveThroughput</code>)<a class="headerlink" href="#trafico-de-red-recibido-networkreceivethroughput" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: tráfico de red entrante, incluido el de los clientes y el de la replicación.</p>
+<p><strong>Qué revisar</strong>: réplicas, consultas remotas, aplicaciones con mucho tráfico.</p>
+<p><strong>Consecuencias</strong>: posibles cuellos de botella de red.</p>
+<h3 id="trafico-de-red-enviado-networktransmitthroughput">Tráfico de red enviado (<code>NetworkTransmitThroughput</code>)<a class="headerlink" href="#trafico-de-red-enviado-networktransmitthroughput" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: tráfico de red saliente.</p>
+<p><strong>Qué revisar</strong>: respuestas SQL muy grandes (por ejemplo, <code>SELECT *</code> sin paginar) y exportaciones masivas.</p>
+<p><strong>Consecuencias</strong>: saturación de la red y mayor latencia de respuesta.</p>
+<hr />
+<h2 id="metricas-de-disponibilidad-y-replicacion">Métricas de disponibilidad y replicación<a class="headerlink" href="#metricas-de-disponibilidad-y-replicacion" title="Permanent link">&para;</a></h2>
+<h3 id="retraso-de-replica-replicalag">Retraso de réplica (<code>ReplicaLag</code>)<a class="headerlink" href="#retraso-de-replica-replicalag" title="Permanent link">&para;</a></h3>
+<p><em>(Solo réplicas de lectura)</em></p>
+<p><strong>Qué mide</strong>: retraso, en segundos, entre la instancia principal y la réplica.</p>
+<table>
+<thead>
+<tr>
+<th>Valor</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Segundos</td>
+<td>Normal</td>
+</tr>
+<tr>
+<td>Minutos</td>
+<td>Alarma</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Consecuencias</strong>: datos desactualizados en las lecturas, problemas en la recuperación ante desastres y riesgo de inconsistencias.</p>
+<h3 id="interbloqueos-deadlocks">Interbloqueos (<code>Deadlocks</code>)<a class="headerlink" href="#interbloqueos-deadlocks" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: número de interbloqueos entre transacciones por segundo. Está disponible como métrica de CloudWatch en Aurora MySQL; en RDS for MySQL y MariaDB, los interbloqueos se consultan con <code>SHOW ENGINE INNODB STATUS</code> o en Database Insights.</p>
+<p><strong>Valores</strong>: cero o muy pocos.</p>
+<p><strong>Qué revisar</strong>: transacciones largas y accesos concurrentes a las mismas filas en distinto orden.</p>
+<p><strong>Consecuencias</strong>: errores de aplicación y cancelación automática de transacciones.</p>
+<hr />
+<h2 id="metricas-de-coste">Métricas de coste<a class="headerlink" href="#metricas-de-coste" title="Permanent link">&para;</a></h2>
+<h3 id="almacenamiento-de-copias-de-seguridad-totalbackupstoragebilled">Almacenamiento de copias de seguridad (<code>TotalBackupStorageBilled</code>)<a class="headerlink" href="#almacenamiento-de-copias-de-seguridad-totalbackupstoragebilled" title="Permanent link">&para;</a></h3>
+<p><strong>Qué mide</strong>: almacenamiento de copias de seguridad facturado (copias automáticas e instantáneas manuales que superan el almacenamiento gratuito).</p>
+<p><strong>Qué revisar</strong>: crecimiento continuo, periodos de retención excesivos, instantáneas manuales olvidadas.</p>
+<p><strong>Consecuencias</strong>: coste adicional.</p>
+<h3 id="infrautilizacion">Infrautilización<a class="headerlink" href="#infrautilizacion" title="Permanent link">&para;</a></h3>
+<p>Una CPU que se mantiene de forma sostenida por debajo del 10–20 % y una memoria libre abundante indican que la instancia está <strong>sobredimensionada</strong>. Reducir la clase es una de las optimizaciones de coste más sencillas.</p>
+<hr />
+<h2 id="alarmas-recomendadas-para-produccion">Alarmas recomendadas para producción<a class="headerlink" href="#alarmas-recomendadas-para-produccion" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Condición de alarma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CPUUtilization</code></td>
+<td>&gt; 80 % durante 15 minutos</td>
+</tr>
+<tr>
+<td><code>FreeableMemory</code></td>
+<td>&lt; 500 MB (o &lt; 10 % de la memoria de la clase en instancias pequeñas)</td>
+</tr>
+<tr>
+<td><code>FreeStorageSpace</code></td>
+<td>&lt; 15 % del almacenamiento asignado (la métrica se expresa en bytes)</td>
+</tr>
+<tr>
+<td><code>DiskQueueDepth</code></td>
+<td>&gt; 10</td>
+</tr>
+<tr>
+<td><code>ReadLatency</code></td>
+<td>&gt; 20 ms</td>
+</tr>
+<tr>
+<td><code>WriteLatency</code></td>
+<td>&gt; 20 ms</td>
+</tr>
+<tr>
+<td><code>BurstBalance</code></td>
+<td>&lt; 20 % (solo <code>gp2</code>)</td>
+</tr>
+<tr>
+<td><code>CPUCreditBalance</code></td>
+<td>próximo a 0 (solo clases <code>db.t</code>)</td>
+</tr>
+<tr>
+<td><code>ReplicaLag</code></td>
+<td>&gt; 60 segundos</td>
+</tr>
+<tr>
+<td><code>DatabaseConnections</code></td>
+<td>&gt; 80 % de <code>max_connections</code></td>
+</tr>
+</tbody>
+</table>
+<p>La creación de alarmas con la AWS CLI se muestra en <a href="../BD-Rendimiento/#alarmas">Monitorización del rendimiento y optimización</a> y en la <a href="../Chuleta/#amazon-cloudwatch">chuleta de comandos</a>.</p>
+<hr />
+<h2 id="indicadores-de-necesidad-de-escalado">Indicadores de necesidad de escalado<a class="headerlink" href="#indicadores-de-necesidad-de-escalado" title="Permanent link">&para;</a></h2>
+<p>Los indicadores que antes anticipan la necesidad de escalar una instancia RDS son:</p>
+<ul>
+<li>CPU por encima del 80 % de forma sostenida, o créditos de CPU agotados.</li>
+<li>Memoria libre muy baja.</li>
+<li>Uso de <em>swap</em> creciente.</li>
+<li>Latencias elevadas.</li>
+<li>Cola de disco alta.</li>
+<li>Almacenamiento libre por debajo del 15 %.</li>
+</ul>
+<p>Antes de escalar conviene comprobar, con las herramientas del apartado de rendimiento, que el problema no se resuelve con una optimización más barata, como crear un índice.</p>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Amazon CloudWatch metrics for Amazon RDS</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-metrics.html">Métricas de CloudWatch para RDS</a></li>
+<li>AWS. <em>Amazon CloudWatch metrics for Amazon Aurora</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraMonitoring.Metrics.html">Métricas de CloudWatch para Aurora</a></li>
+<li>AWS. <em>Viewing metrics in the Amazon RDS console</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.html">Pestaña Supervisión</a></li>
+<li>AWS. <em>Maximum number of database connections</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Limits.html#RDS_Limits.MaxConnections"><code>max_connections</code></a></li>
+<li>AWS. <em>Burstable performance instances</em> — <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html">Créditos de CPU</a></li>
+<li>AWS. <em>Amazon RDS DB instance storage</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html">Tipos de almacenamiento y BurstBalance</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

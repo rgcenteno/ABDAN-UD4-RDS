@@ -1,0 +1,2165 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../RDS-Seguridad/">
+      
+      
+        <link rel="next" href="../Aurora-01/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>RDS Proxy - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#amazon-rds-proxy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              RDS Proxy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-el-coste-de-las-conexiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema: el coste de las conexiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es RDS Proxy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué es RDS Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#motores-compatibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motores compatibles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionamiento-agrupacion-y-multiplexacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funcionamiento: agrupación y multiplexación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Funcionamiento: agrupación y multiplexación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fijacion-de-conexiones-pinning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fijación de conexiones (pinning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alta-disponibilidad-y-conmutacion-por-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alta disponibilidad y conmutación por error
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alta disponibilidad y conmutación por error">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#puntos-de-enlace-de-solo-lectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de enlace de solo lectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rds-proxy-y-la-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Proxy y la seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros-de-configuracion-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de configuración principales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de configuración principales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-con-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creación con la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supervision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervisión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuando-utilizar-rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuándo utilizar RDS Proxy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-el-coste-de-las-conexiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema: el coste de las conexiones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué es RDS Proxy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué es RDS Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#motores-compatibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motores compatibles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#componentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionamiento-agrupacion-y-multiplexacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funcionamiento: agrupación y multiplexación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Funcionamiento: agrupación y multiplexación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fijacion-de-conexiones-pinning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fijación de conexiones (pinning)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alta-disponibilidad-y-conmutacion-por-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alta disponibilidad y conmutación por error
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Alta disponibilidad y conmutación por error">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#puntos-de-enlace-de-solo-lectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de enlace de solo lectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rds-proxy-y-la-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Proxy y la seguridad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parametros-de-configuracion-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros de configuración principales
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parámetros de configuración principales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creacion-con-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creación con la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supervision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supervisión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cuando-utilizar-rds-proxy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cuándo utilizar RDS Proxy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="amazon-rds-proxy">Amazon RDS Proxy<a class="headerlink" href="#amazon-rds-proxy" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/RDS-Proxy-arquitectura.png" /></p>
+<p>En el apartado de redes se presentó brevemente <strong>Amazon RDS Proxy</strong> como una capa intermedia que reutiliza conexiones. Este apartado profundiza en el problema que resuelve, su funcionamiento interno (agrupación, multiplexación y fijación de conexiones), su papel en la alta disponibilidad y en la seguridad, y los parámetros que el administrador debe configurar.</p>
+<hr />
+<h2 id="el-problema-el-coste-de-las-conexiones">El problema: el coste de las conexiones<a class="headerlink" href="#el-problema-el-coste-de-las-conexiones" title="Permanent link">&para;</a></h2>
+<p>En un motor relacional, <strong>cada conexión es un recurso caro</strong>. Al abrirla, el servidor debe negociar TLS, autenticar al usuario y reservar memoria y, en el caso de PostgreSQL, crear un proceso del sistema operativo. Mientras permanece abierta, consume memoria aunque no ejecute ninguna consulta.</p>
+<p>Este coste se vuelve crítico en arquitecturas modernas:</p>
+<ul>
+<li><strong>Aplicaciones con escalado automático</strong>: si un grupo de Auto Scaling pasa de 4 a 40 servidores web y cada uno mantiene un <em>pool</em> de 20 conexiones, la base de datos pasa de 80 a 800 conexiones.</li>
+<li><strong>Funciones sin servidor (AWS Lambda)</strong>: cada ejecución concurrente puede abrir su propia conexión, y ante un pico de tráfico se producen cientos o miles de aperturas en pocos segundos.</li>
+<li><strong>Aplicaciones que abren y cierran conexiones por petición</strong>, como muchas aplicaciones PHP: el tiempo de establecimiento de la conexión puede superar al de la propia consulta.</li>
+</ul>
+<p>El resultado típico es que la base de datos alcanza su límite <code>max_connections</code>, rechaza nuevas conexiones (<code>Too many connections</code>) o dedica buena parte de su CPU y memoria a gestionar conexiones en lugar de ejecutar consultas.</p>
+<hr />
+<h2 id="que-es-rds-proxy">Qué es RDS Proxy<a class="headerlink" href="#que-es-rds-proxy" title="Permanent link">&para;</a></h2>
+<p><strong>Amazon RDS Proxy</strong> es un <strong>proxy de base de datos totalmente gestionado y de alta disponibilidad</strong> que se sitúa entre las aplicaciones y la base de datos. Las aplicaciones se conectan al <strong>punto de enlace del proxy</strong> como si fuera la base de datos, usando el mismo protocolo, puerto y controladores, por lo que en la mayoría de los casos <strong>no es necesario modificar el código</strong>: basta con cambiar el nombre del servidor en la configuración.</p>
+<h3 id="motores-compatibles">Motores compatibles<a class="headerlink" href="#motores-compatibles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Familia</th>
+<th>Motores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Amazon RDS</td>
+<td>MySQL, MariaDB, PostgreSQL y SQL Server</td>
+</tr>
+<tr>
+<td>Amazon Aurora</td>
+<td>Aurora MySQL, Aurora PostgreSQL (incluido Aurora Serverless)</td>
+</tr>
+</tbody>
+</table>
+<p>La disponibilidad concreta depende de la versión del motor y de la región.</p>
+<h3 id="componentes">Componentes<a class="headerlink" href="#componentes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Proxy</strong></td>
+<td>Recurso que se crea en la VPC de la base de datos, en al menos dos subredes de distintas zonas de disponibilidad</td>
+</tr>
+<tr>
+<td><strong>Grupo de destino</strong> (<em>target group</em>)</td>
+<td>Base de datos asociada al proxy: una instancia RDS, un clúster Multi-AZ o un clúster Aurora. Cada proxy tiene un único destino, aunque varios proxies pueden apuntar al mismo</td>
+</tr>
+<tr>
+<td><strong>Punto de enlace predeterminado</strong></td>
+<td>Nombre DNS de lectura y escritura (<code>mi-proxy.proxy-xxxx.us-east-1.rds.amazonaws.com</code>)</td>
+</tr>
+<tr>
+<td><strong>Puntos de enlace adicionales</strong></td>
+<td>Hasta 20 por proxy: de solo lectura (hacia las réplicas) o en otra VPC de la misma región</td>
+</tr>
+<tr>
+<td><strong>Autenticación</strong></td>
+<td>Secretos de AWS Secrets Manager (hasta 200 por proxy) o autenticación de IAM</td>
+</tr>
+<tr>
+<td><strong>Grupo de seguridad</strong></td>
+<td>Controla qué clientes pueden conectarse al proxy</td>
+</tr>
+</tbody>
+</table>
+<p>El proxy <strong>no es accesible públicamente</strong>: solo puede utilizarse desde la VPC en la que se crea, desde VPC conectadas o mediante puntos de enlace en otras VPC.</p>
+<hr />
+<h2 id="funcionamiento-agrupacion-y-multiplexacion">Funcionamiento: agrupación y multiplexación<a class="headerlink" href="#funcionamiento-agrupacion-y-multiplexacion" title="Permanent link">&para;</a></h2>
+<p><img alt="image" src="../imgs/RDS-Proxy-multiplexacion.png" /></p>
+<p>RDS Proxy mantiene un <strong>conjunto de conexiones abiertas con la base de datos</strong> (<em>connection pool</em>) y las comparte entre los clientes:</p>
+<ol>
+<li><strong>Agrupación de conexiones</strong> (<em>connection pooling</em>): las conexiones con la base de datos se abren una vez y se reutilizan. Cuando un cliente se conecta al proxy, no se crea una conexión nueva con la base de datos; el proxy autentica al cliente y le asigna una conexión ya existente.</li>
+<li><strong>Multiplexación por transacción</strong> (<em>multiplexing</em>): una conexión de la base de datos <strong>solo se asigna a un cliente mientras dura una transacción</strong>. Al terminar la transacción, la conexión vuelve al grupo y puede atender a otro cliente, aunque el primero siga conectado al proxy. De este modo, <strong>cientos o miles de conexiones de clientes</strong> pueden atenderse con <strong>unas decenas de conexiones reales</strong>.</li>
+<li><strong>Cola y protección de la base de datos</strong>: si todas las conexiones del grupo están ocupadas, las nuevas peticiones esperan en cola durante un tiempo máximo (<em>connection borrow timeout</em>) en lugar de saturar la base de datos. Superado ese tiempo, se rechazan.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Sin RDS Proxy</th>
+<th>Con RDS Proxy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cada cliente abre su propia conexión con la base de datos</td>
+<td>Los clientes se conectan al proxy; el proxy reutiliza un grupo reducido de conexiones</td>
+</tr>
+<tr>
+<td>Los picos de tráfico se traducen en picos de conexiones</td>
+<td>Los picos se absorben en la cola del proxy</td>
+</tr>
+<tr>
+<td>Las conexiones inactivas ocupan memoria en la base de datos</td>
+<td>Las conexiones inactivas solo existen entre el cliente y el proxy</td>
+</tr>
+<tr>
+<td>Cada apertura implica TLS y autenticación en la base de datos</td>
+<td>El proxy asume ese trabajo</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fijacion-de-conexiones-pinning">Fijación de conexiones (<em>pinning</em>)<a class="headerlink" href="#fijacion-de-conexiones-pinning" title="Permanent link">&para;</a></h3>
+<p>La multiplexación solo es segura si la conexión no conserva <strong>estado de sesión</strong> que pueda afectar a otro cliente. Cuando el proxy detecta una operación que modifica ese estado, <strong>fija</strong> (<em>pins</em>) la conexión de la base de datos a ese cliente hasta que se desconecte. Una conexión fijada no puede reutilizarse, por lo que un exceso de fijaciones anula la ventaja del proxy.</p>
+<table>
+<thead>
+<tr>
+<th>Motor</th>
+<th>Operaciones que provocan fijación (principales)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MySQL / MariaDB</td>
+<td><code>LOCK TABLES</code>, <code>GET_LOCK()</code>, sentencias <code>SET</code> de variables (con excepciones), tablas temporales, sentencias preparadas, comentarios ejecutables <code>/*! … */</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>SET</code> y <code>set_config</code>, <code>PREPARE</code>/<code>EXECUTE</code>, tablas o secuencias temporales, cursores, <code>LISTEN</code>, <code>DISCARD ALL</code>, <code>nextval</code>/<code>setval</code>, bloqueos consultivos de sesión</td>
+</tr>
+<tr>
+<td>Todos</td>
+<td>Sentencias de más de 16 KB</td>
+</tr>
+</tbody>
+</table>
+<p>Medidas para reducir la fijación:</p>
+<ul>
+<li>Vigilar la métrica de CloudWatch <strong><code>DatabaseConnectionsCurrentlySessionPinned</code></strong>.</li>
+<li>Trasladar los <code>SET</code> comunes a todas las conexiones a la <strong>consulta de inicialización</strong> del proxy (por ejemplo, <code>SET time_zone = '+00:00'; SET NAMES utf8mb4;</code>).</li>
+<li>En MySQL y MariaDB, activar los <strong>filtros de fijación de sesión</strong> (<em>session pinning filters</em>) cuando se sepa que ciertos cambios de variables no afectan a la aplicación.</li>
+<li>Evitar en el código, cuando no sean necesarias, las tablas temporales, los bloqueos con nombre o las sentencias preparadas del lado del servidor.</li>
+</ul>
+<hr />
+<h2 id="alta-disponibilidad-y-conmutacion-por-error">Alta disponibilidad y conmutación por error<a class="headerlink" href="#alta-disponibilidad-y-conmutacion-por-error" title="Permanent link">&para;</a></h2>
+<p>RDS Proxy mejora la disponibilidad percibida por las aplicaciones:</p>
+<ul>
+<li>El propio proxy es un servicio <strong>redundante en varias zonas de disponibilidad</strong>.</li>
+<li>Durante una <strong>conmutación por error</strong> de una instancia Multi-AZ o de un clúster Aurora, el proxy <strong>mantiene abiertas las conexiones de los clientes</strong>, detecta la nueva instancia primaria y redirige el tráfico hacia ella. Las aplicaciones no dependen de la propagación del cambio DNS del punto de enlace de la base de datos ni de su caché.</li>
+<li>Según AWS, el uso de RDS Proxy puede <strong>reducir el tiempo de conmutación por error de Aurora hasta en un 66 %</strong>.</li>
+<li>Las transacciones en curso en el momento del fallo se pierden y la aplicación debe reintentarlas, pero las conexiones inactivas sobreviven al cambio.</li>
+</ul>
+<h3 id="puntos-de-enlace-de-solo-lectura">Puntos de enlace de solo lectura<a class="headerlink" href="#puntos-de-enlace-de-solo-lectura" title="Permanent link">&para;</a></h3>
+<p>Por defecto, el punto de enlace del proxy envía todo el tráfico a la instancia de escritura. Para aprovechar las <strong>réplicas de Aurora</strong> o los <em>standby</em> legibles de un <strong>clúster Multi-AZ</strong>, se crea un <strong>punto de enlace de solo lectura</strong> del proxy, que reparte las conexiones entre los lectores disponibles y, si uno falla, traslada las sesiones multiplexadas a otro sin interrumpir la aplicación.</p>
+<hr />
+<h2 id="rds-proxy-y-la-seguridad">RDS Proxy y la seguridad<a class="headerlink" href="#rds-proxy-y-la-seguridad" title="Permanent link">&para;</a></h2>
+<p>Además de su función de rendimiento, RDS Proxy es una pieza de seguridad, como se adelantó en el apartado <a href="../RDS-Seguridad/#rds-proxy-como-punto-de-control">Securización y control de acceso</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Capacidad</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Credenciales en Secrets Manager</strong></td>
+<td>El proxy obtiene usuario y contraseña de la base de datos de un secreto. Las aplicaciones no necesitan conocer esas credenciales si se autentican con IAM</td>
+</tr>
+<tr>
+<td><strong>Autenticación IAM de los clientes</strong></td>
+<td>Puede exigirse que los clientes se conecten al proxy con un <strong>token de IAM</strong> (como en la autenticación IAM de RDS), aunque la base de datos utilice contraseñas</td>
+</tr>
+<tr>
+<td><strong>IAM de extremo a extremo</strong></td>
+<td>Desde septiembre de 2025, en MySQL y PostgreSQL, el proxy puede autenticarse <strong>también contra la base de datos mediante IAM</strong>, sin almacenar credenciales en Secrets Manager</td>
+</tr>
+<tr>
+<td><strong>TLS obligatorio</strong></td>
+<td>La opción <em>Require Transport Layer Security</em> rechaza las conexiones de clientes sin cifrar</td>
+</tr>
+<tr>
+<td><strong>Punto único de entrada</strong></td>
+<td>Si el grupo de seguridad de la base de datos solo admite tráfico desde el grupo de seguridad del proxy, todo acceso queda canalizado y registrado a través de él</td>
+</tr>
+<tr>
+<td><strong>Rotación transparente</strong></td>
+<td>Al rotar la contraseña en Secrets Manager, el proxy utiliza la nueva sin que las aplicaciones lo perciban</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="image" src="../imgs/RDS-Proxy-seguridad.png" /></p>
+<p>La configuración de grupos de seguridad recomendada es la siguiente:</p>
+<table>
+<thead>
+<tr>
+<th>Grupo de seguridad</th>
+<th>Regla de entrada</th>
+<th>Origen</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rds-proxy-sg</code> (asociado al proxy)</td>
+<td>TCP 3306 (o 5432)</td>
+<td><code>servidor-web-sg</code></td>
+</tr>
+<tr>
+<td><code>rds-mysql-sg</code> (asociado a la base de datos)</td>
+<td>TCP 3306 (o 5432)</td>
+<td><code>rds-proxy-sg</code></td>
+</tr>
+</tbody>
+</table>
+<p>El proxy necesita además un <strong>rol de IAM</strong> que le permita leer los secretos (<code>secretsmanager:GetSecretValue</code>) y, si están cifrados con una clave administrada por el cliente, descifrarlos (<code>kms:Decrypt</code>).</p>
+<hr />
+<h2 id="parametros-de-configuracion-principales">Parámetros de configuración principales<a class="headerlink" href="#parametros-de-configuracion-principales" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parámetro</th>
+<th>Valor predeterminado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Conexiones máximas</strong> (<code>MaxConnectionsPercent</code>)</td>
+<td>100 %</td>
+<td>Porcentaje de <code>max_connections</code> de la base de datos que el proxy puede utilizar. Conviene reducirlo si otras aplicaciones o administradores se conectan directamente</td>
+</tr>
+<tr>
+<td><strong>Conexiones inactivas máximas</strong> (<code>MaxIdleConnectionsPercent</code>)</td>
+<td>Proporcional al anterior</td>
+<td>Conexiones que el proxy mantiene abiertas sin uso para atender picos</td>
+</tr>
+<tr>
+<td><strong>Tiempo de espera de préstamo</strong> (<code>ConnectionBorrowTimeout</code>)</td>
+<td>120 segundos</td>
+<td>Tiempo que una petición espera en cola una conexión libre antes de fallar</td>
+</tr>
+<tr>
+<td><strong>Tiempo de inactividad del cliente</strong> (<code>IdleClientTimeout</code>)</td>
+<td>30 minutos</td>
+<td>Tiempo tras el que el proxy cierra una conexión de cliente sin actividad</td>
+</tr>
+<tr>
+<td><strong>Consulta de inicialización</strong> (<code>InitQuery</code>)</td>
+<td>Vacía</td>
+<td>Sentencias <code>SET</code> que se ejecutan al abrir cada conexión con la base de datos</td>
+</tr>
+<tr>
+<td><strong>Filtros de fijación de sesión</strong></td>
+<td>Ninguno</td>
+<td>Excepciones a la fijación (solo MySQL y MariaDB)</td>
+</tr>
+<tr>
+<td><strong>Exigir TLS</strong></td>
+<td>Desactivado</td>
+<td>Rechaza conexiones de clientes sin cifrar</td>
+</tr>
+<tr>
+<td><strong>Autenticación IAM</strong></td>
+<td>Desactivada</td>
+<td>Exige tokens de IAM a los clientes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creacion-con-la-aws-cli">Creación con la AWS CLI<a class="headerlink" href="#creacion-con-la-aws-cli" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-proxy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--db-proxy-name<span class="w"> </span>tienda-proxy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>--engine-family<span class="w"> </span>MYSQL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span>--auth<span class="w"> </span><span class="s1">'[{"AuthScheme":"SECRETS","SecretArn":"arn:aws:secretsmanager:us-east-1:111122223333:secret:tienda-db-XXXX","IAMAuth":"DISABLED"}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span>--role-arn<span class="w"> </span>arn:aws:iam::111122223333:role/rol-rds-proxy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span>--vpc-subnet-ids<span class="w"> </span>subnet-aaaa<span class="w"> </span>subnet-bbbb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span>--vpc-security-group-ids<span class="w"> </span>sg-proxy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span>--require-tls
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>aws<span class="w"> </span>rds<span class="w"> </span>register-db-proxy-targets<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span>--db-proxy-name<span class="w"> </span>tienda-proxy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span>--db-instance-identifiers<span class="w"> </span>tienda-db-server
+</span></code></pre></div>
+<p>Una vez disponible, la aplicación solo cambia el nombre del servidor. En la práctica evaluable, la variable con el punto de enlace de RDS pasaría a contener <code>tienda-proxy.proxy-xxxx.us-east-1.rds.amazonaws.com</code>.</p>
+<hr />
+<h2 id="supervision">Supervisión<a class="headerlink" href="#supervision" title="Permanent link">&para;</a></h2>
+<p>RDS Proxy publica métricas en CloudWatch que permiten comprobar si está cumpliendo su función:</p>
+<table>
+<thead>
+<tr>
+<th>Métrica</th>
+<th>Qué indica</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ClientConnections</code></td>
+<td>Conexiones de clientes abiertas con el proxy</td>
+</tr>
+<tr>
+<td><code>DatabaseConnections</code></td>
+<td>Conexiones reales del proxy con la base de datos</td>
+</tr>
+<tr>
+<td><code>DatabaseConnectionsCurrentlySessionPinned</code></td>
+<td>Conexiones fijadas: si es alta, la multiplexación no es efectiva</td>
+</tr>
+<tr>
+<td><code>DatabaseConnectionsBorrowLatency</code></td>
+<td>Tiempo que tardan las peticiones en obtener una conexión del grupo</td>
+</tr>
+<tr>
+<td><code>QueryRequests</code></td>
+<td>Consultas recibidas por el proxy</td>
+</tr>
+</tbody>
+</table>
+<p>Una relación elevada entre <code>ClientConnections</code> y <code>DatabaseConnections</code> indica que la multiplexación funciona; si ambas cifras son similares, conviene revisar las causas de fijación.</p>
+<hr />
+<h2 id="cuando-utilizar-rds-proxy">Cuándo utilizar RDS Proxy<a class="headerlink" href="#cuando-utilizar-rds-proxy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>¿RDS Proxy?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Funciones AWS Lambda que acceden a RDS o Aurora</td>
+<td>Muy recomendable</td>
+</tr>
+<tr>
+<td>Aplicaciones con escalado automático y muchas conexiones concurrentes</td>
+<td>Recomendable</td>
+</tr>
+<tr>
+<td>Aplicaciones que abren y cierran conexiones con mucha frecuencia (PHP sin <em>pool</em> persistente)</td>
+<td>Recomendable</td>
+</tr>
+<tr>
+<td>Requisitos estrictos de disponibilidad ante conmutaciones por error</td>
+<td>Recomendable</td>
+</tr>
+<tr>
+<td>Centralizar credenciales y exigir IAM y TLS</td>
+<td>Recomendable</td>
+</tr>
+<tr>
+<td>Aplicación con pocas conexiones persistentes y estables</td>
+<td>Aporta poco y añade coste</td>
+</tr>
+<tr>
+<td>Uso intensivo de sentencias preparadas, tablas temporales o variables de sesión</td>
+<td>Ventaja reducida por la fijación</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Coste</p>
+<p>RDS Proxy se factura por hora en función de la <strong>capacidad de la base de datos de destino</strong> (vCPU de las instancias o ACU en Aurora Serverless), con independencia del número de conexiones. Cada punto de enlace adicional implica además un punto de enlace de AWS PrivateLink con su propio coste. En entornos formativos conviene eliminarlo al terminar las prácticas.</p>
+</div>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Amazon RDS Proxy</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html">Guía del usuario de RDS</a></li>
+<li>AWS. <em>Amazon RDS Proxy for Aurora</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-proxy.html">Guía del usuario de Aurora</a></li>
+<li>AWS. <em>RDS Proxy concepts and terminology</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.howitworks.html">Conceptos: agrupación, multiplexación y conmutación por error</a></li>
+<li>AWS. <em>Avoiding pinning an RDS Proxy</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-pinning.html">Fijación de conexiones</a></li>
+<li>AWS. <em>Working with Amazon RDS Proxy endpoints</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-endpoints.html">Puntos de enlace del proxy</a></li>
+<li>AWS. <em>Setting up network prerequisites and database credentials for RDS Proxy</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-setup.html">Requisitos de red y credenciales</a></li>
+<li>AWS. <em>Amazon RDS Proxy announces support for end-to-end IAM authentication</em> (12/09/2025) — <a href="https://aws.amazon.com/about-aws/whats-new/2025/09/amazon-rds-proxy-end-to-end-iam-authentication">Anuncio</a></li>
+<li>AWS. <em>Monitoring RDS Proxy metrics with Amazon CloudWatch</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.monitoring.html">Métricas</a></li>
+<li>AWS. <em>AWS CLI Command Reference: create-db-proxy</em> — <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/rds/create-db-proxy.html">create-db-proxy</a></li>
+<li>AWS. <em>Amazon Aurora FAQ: availability and durability</em> (reducción del tiempo de conmutación) — <a href="https://docs.aws.amazon.com/rds/latest/auroraextendedcontent/aurora-faq-availability-and-durability.html">Preguntas frecuentes</a></li>
+<li>AWS. <em>Amazon RDS Proxy pricing</em> — <a href="https://aws.amazon.com/rds/proxy/pricing/">Precios</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

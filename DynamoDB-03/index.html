@@ -1,0 +1,1988 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../DynamoDB-02/">
+      
+      
+        <link rel="next" href="../DynamoDB-04/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Arquitectura - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#arquitectura-de-amazon-dynamodb" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Arquitectura
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#un-servicio-regional-situado-fuera-de-la-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un servicio regional situado fuera de la VPC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plano-de-control-y-plano-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plano de control y plano de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentes-internos-del-plano-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes internos del plano de datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Componentes internos del plano de datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recorrido-de-una-peticion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido de una petición
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-replicacion-y-consenso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de replicación y consenso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#particionado-y-distribucion-de-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particionado y distribución de los datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Particionado y distribución de los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubicacion-de-los-elementos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ubicación de los elementos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crecimiento-de-la-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crecimiento de la tabla
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limite-por-particion-y-particiones-calientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Límite por partición y particiones calientes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-los-indices-secundarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de los índices secundarios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#durabilidad-disponibilidad-y-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durabilidad, disponibilidad y recuperación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Durabilidad, disponibilidad y recuperación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tablas-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tablas globales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparativa-arquitectonica-con-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa arquitectónica con Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#un-servicio-regional-situado-fuera-de-la-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Un servicio regional situado fuera de la VPC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plano-de-control-y-plano-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plano de control y plano de datos
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentes-internos-del-plano-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Componentes internos del plano de datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Componentes internos del plano de datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recorrido-de-una-peticion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recorrido de una petición
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-replicacion-y-consenso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de replicación y consenso
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#particionado-y-distribucion-de-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particionado y distribución de los datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Particionado y distribución de los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ubicacion-de-los-elementos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ubicación de los elementos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crecimiento-de-la-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crecimiento de la tabla
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limite-por-particion-y-particiones-calientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Límite por partición y particiones calientes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#arquitectura-de-los-indices-secundarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arquitectura de los índices secundarios
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#durabilidad-disponibilidad-y-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Durabilidad, disponibilidad y recuperación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Durabilidad, disponibilidad y recuperación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tablas-globales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tablas globales
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparativa-arquitectonica-con-amazon-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa arquitectónica con Amazon RDS
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="arquitectura-de-amazon-dynamodb">Arquitectura de Amazon DynamoDB<a class="headerlink" href="#arquitectura-de-amazon-dynamodb" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/DynamoDB-arquitectura.png" /></p>
+<p>Para administrar y securizar DynamoDB correctamente es necesario comprender <strong>dónde reside</strong> el servicio y <strong>cómo procesa</strong> cada petición. La mayor parte de las decisiones de diseño (elección de claves, modo de capacidad, uso de puntos de enlace de VPC, políticas de acceso) encuentran su justificación en la arquitectura interna que se describe en este apartado.</p>
+<p>La descripción combina la documentación oficial del servicio con el artículo académico publicado por los ingenieros de AWS en la conferencia USENIX ATC 2022, que detalla el diseño interno de DynamoDB tras más de una década en producción.</p>
+<hr />
+<h2 id="un-servicio-regional-situado-fuera-de-la-vpc">Un servicio regional situado fuera de la VPC<a class="headerlink" href="#un-servicio-regional-situado-fuera-de-la-vpc" title="Permanent link">&para;</a></h2>
+<p>La primera diferencia arquitectónica con Amazon RDS es la ubicación. Una instancia RDS se despliega <strong>dentro de las subredes de una VPC</strong> (a través del grupo de subredes) y recibe una dirección IP privada; por eso en RDS tenía sentido configurar el acceso público, los grupos de seguridad o la zona de disponibilidad.</p>
+<p>DynamoDB, en cambio, es un <strong>servicio regional</strong> operado por AWS <strong>fuera de cualquier VPC del cliente</strong>:</p>
+<ul>
+<li>Una tabla pertenece a una <strong>cuenta</strong> y a una <strong>región</strong>, no a una VPC ni a una subred.</li>
+<li>AWS distribuye internamente los datos de la tabla entre <strong>varias zonas de disponibilidad</strong> de la región, sin que el administrador tenga que elegirlas.</li>
+<li>Se accede a la tabla a través de un <strong>punto de enlace de API regional</strong> (por ejemplo, <code>dynamodb.us-east-1.amazonaws.com</code>), es decir, mediante peticiones HTTPS firmadas.</li>
+<li>Las tablas <strong>no tienen grupos de seguridad</strong> ni dirección IP propia; el control de acceso se basa en la <strong>identidad</strong> (IAM) y, opcionalmente, en el <strong>origen de red</strong> de la petición.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Consecuencia práctica</p>
+<p>No es posible «meter» una tabla DynamoDB en una subred privada como se hace con una instancia EC2 o RDS. Lo que sí puede colocarse en la VPC es la <strong>puerta de entrada</strong> al servicio: un punto de enlace de VPC. Este concepto, trabajado en la práctica, se desarrolla en el apartado de seguridad.</p>
+</div>
+<hr />
+<h2 id="plano-de-control-y-plano-de-datos">Plano de control y plano de datos<a class="headerlink" href="#plano-de-control-y-plano-de-datos" title="Permanent link">&para;</a></h2>
+<p>Las operaciones de la API de DynamoDB se dividen en dos grupos:</p>
+<table>
+<thead>
+<tr>
+<th>Plano</th>
+<th>Finalidad</th>
+<th>Operaciones representativas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Plano de control</strong> (<em>control plane</em>)</td>
+<td>Crear y administrar tablas e índices</td>
+<td><code>CreateTable</code>, <code>DescribeTable</code>, <code>UpdateTable</code>, <code>DeleteTable</code>, <code>ListTables</code>, <code>PutResourcePolicy</code>, <code>UpdateTimeToLive</code>, <code>CreateBackup</code></td>
+</tr>
+<tr>
+<td><strong>Plano de datos</strong> (<em>data plane</em>)</td>
+<td>Leer y escribir elementos</td>
+<td><code>GetItem</code>, <code>PutItem</code>, <code>UpdateItem</code>, <code>DeleteItem</code>, <code>Query</code>, <code>Scan</code>, <code>BatchGetItem</code>, <code>BatchWriteItem</code>, <code>TransactWriteItems</code>, <code>ExecuteStatement</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esta distinción es relevante en la administración diaria y, especialmente, en la seguridad. En la práctica, la política de la tabla <strong>solo denegaba operaciones del plano de datos</strong>, de forma que el administrador podía seguir modificando o eliminando la política desde la consola aunque ya no pudiera consultar los elementos.</p>
+<hr />
+<h2 id="componentes-internos-del-plano-de-datos">Componentes internos del plano de datos<a class="headerlink" href="#componentes-internos-del-plano-de-datos" title="Permanent link">&para;</a></h2>
+<p>Según la descripción publicada por AWS, el plano de datos de DynamoDB se compone de varios subsistemas que colaboran en cada petición:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Balanceadores y routers de peticiones</strong> (<em>request routers</em>)</td>
+<td>Reciben las peticiones de los clientes, las <strong>autentican</strong> y <strong>autorizan</strong> contra IAM, consultan en qué partición se encuentra el elemento y la reenvían al nodo de almacenamiento adecuado</td>
+</tr>
+<tr>
+<td><strong>Sistema de metadatos de particiones</strong></td>
+<td>Mantiene la correspondencia entre rangos de <em>hash</em> de la clave de partición y los nodos de almacenamiento que contienen cada partición</td>
+</tr>
+<tr>
+<td><strong>Nodos de almacenamiento</strong> (<em>storage nodes</em>)</td>
+<td>Almacenan las réplicas de las particiones en discos SSD; cada réplica mantiene un <strong>registro de escritura anticipada</strong> (<em>write-ahead log</em>) y un <strong>árbol B</strong> con los elementos</td>
+</tr>
+<tr>
+<td><strong>Control de admisión</strong></td>
+<td>Comprueba que la petición no supera la capacidad disponible de la tabla y de la partición; en caso contrario se produce una limitación (<em>throttling</em>)</td>
+</tr>
+<tr>
+<td><strong>Subsistema de administración</strong> (<em>autoadmin</em>)</td>
+<td>Supervisa el estado de la flota, sustituye réplicas defectuosas, divide particiones y ejecuta las operaciones del plano de control</td>
+</tr>
+</tbody>
+</table>
+<h3 id="recorrido-de-una-peticion">Recorrido de una petición<a class="headerlink" href="#recorrido-de-una-peticion" title="Permanent link">&para;</a></h3>
+<p>El siguiente ejemplo describe qué ocurre cuando la instancia EC2 de la práctica ejecuta un <code>PutItem</code> sobre la tabla <code>Productos</code>:</p>
+<ol>
+<li><strong>Firma de la petición.</strong> La AWS CLI o el SDK obtiene credenciales temporales del rol asociado a la instancia y firma la petición con el algoritmo <strong>Signature Version 4 (SigV4)</strong>.</li>
+<li><strong>Resolución DNS.</strong> El nombre <code>dynamodb.us-east-1.amazonaws.com</code> (o el nombre del punto de enlace de VPC, si se usa <code>--endpoint-url</code>) se resuelve a una dirección IP.</li>
+<li><strong>Router de peticiones.</strong> La petición llega a un router, que verifica la firma, evalúa las <strong>políticas de IAM</strong> aplicables (de identidad, de recursos, del punto de enlace, de la organización) y, si la autorización es correcta, consulta el sistema de metadatos.</li>
+<li><strong>Cálculo de la partición.</strong> Se aplica la función <em>hash</em> al valor de la clave de partición (<code>categoria</code>) para determinar la partición responsable.</li>
+<li><strong>Escritura en el líder.</strong> La petición se envía a la <strong>réplica líder</strong> de esa partición, que comprueba las condiciones (<code>ConditionExpression</code>), genera el registro en su <em>write-ahead log</em> y lo propaga a las demás réplicas.</li>
+<li><strong>Confirmación por quórum.</strong> Cuando <strong>dos de las tres réplicas</strong>, situadas en zonas de disponibilidad distintas, han persistido el registro, la escritura se considera confirmada y se responde al cliente.</li>
+</ol>
+<p>La figura que encabeza este apartado representa este recorrido con la misma numeración.</p>
+<h3 id="grupos-de-replicacion-y-consenso">Grupos de replicación y consenso<a class="headerlink" href="#grupos-de-replicacion-y-consenso" title="Permanent link">&para;</a></h3>
+<p>Cada partición de una tabla se almacena en un <strong>grupo de replicación</strong> compuesto por réplicas distribuidas en <strong>varias zonas de disponibilidad</strong> de la región. Las réplicas utilizan el protocolo de consenso <strong>Multi-Paxos</strong> para elegir a un <strong>líder</strong>:</p>
+<ul>
+<li>Solo el líder acepta <strong>escrituras</strong> y atiende las <strong>lecturas fuertemente consistentes</strong>.</li>
+<li>Las <strong>lecturas eventualmente consistentes</strong> pueden ser atendidas por cualquier réplica, lo que explica que puedan devolver un valor ligeramente desactualizado y que su coste sea la mitad.</li>
+<li>Si el líder falla o pierde la comunicación, las réplicas restantes eligen un nuevo líder de forma automática. Este proceso es transparente para la aplicación, que como mucho experimenta un reintento.</li>
+</ul>
+<p>Este diseño es el que permite a DynamoDB ofrecer <strong>alta disponibilidad y durabilidad sin necesidad de configurar Multi-AZ</strong>, a diferencia de RDS, donde la réplica en espera era una opción de creación de la instancia.</p>
+<hr />
+<h2 id="particionado-y-distribucion-de-los-datos">Particionado y distribución de los datos<a class="headerlink" href="#particionado-y-distribucion-de-los-datos" title="Permanent link">&para;</a></h2>
+<p>Una <strong>partición</strong> es una asignación de almacenamiento para una tabla, respaldada por discos SSD y replicada automáticamente en varias zonas de disponibilidad. El número de particiones de una tabla no se configura ni se consulta directamente: DynamoDB lo gestiona según el volumen de datos y el rendimiento requerido.</p>
+<p><img alt="image" src="../imgs/DynamoDB-particionado.png" /></p>
+<h3 id="ubicacion-de-los-elementos">Ubicación de los elementos<a class="headerlink" href="#ubicacion-de-los-elementos" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Tabla con clave simple</strong> (solo partición): DynamoDB aplica una función <em>hash</em> interna al valor de la clave. El resultado determina la partición en la que se guarda el elemento. Los elementos <strong>no se almacenan en ningún orden</strong> útil para la aplicación.</li>
+<li><strong>Tabla con clave compuesta</strong> (partición + ordenación): el <em>hash</em> de la clave de partición determina la partición, y dentro de ella los elementos que comparten clave de partición se guardan <strong>juntos y ordenados de forma ascendente por la clave de ordenación</strong>. Por eso una <code>Query</code> puede devolver resultados en orden ascendente o, con <code>ScanIndexForward = false</code>, descendente.</li>
+</ul>
+<h3 id="crecimiento-de-la-tabla">Crecimiento de la tabla<a class="headerlink" href="#crecimiento-de-la-tabla" title="Permanent link">&para;</a></h3>
+<p>DynamoDB añade particiones de forma automática en dos situaciones:</p>
+<ol>
+<li>Cuando una partición se llena y se necesita más espacio de almacenamiento.</li>
+<li>Cuando la capacidad requerida (aprovisionada o demandada) supera lo que pueden atender las particiones existentes.</li>
+</ol>
+<p>La operación consiste en <strong>dividir</strong> (<em>split</em>) una partición en dos y repartir su rango de claves, sin interrumpir el servicio. En tablas con clave compuesta y sin LSI, una misma colección de elementos puede llegar a repartirse entre varias particiones si su tamaño o su tráfico lo requieren.</p>
+<h3 id="limite-por-particion-y-particiones-calientes">Límite por partición y particiones calientes<a class="headerlink" href="#limite-por-particion-y-particiones-calientes" title="Permanent link">&para;</a></h3>
+<p>Cada partición puede atender como máximo <strong>3 000 unidades de lectura</strong> y <strong>1 000 unidades de escritura por segundo</strong>. Si una clave de partición concentra una parte desproporcionada del tráfico (una <strong>partición caliente</strong>, <em>hot partition</em>), las peticiones dirigidas a ella se limitarán aunque la tabla en su conjunto tenga capacidad disponible.</p>
+<p>Para mitigar este problema, DynamoDB incorpora dos mecanismos automáticos y sin coste:</p>
+<ul>
+<li><strong>Capacidad de ráfaga</strong> (<em>burst capacity</em>): conserva hasta <strong>300 segundos</strong> de capacidad no utilizada para absorber picos puntuales.</li>
+<li><strong>Capacidad adaptativa</strong> (<em>adaptive capacity</em>): aumenta automáticamente la capacidad de las particiones que reciben más tráfico y, si es necesario, <strong>aísla los elementos más accedidos</strong> en particiones propias.</li>
+</ul>
+<p>Estos mecanismos no sustituyen a un buen diseño: la medida más eficaz es elegir una <strong>clave de partición con muchos valores distintos y accesos uniformes</strong>, como se explica en el apartado de claves.</p>
+<hr />
+<h2 id="arquitectura-de-los-indices-secundarios">Arquitectura de los índices secundarios<a class="headerlink" href="#arquitectura-de-los-indices-secundarios" title="Permanent link">&para;</a></h2>
+<p>Los dos tipos de índice tienen una implementación física distinta, lo que explica sus diferentes propiedades:</p>
+<ul>
+<li><strong>Índice secundario global (GSI)</strong>: se almacena en <strong>particiones propias</strong>, independientes de las de la tabla, porque su clave de partición es diferente. DynamoDB actualiza el índice de forma <strong>asíncrona</strong> después de cada escritura en la tabla; por ese motivo <strong>solo admite lecturas eventualmente consistentes</strong> y dispone de su propia capacidad.</li>
+<li><strong>Índice secundario local (LSI)</strong>: se almacena <strong>en la misma partición</strong> que los elementos de la tabla a los que indexa, puesto que comparte la clave de partición. Esto permite actualizarlo de forma síncrona y ofrecer lecturas fuertemente consistentes, pero impone el límite de <strong>10 GB por colección de elementos</strong> e impide que la capacidad adaptativa reparta una colección entre varias particiones.</li>
+</ul>
+<hr />
+<h2 id="durabilidad-disponibilidad-y-recuperacion">Durabilidad, disponibilidad y recuperación<a class="headerlink" href="#durabilidad-disponibilidad-y-recuperacion" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Durabilidad</strong>: cada escritura confirmada se encuentra persistida en al menos dos zonas de disponibilidad. Además, los registros de escritura se archivan de forma continua en Amazon S3, lo que constituye la base de la <strong>recuperación a un momento dado (PITR)</strong> y de las copias de seguridad, que se realizan sin consumir capacidad de la tabla.</li>
+<li><strong>Disponibilidad</strong>: el acuerdo de nivel de servicio (SLA) de DynamoDB es del <strong>99,99 %</strong> para tablas regionales y del <strong>99,999 %</strong> para tablas globales.</li>
+<li><strong>Sin ventanas de mantenimiento</strong>: las actualizaciones de software, la sustitución de hardware y la división de particiones se realizan sin detener el servicio.</li>
+</ul>
+<h3 id="tablas-globales">Tablas globales<a class="headerlink" href="#tablas-globales" title="Permanent link">&para;</a></h3>
+<p>En una tabla global, cada región contiene una <strong>réplica completa</strong> de la tabla con su propia arquitectura de particiones. Un proceso de replicación interno propaga las escrituras entre regiones: de forma asíncrona en el modo de consistencia eventual (MREC) o de forma síncrona con otra región en el modo de consistencia fuerte (MRSC).</p>
+<hr />
+<h2 id="comparativa-arquitectonica-con-amazon-rds">Comparativa arquitectónica con Amazon RDS<a class="headerlink" href="#comparativa-arquitectonica-con-amazon-rds" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Amazon RDS</th>
+<th>Amazon DynamoDB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unidad de despliegue</td>
+<td>Instancia de base de datos</td>
+<td>Tabla</td>
+</tr>
+<tr>
+<td>Ubicación</td>
+<td>Subredes de una VPC (grupo de subredes)</td>
+<td>Servicio regional fuera de la VPC</td>
+</tr>
+<tr>
+<td>Dirección de acceso</td>
+<td>Punto de enlace DNS que resuelve a la IP de la instancia</td>
+<td>Punto de enlace de API regional (o punto de enlace de VPC)</td>
+</tr>
+<tr>
+<td>Protocolo</td>
+<td>Protocolo nativo del motor (p. ej., MySQL en el puerto 3306)</td>
+<td>HTTPS (puerto 443) con peticiones firmadas SigV4</td>
+</tr>
+<tr>
+<td>Control de red</td>
+<td>Grupos de seguridad y opción de acceso público</td>
+<td>Puntos de enlace de VPC y condiciones en políticas</td>
+</tr>
+<tr>
+<td>Autenticación</td>
+<td>Usuarios del motor de base de datos (y opcionalmente IAM)</td>
+<td>Exclusivamente IAM</td>
+</tr>
+<tr>
+<td>Réplicas</td>
+<td>Multi-AZ (opcional) y réplicas de lectura</td>
+<td>Tres réplicas en varias AZ siempre; tablas globales opcionales</td>
+</tr>
+<tr>
+<td>Escalado</td>
+<td>Vertical (clase) y réplicas de lectura</td>
+<td>Horizontal y automático (particiones)</td>
+</tr>
+<tr>
+<td>Mantenimiento</td>
+<td>Ventana de mantenimiento</td>
+<td>Transparente</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Elhemali, M., Gallagher, N., Gordon, N., Idziorek, J., Krog, R., Lazier, C., Mo, E., Mritunjai, A., Perianayagam, S., Rath, T., Sivasubramanian, S., Sorenson, J. C., Sosothikul, S., Terry, D., Vig, A. (2022). <em>Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service</em>. USENIX Annual Technical Conference (ATC 22) — <a href="https://www.usenix.org/conference/atc22/presentation/elhemali">Artículo</a></li>
+<li>AWS. <em>Partitions and data distribution in DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html">Particiones</a></li>
+<li>AWS. <em>DynamoDB burst and adaptive capacity</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/burst-adaptive-capacity.html">Capacidad de ráfaga y adaptativa</a></li>
+<li>AWS. <em>DynamoDB read consistency</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html">Consistencia de lectura</a></li>
+<li>AWS. <em>DynamoDB API</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.API.html">Planos de control y de datos</a></li>
+<li>AWS. <em>Resilience in Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/disaster-recovery-resiliency.html">Resiliencia</a></li>
+<li>AWS. <em>How DynamoDB global tables work</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/V2globaltables_HowItWorks.html">Funcionamiento de las tablas globales</a></li>
+<li>AWS. <em>Signature Version 4 for API requests</em> — <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html">Firma SigV4</a></li>
+<li>AWS. <em>Amazon DynamoDB Service Level Agreement</em> — <a href="https://aws.amazon.com/dynamodb/sla/">SLA</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

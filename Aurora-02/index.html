@@ -1,0 +1,2026 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../Aurora-01/">
+      
+      
+        <link rel="next" href="../Aurora-03/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Aurora MySQL y Aurora PostgreSQL - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aurora-mysql-y-aurora-postgresql" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Aurora MySQL y Aurora PostgreSQL
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-compatible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué significa «compatible»
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versiones-disponibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versiones disponibles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versiones disponibles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aurora-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aurora MySQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aurora-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aurora PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionalidades-especificas-de-cada-edicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funcionalidades específicas de cada edición
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencias-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferencias de administración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diferencias de administración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-parametros-en-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de parámetros en Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-maestro-y-privilegios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usuario maestro y privilegios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexion-a-cada-edicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexión a cada edición
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migracion-hacia-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migración hacia Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-de-eleccion-entre-ambas-ediciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de elección entre ambas ediciones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-compatible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué significa «compatible»
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#versiones-disponibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versiones disponibles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Versiones disponibles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aurora-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aurora MySQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aurora-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aurora PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#funcionalidades-especificas-de-cada-edicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funcionalidades específicas de cada edición
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencias-de-administracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diferencias de administración
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diferencias de administración">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grupos-de-parametros-en-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grupos de parámetros en Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-maestro-y-privilegios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usuario maestro y privilegios
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conexion-a-cada-edicion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conexión a cada edición
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migracion-hacia-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migración hacia Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-de-eleccion-entre-ambas-ediciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios de elección entre ambas ediciones
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="aurora-mysql-y-aurora-postgresql">Aurora MySQL y Aurora PostgreSQL<a class="headerlink" href="#aurora-mysql-y-aurora-postgresql" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/Aurora-compatibilidad.png" /></p>
+<p>Aurora no es un motor con lenguaje propio: se presenta en dos <strong>ediciones compatibles</strong> con los dos motores de código abierto más extendidos. En ambos casos AWS conserva la capa SQL del motor original (analizador, optimizador, gestión de transacciones, tipos de datos, protocolo de red) y <strong>sustituye la capa de almacenamiento</strong> por el volumen de clúster distribuido descrito en el apartado anterior.</p>
+<hr />
+<h2 id="que-significa-compatible">Qué significa «compatible»<a class="headerlink" href="#que-significa-compatible" title="Permanent link">&para;</a></h2>
+<p>Que Aurora sea compatible con MySQL o PostgreSQL significa que:</p>
+<ul>
+<li>Utiliza el <strong>mismo protocolo de red</strong> y el mismo puerto predeterminado (3306 para MySQL, 5432 para PostgreSQL), de modo que las aplicaciones se conectan con los <strong>mismos controladores</strong> (JDBC, PDO, <code>mysqlclient</code>, <code>psycopg</code>…).</li>
+<li>Acepta el <strong>mismo dialecto SQL</strong>, los mismos tipos de datos y las mismas funciones de la versión de la que deriva.</li>
+<li>Funciona con las <strong>mismas herramientas</strong> de administración: cliente <code>mysql</code>, MySQL Workbench, <code>mysqldump</code>, <code>psql</code>, pgAdmin, <code>pg_dump</code>, etc.</li>
+<li>Permite migrar aplicaciones existentes <strong>con cambios mínimos o nulos</strong> en el código.</li>
+</ul>
+<p>No obstante, compatibilidad <strong>no es identidad</strong>. Al tratarse de un servicio gestionado con un almacenamiento distinto, existen diferencias que el administrador debe conocer:</p>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>Motor autogestionado</th>
+<th>Aurora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acceso al sistema operativo y a los ficheros de datos</td>
+<td>Sí</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Superusuario real (<code>SUPER</code> en MySQL, <code>superuser</code> en PostgreSQL)</td>
+<td>Sí</td>
+<td>No; se sustituye por roles gestionados (<code>rds_superuser_role</code>, <code>rds_superuser</code>)</td>
+</tr>
+<tr>
+<td>Motores de almacenamiento de MySQL</td>
+<td>InnoDB, MyISAM, MEMORY…</td>
+<td>Solo <strong>InnoDB</strong> para tablas persistentes</td>
+</tr>
+<tr>
+<td>Extensiones de PostgreSQL</td>
+<td>Cualquiera que se compile e instale</td>
+<td>Solo las de la <strong>lista de extensiones admitidas</strong></td>
+</tr>
+<tr>
+<td>Configuración del motor</td>
+<td><code>my.cnf</code>, <code>postgresql.conf</code></td>
+<td>Grupos de parámetros de <strong>clúster</strong> y de <strong>instancia</strong></td>
+</tr>
+<tr>
+<td>Replicación</td>
+<td>Configurada por el administrador</td>
+<td>Réplicas de Aurora sobre almacenamiento compartido (el <em>binlog</em> de MySQL es opcional)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="versiones-disponibles">Versiones disponibles<a class="headerlink" href="#versiones-disponibles" title="Permanent link">&para;</a></h2>
+<h3 id="aurora-mysql">Aurora MySQL<a class="headerlink" href="#aurora-mysql" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Versión de Aurora MySQL</th>
+<th>Compatible con</th>
+<th>Situación (noviembre de 2026)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aurora MySQL 2 (<code>2.x</code>)</td>
+<td>MySQL 5.7</td>
+<td>Fuera del soporte estándar; solo disponible con <strong>RDS Extended Support</strong> (de pago)</td>
+</tr>
+<tr>
+<td>Aurora MySQL 3 (<code>3.x</code>)</td>
+<td>MySQL 8.0</td>
+<td>Versión principal más utilizada; por ejemplo, la 3.10 es compatible con MySQL 8.0.42</td>
+</tr>
+<tr>
+<td><strong>Aurora MySQL 8.4</strong></td>
+<td>MySQL 8.4 LTS</td>
+<td>Disponible desde <strong>mayo de 2026</strong>; adopta una <strong>numeración alineada</strong> con la versión de MySQL (Aurora MySQL 8.4.7 ↔ MySQL 8.4.7)</td>
+</tr>
+</tbody>
+</table>
+<p>Aurora MySQL 8.4 incorpora además valores predeterminados más seguros en los clústeres nuevos: <strong>TLS obligatorio</strong> (solo TLS 1.2 y 1.3) y el complemento de autenticación <code>caching_sha2_password</code> para las cuentas nuevas.</p>
+<h3 id="aurora-postgresql">Aurora PostgreSQL<a class="headerlink" href="#aurora-postgresql" title="Permanent link">&para;</a></h3>
+<p>Aurora PostgreSQL sigue la numeración de PostgreSQL. A finales de 2026 admite las versiones principales <strong>14, 15, 16, 17 y 18</strong>; la versión 18 se incorporó en junio de 2026. AWS publica periódicamente versiones secundarias para todas ellas.</p>
+<div class="admonition note">
+<p class="admonition-title">Ciclo de vida de las versiones</p>
+<p>Cada versión principal tiene una fecha de fin de soporte estándar. Llegada esa fecha, el clúster se actualiza automáticamente o pasa a <strong>RDS Extended Support</strong>, con coste adicional. Planificar las actualizaciones de versión principal (por ejemplo, con implementaciones azul/verde) forma parte de las tareas de mantenimiento del administrador.</p>
+</div>
+<hr />
+<h2 id="funcionalidades-especificas-de-cada-edicion">Funcionalidades específicas de cada edición<a class="headerlink" href="#funcionalidades-especificas-de-cada-edicion" title="Permanent link">&para;</a></h2>
+<p>Además de las funcionalidades comunes de Aurora (almacenamiento distribuido, réplicas, clonado, Aurora Serverless, Global Database, implementaciones azul/verde, integración <em>zero-ETL</em> con Amazon Redshift, autenticación IAM o Database Activity Streams), cada edición ofrece capacidades propias:</p>
+<table>
+<thead>
+<tr>
+<th>Funcionalidad</th>
+<th>Aurora MySQL</th>
+<th>Aurora PostgreSQL</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Backtrack</strong></td>
+<td>✔</td>
+<td>—</td>
+<td>Rebobina el clúster a un instante anterior sin restaurar una copia</td>
+</tr>
+<tr>
+<td><strong>Parallel Query</strong></td>
+<td>✔</td>
+<td>—</td>
+<td>Delega parte del procesamiento de consultas analíticas en la capa de almacenamiento</td>
+</tr>
+<tr>
+<td><strong>Reenvío de escrituras local</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>Las réplicas reenvían escrituras a la instancia primaria</td>
+</tr>
+<tr>
+<td><strong>Babelfish</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>Permite que aplicaciones de <strong>SQL Server</strong> se conecten mediante el protocolo TDS y T-SQL</td>
+</tr>
+<tr>
+<td><strong>Limitless Database</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>Escalado horizontal automático de escrituras mediante particionado (<em>sharding</em>)</td>
+</tr>
+<tr>
+<td><strong>Query Plan Management</strong></td>
+<td>—</td>
+<td>✔</td>
+<td>Estabiliza los planes de ejecución para evitar regresiones de rendimiento</td>
+</tr>
+<tr>
+<td><strong>Optimized Reads</strong></td>
+<td>✔</td>
+<td>✔</td>
+<td>Usa el almacenamiento NVMe local de ciertas instancias como caché y para objetos temporales</td>
+</tr>
+<tr>
+<td><strong>Integración con S3</strong></td>
+<td><code>LOAD DATA FROM S3</code>, <code>SELECT … INTO OUTFILE S3</code></td>
+<td>Extensión <code>aws_s3</code></td>
+<td>Importación y exportación de datos desde y hacia S3</td>
+</tr>
+<tr>
+<td><strong>Integración con Lambda</strong></td>
+<td>Procedimientos y funciones nativas</td>
+<td>Extensión <code>aws_lambda</code></td>
+<td>Invocar funciones Lambda desde la base de datos</td>
+</tr>
+<tr>
+<td><strong>Extensiones destacadas</strong></td>
+<td>—</td>
+<td><code>pgvector</code>, <code>PostGIS</code>, <code>pgAudit</code>, <code>pg_stat_statements</code>…</td>
+<td>Búsqueda vectorial, datos geográficos, auditoría, estadísticas</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="diferencias-de-administracion">Diferencias de administración<a class="headerlink" href="#diferencias-de-administracion" title="Permanent link">&para;</a></h2>
+<h3 id="grupos-de-parametros-en-aurora">Grupos de parámetros en Aurora<a class="headerlink" href="#grupos-de-parametros-en-aurora" title="Permanent link">&para;</a></h3>
+<p>En Aurora existen <strong>dos niveles</strong> de grupos de parámetros:</p>
+<ul>
+<li><strong>Grupo de parámetros de clúster</strong> (<em>DB cluster parameter group</em>): parámetros que afectan a todo el clúster, como el juego de caracteres, la zona horaria, <code>binlog_format</code>, <code>require_secure_transport</code> (MySQL) o <code>rds.force_ssl</code> (PostgreSQL).</li>
+<li><strong>Grupo de parámetros de instancia</strong> (<em>DB parameter group</em>): parámetros propios de cada instancia, como los relacionados con la memoria o las conexiones.</li>
+</ul>
+<h3 id="usuario-maestro-y-privilegios">Usuario maestro y privilegios<a class="headerlink" href="#usuario-maestro-y-privilegios" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Aurora MySQL</th>
+<th>Aurora PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rol del usuario maestro</td>
+<td><code>rds_superuser_role</code> (versión 3 y posteriores)</td>
+<td>Miembro de <code>rds_superuser</code></td>
+</tr>
+<tr>
+<td>Puede crear usuarios y conceder privilegios</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Puede instalar extensiones</td>
+<td>—</td>
+<td>Sí, de la lista admitida</td>
+</tr>
+<tr>
+<td>Puede acceder al sistema de ficheros</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<h3 id="conexion-a-cada-edicion">Conexión a cada edición<a class="headerlink" href="#conexion-a-cada-edicion" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Aurora MySQL (punto de enlace de clúster)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>mysql<span class="w"> </span>-h<span class="w"> </span>mi-cluster.cluster-xxxx.us-east-1.rds.amazonaws.com<span class="w"> </span>-P<span class="w"> </span><span class="m">3306</span><span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-p<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">      </span>--ssl-mode<span class="o">=</span>VERIFY_IDENTITY<span class="w"> </span>--ssl-ca<span class="o">=</span>global-bundle.pem
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Aurora PostgreSQL (punto de enlace de clúster)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>psql<span class="w"> </span><span class="s2">"host=mi-cluster.cluster-xxxx.us-east-1.rds.amazonaws.com port=5432 \</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="s2">      dbname=tienda user=postgres sslmode=verify-full sslrootcert=global-bundle.pem"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="migracion-hacia-aurora">Migración hacia Aurora<a class="headerlink" href="#migracion-hacia-aurora" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Origen</th>
+<th>Método habitual</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDS for MySQL</td>
+<td>Crear una <strong>réplica de lectura de Aurora</strong> a partir de la instancia y promocionarla, o restaurar una instantánea como clúster Aurora</td>
+</tr>
+<tr>
+<td>RDS for PostgreSQL</td>
+<td>Réplica de lectura de Aurora o restauración de instantánea</td>
+</tr>
+<tr>
+<td>MySQL autogestionado</td>
+<td>Copia física con <strong>Percona XtraBackup</strong> cargada desde S3, <code>mysqldump</code> o AWS DMS</td>
+</tr>
+<tr>
+<td>PostgreSQL autogestionado</td>
+<td><code>pg_dump</code>/<code>pg_restore</code>, replicación lógica o AWS DMS</td>
+</tr>
+<tr>
+<td>SQL Server</td>
+<td>AWS DMS + <strong>Babelfish for Aurora PostgreSQL</strong></td>
+</tr>
+<tr>
+<td>Oracle y otros motores</td>
+<td>AWS Schema Conversion Tool / DMS Schema Conversion + AWS DMS</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="criterios-de-eleccion-entre-ambas-ediciones">Criterios de elección entre ambas ediciones<a class="headerlink" href="#criterios-de-eleccion-entre-ambas-ediciones" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th>Aurora MySQL</th>
+<th>Aurora PostgreSQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aplicación existente</td>
+<td>Desarrollada para MySQL o MariaDB (por ejemplo, la aplicación PHP de la práctica)</td>
+<td>Desarrollada para PostgreSQL, o procedente de SQL Server (Babelfish) u Oracle</td>
+</tr>
+<tr>
+<td>Tipo de carga</td>
+<td>Transaccional web de alta concurrencia</td>
+<td>Transaccional con consultas complejas, datos geográficos o vectoriales</td>
+</tr>
+<tr>
+<td>Funcionalidad avanzada del lenguaje</td>
+<td>Más limitada</td>
+<td>Tipos de datos ricos, extensiones, funciones de ventana avanzadas</td>
+</tr>
+<tr>
+<td>Escalado horizontal de escrituras</td>
+<td>No (salvo varias bases de datos)</td>
+<td>Limitless Database</td>
+</tr>
+</tbody>
+</table>
+<p>En la práctica evaluable se utiliza RDS for MySQL. Migrar esa aplicación a <strong>Aurora MySQL</strong> no requeriría cambios en el código: bastaría con sustituir el punto de enlace de la instancia por el punto de enlace de clúster.</p>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Working with Amazon Aurora MySQL</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraMySQL.html">Aurora MySQL</a></li>
+<li>AWS. <em>Working with Amazon Aurora PostgreSQL</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.AuroraPostgreSQL.html">Aurora PostgreSQL</a></li>
+<li>AWS. <em>Amazon Aurora MySQL 8.4 is now generally available</em> (21/05/2026) — <a href="https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-aurora-mysql/8-4/">Anuncio</a></li>
+<li>AWS. <em>Aurora MySQL version 3 compatible with MySQL 8.0</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.MySQL80.html">Aurora MySQL 3</a></li>
+<li>AWS. <em>Amazon Aurora now supports PostgreSQL major version 18</em> (06/2026) — <a href="https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-aurora-postgresql-major-version-18">Anuncio</a></li>
+<li>AWS. <em>Amazon Aurora now supports PostgreSQL 18.4, 17.10, 16.14, 15.18, and 14.23</em> (08/2026) — <a href="https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-aurora-postgresql-18-4-17-10-16-14-15-18-14-23/">Anuncio</a></li>
+<li>AWS. <em>Using Amazon RDS Extended Support</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/extended-support.html">Extended Support</a></li>
+<li>AWS. <em>Working with parameter groups</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/USER_WorkingWithParamGroups.html">Grupos de parámetros de Aurora</a></li>
+<li>AWS. <em>Working with Babelfish for Aurora PostgreSQL</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/babelfish.html">Babelfish</a></li>
+<li>AWS. <em>Working with parallel query for Amazon Aurora MySQL</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-mysql-parallel-query.html">Parallel Query</a></li>
+<li>AWS. <em>Extension versions for Amazon Aurora PostgreSQL</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraPostgreSQLReleaseNotes/AuroraPostgreSQL.Extensions.html">Extensiones admitidas</a></li>
+<li>AWS. <em>Migrating data to an Amazon Aurora MySQL DB cluster</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Migrating.html">Migración a Aurora MySQL</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

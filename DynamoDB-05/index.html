@@ -1,0 +1,2721 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../DynamoDB-04/">
+      
+      
+        <link rel="next" href="../BD-IaC/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Acceso y securización - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#acceso-a-dynamodb-y-securizacion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Acceso y securización
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dynamodb-es-un-servicio-accesible-desde-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DynamoDB es un servicio accesible desde Internet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autenticacion-y-autorizacion-con-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autenticación y autorización con IAM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autenticación y autorización con IAM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-politicas-que-intervienen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de políticas que intervienen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lógica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#politicas-basadas-en-identidad-minimo-privilegio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Políticas basadas en identidad: mínimo privilegio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#politicas-basadas-en-recursos-en-la-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Políticas basadas en recursos en la tabla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Políticas basadas en recursos en la tabla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#permitir-el-acceso-solo-a-determinados-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permitir el acceso solo a determinados roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqueo-del-acceso-publico-bpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloqueo del acceso público (BPA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evitar-el-acceso-publico-puntos-de-enlace-de-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evitar el acceso público: puntos de enlace de VPC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evitar el acceso público: puntos de enlace de VPC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#punto-de-enlace-de-tipo-puerta-de-enlace-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de enlace de tipo puerta de enlace (Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#punto-de-enlace-de-tipo-interfaz-interface-aws-privatelink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de enlace de tipo interfaz (Interface, AWS PrivateLink)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-punto-de-enlace-por-si-solo-no-impide-el-acceso-publico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El punto de enlace por sí solo no impide el acceso público
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obligar-a-que-el-trafico-llegue-por-el-punto-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obligar a que el tráfico llegue por el punto de enlace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combinar-condiciones-quien-y-desde-donde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combinar condiciones: quién y desde dónde
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#politica-del-punto-de-enlace-de-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Política del punto de enlace de VPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otras-tecnicas-de-securizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Otras técnicas de securización
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Otras técnicas de securización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#control-de-acceso-detallado-por-elemento-y-atributo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control de acceso detallado por elemento y atributo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-de-acceso-basado-en-atributos-abac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control de acceso basado en atributos (ABAC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perimetro-de-datos-con-aws-organizations-scp-y-rcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perímetro de datos con AWS Organizations: SCP y RCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cifrado-con-claves-administradas-por-el-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado con claves administradas por el cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exigir-cifrado-en-transito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exigir cifrado en tránsito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restringir-donde-pueden-usarse-las-credenciales-de-una-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restringir dónde pueden usarse las credenciales de una instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguridad-de-red-complementaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seguridad de red complementaria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auditoria-y-deteccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoría y detección
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proteccion-frente-a-perdida-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protección frente a pérdida de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-defensa-en-profundidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen: defensa en profundidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#dynamodb-es-un-servicio-accesible-desde-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DynamoDB es un servicio accesible desde Internet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autenticacion-y-autorizacion-con-iam" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autenticación y autorización con IAM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autenticación y autorización con IAM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identidades
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-politicas-que-intervienen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de políticas que intervienen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logica-de-evaluacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lógica de evaluación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#politicas-basadas-en-identidad-minimo-privilegio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Políticas basadas en identidad: mínimo privilegio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#politicas-basadas-en-recursos-en-la-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Políticas basadas en recursos en la tabla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Políticas basadas en recursos en la tabla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#permitir-el-acceso-solo-a-determinados-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permitir el acceso solo a determinados roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bloqueo-del-acceso-publico-bpa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bloqueo del acceso público (BPA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evitar-el-acceso-publico-puntos-de-enlace-de-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evitar el acceso público: puntos de enlace de VPC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Evitar el acceso público: puntos de enlace de VPC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#punto-de-enlace-de-tipo-puerta-de-enlace-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de enlace de tipo puerta de enlace (Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#punto-de-enlace-de-tipo-interfaz-interface-aws-privatelink" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Punto de enlace de tipo interfaz (Interface, AWS PrivateLink)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-punto-de-enlace-por-si-solo-no-impide-el-acceso-publico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El punto de enlace por sí solo no impide el acceso público
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obligar-a-que-el-trafico-llegue-por-el-punto-de-enlace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obligar a que el tráfico llegue por el punto de enlace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#combinar-condiciones-quien-y-desde-donde" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Combinar condiciones: quién y desde dónde
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#politica-del-punto-de-enlace-de-vpc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Política del punto de enlace de VPC
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#otras-tecnicas-de-securizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Otras técnicas de securización
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Otras técnicas de securización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#control-de-acceso-detallado-por-elemento-y-atributo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control de acceso detallado por elemento y atributo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-de-acceso-basado-en-atributos-abac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control de acceso basado en atributos (ABAC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#perimetro-de-datos-con-aws-organizations-scp-y-rcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perímetro de datos con AWS Organizations: SCP y RCP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cifrado-con-claves-administradas-por-el-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cifrado con claves administradas por el cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exigir-cifrado-en-transito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exigir cifrado en tránsito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restringir-donde-pueden-usarse-las-credenciales-de-una-instancia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restringir dónde pueden usarse las credenciales de una instancia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguridad-de-red-complementaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Seguridad de red complementaria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auditoria-y-deteccion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auditoría y detección
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proteccion-frente-a-perdida-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protección frente a pérdida de datos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumen-defensa-en-profundidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumen: defensa en profundidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="acceso-a-dynamodb-y-securizacion">Acceso a DynamoDB y securización<a class="headerlink" href="#acceso-a-dynamodb-y-securizacion" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/DynamoDB-acceso-publico.png" /></p>
+<p>En el apartado dedicado a las redes de Amazon RDS se estudió que una instancia puede configurarse como <strong>no accesible públicamente</strong> y protegerse mediante <strong>grupos de seguridad</strong> dentro de una VPC. Ese modelo de seguridad, basado principalmente en el <strong>perímetro de red</strong>, no es directamente aplicable a DynamoDB. Como se ha visto en el apartado de arquitectura, una tabla no reside en ninguna subred y no tiene dirección IP propia: se accede a ella a través de una <strong>API pública</strong> de AWS.</p>
+<p>Este apartado analiza las implicaciones de esa exposición y las técnicas disponibles para securizar el acceso, con especial atención a las dos que se trabajan en las prácticas: <strong>limitar el acceso a determinados roles</strong> y <strong>obligar a que el tráfico llegue a través de un punto de enlace de VPC</strong>.</p>
+<hr />
+<h2 id="dynamodb-es-un-servicio-accesible-desde-internet">DynamoDB es un servicio accesible desde Internet<a class="headerlink" href="#dynamodb-es-un-servicio-accesible-desde-internet" title="Permanent link">&para;</a></h2>
+<p>Todas las operaciones de DynamoDB, tanto del plano de control como del plano de datos, se realizan mediante <strong>peticiones HTTP a un punto de enlace (<em>endpoint</em>) de la API</strong>. Estos puntos de enlace tienen nombres DNS públicos que resuelven a direcciones IP públicas de AWS. En la región <code>us-east-1</code> son, entre otros:</p>
+<table>
+<thead>
+<tr>
+<th>Punto de enlace</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dynamodb.us-east-1.amazonaws.com</code></td>
+<td>Estándar (IPv4)</td>
+</tr>
+<tr>
+<td><code>dynamodb.us-east-1.api.aws</code></td>
+<td>Pila doble (IPv4 e IPv6)</td>
+</tr>
+<tr>
+<td><code>dynamodb-fips.us-east-1.amazonaws.com</code></td>
+<td>Validado FIPS 140</td>
+</tr>
+<tr>
+<td><code>ID-CUENTA.ddb.us-east-1.amazonaws.com</code></td>
+<td>Basado en la cuenta, usado por defecto en las versiones recientes de los SDK para optimizar el enrutamiento</td>
+</tr>
+</tbody>
+</table>
+<p>Esto significa que <strong>cualquier equipo conectado a Internet puede enviar peticiones a DynamoDB</strong>: un portátil, una función Lambda, la consola web, AWS CloudShell o una instancia EC2 con salida a Internet. No existe en DynamoDB una casilla equivalente a la opción <em>Accesible públicamente: No</em> de RDS.</p>
+<p>Que el punto de enlace sea público <strong>no significa que los datos lo sean</strong>. Cada petición debe estar <strong>firmada</strong> con credenciales de AWS válidas mediante el algoritmo <strong>Signature Version 4 (SigV4)</strong>, y DynamoDB solo la ejecuta si las <strong>políticas de IAM</strong> la autorizan. Por defecto, ninguna identidad tiene acceso a ninguna tabla salvo que una política se lo conceda de forma explícita.</p>
+<div class="admonition warning">
+<p class="admonition-title">El riesgo real</p>
+<p>En DynamoDB <strong>la identidad es el perímetro principal</strong>. Si unas credenciales con permisos sobre una tabla se filtran (por ejemplo, unas claves de acceso publicadas por error en un repositorio), un atacante podría utilizarlas <strong>desde cualquier lugar de Internet</strong>. Por este motivo, la securización de DynamoDB combina dos líneas de defensa:</p>
+<ol>
+<li><strong>Quién</strong> puede acceder: identidades y políticas de IAM con mínimo privilegio.</li>
+<li><strong>Desde dónde</strong> puede acceder: restricciones de origen de red mediante puntos de enlace de VPC y condiciones en las políticas.</li>
+</ol>
+</div>
+<p>Este comportamiento se observó en ambas prácticas: antes de aplicar la política de la tabla, la instancia EC2 podía consultar la tabla <strong>sin</strong> utilizar el punto de enlace de VPC, porque la petición salía por el Internet Gateway hacia el punto de enlace público y estaba firmada con las credenciales válidas del rol <code>LabRole</code>.</p>
+<hr />
+<h2 id="autenticacion-y-autorizacion-con-iam">Autenticación y autorización con IAM<a class="headerlink" href="#autenticacion-y-autorizacion-con-iam" title="Permanent link">&para;</a></h2>
+<p>DynamoDB no tiene usuarios propios como un motor relacional: <strong>toda la autenticación y autorización se delega en AWS Identity and Access Management (IAM)</strong>.</p>
+<h3 id="identidades">Identidades<a class="headerlink" href="#identidades" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Identidad</th>
+<th>Credenciales</th>
+<th>Uso recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rol de IAM</strong></td>
+<td>Temporales, obtenidas mediante AWS STS y renovadas automáticamente</td>
+<td><strong>Opción preferente</strong> para aplicaciones: instancias EC2 (perfil de instancia), funciones Lambda, contenedores ECS/EKS</td>
+</tr>
+<tr>
+<td><strong>Usuario de IAM</strong></td>
+<td>Claves de acceso de larga duración</td>
+<td>Desaconsejado para aplicaciones; si se usa, con rotación y mínimo privilegio</td>
+</tr>
+<tr>
+<td><strong>Identidad federada</strong></td>
+<td>Temporales, a partir de un proveedor externo (IAM Identity Center, SAML, OIDC, Amazon Cognito)</td>
+<td>Usuarios humanos y aplicaciones web o móviles</td>
+</tr>
+</tbody>
+</table>
+<p>En las prácticas, la instancia EC2 obtiene las credenciales del rol <code>LabRole</code> a través del perfil de instancia <code>LabInstanceProfile</code>, de modo que <strong>no es necesario almacenar claves de acceso</strong> en la aplicación ni en el fichero <code>.env</code>. El SDK consulta automáticamente el servicio de metadatos de la instancia para obtener y renovar las credenciales.</p>
+<h3 id="tipos-de-politicas-que-intervienen">Tipos de políticas que intervienen<a class="headerlink" href="#tipos-de-politicas-que-intervienen" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tipo de política</th>
+<th>Dónde se asocia</th>
+<th>Qué controla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Basada en identidad</strong></td>
+<td>Usuario, grupo o rol de IAM</td>
+<td>Qué puede hacer esa identidad sobre qué tablas</td>
+</tr>
+<tr>
+<td><strong>Basada en recursos</strong></td>
+<td>Tabla, índice o <em>stream</em> de DynamoDB</td>
+<td>Quién puede acceder a ese recurso y en qué condiciones</td>
+</tr>
+<tr>
+<td><strong>Política del punto de enlace de VPC</strong></td>
+<td>Punto de enlace de VPC</td>
+<td>Qué peticiones pueden atravesar ese punto de enlace</td>
+</tr>
+<tr>
+<td><strong>Límite de permisos</strong> (<em>permissions boundary</em>)</td>
+<td>Usuario o rol</td>
+<td>Permisos máximos que puede llegar a tener la identidad</td>
+</tr>
+<tr>
+<td><strong>SCP</strong> (<em>Service Control Policy</em>)</td>
+<td>Cuentas u OU de AWS Organizations</td>
+<td>Permisos máximos de las <strong>identidades</strong> de la organización</td>
+</tr>
+<tr>
+<td><strong>RCP</strong> (<em>Resource Control Policy</em>)</td>
+<td>Cuentas u OU de AWS Organizations</td>
+<td>Permisos máximos sobre los <strong>recursos</strong> de la organización</td>
+</tr>
+<tr>
+<td><strong>Política de sesión</strong></td>
+<td>Sesión de un rol asumido</td>
+<td>Restringe los permisos de esa sesión concreta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logica-de-evaluacion">Lógica de evaluación<a class="headerlink" href="#logica-de-evaluacion" title="Permanent link">&para;</a></h3>
+<p><img alt="image" src="../imgs/DynamoDB-evaluacion-politicas.png" /></p>
+<p>IAM combina todas las políticas aplicables a cada petición según estas reglas:</p>
+<ol>
+<li><strong>Denegación por defecto</strong>: si ninguna política permite la acción, se deniega (denegación implícita).</li>
+<li><strong>La denegación explícita prevalece</strong>: si <strong>cualquier</strong> política contiene un <code>Deny</code> aplicable, la petición se rechaza, aunque otras políticas la permitan.</li>
+<li><strong>SCP, RCP, límites de permisos y políticas de sesión no conceden permisos</strong>: solo establecen el máximo. Deben permitir la acción para que pueda concederse.</li>
+<li><strong>Misma cuenta</strong>: basta con que la política basada en identidad <strong>o</strong> la política basada en recursos permitan la acción.</li>
+<li><strong>Acceso entre cuentas</strong>: es necesario que lo permitan <strong>ambas</strong>: la política de identidad en la cuenta de origen y la política de recursos de la tabla.</li>
+</ol>
+<p>La regla 2 es la que hace posibles las técnicas de restricción que se describen a continuación: se concede el acceso de forma general y se añade una <strong>denegación explícita condicionada</strong> que elimina todo lo que no cumpla los requisitos.</p>
+<hr />
+<h2 id="politicas-basadas-en-identidad-minimo-privilegio">Políticas basadas en identidad: mínimo privilegio<a class="headerlink" href="#politicas-basadas-en-identidad-minimo-privilegio" title="Permanent link">&para;</a></h2>
+<p>La política que se asocia al rol de una aplicación debe conceder únicamente las acciones necesarias sobre las tablas concretas que utiliza. Por ejemplo, para un rol que solo lee y actualiza productos:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"LecturaEscrituraProductos"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="s2">"dynamodb:GetItem"</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="s2">"dynamodb:Query"</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="s2">"dynamodb:PutItem"</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="s2">"dynamodb:UpdateItem"</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos"</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos/index/*"</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Obsérvese que el recurso <code>table/Productos/index/*</code> es necesario para poder ejecutar <code>Query</code> sobre los índices secundarios, que tienen un ARN propio.</p>
+<div class="admonition info">
+<p class="admonition-title">Entorno AWS Academy</p>
+<p>En el Learner Lab no es posible crear roles ni modificar las políticas de <code>LabRole</code>, que tiene permisos amplios sobre DynamoDB. Por ese motivo, en las prácticas la restricción se aplica desde el lado del <strong>recurso</strong>, mediante la política de la tabla, que sí está bajo nuestro control.</p>
+</div>
+<hr />
+<h2 id="politicas-basadas-en-recursos-en-la-tabla">Políticas basadas en recursos en la tabla<a class="headerlink" href="#politicas-basadas-en-recursos-en-la-tabla" title="Permanent link">&para;</a></h2>
+<p>Desde marzo de 2024, DynamoDB permite asociar <strong>políticas basadas en recursos</strong> a tablas, índices y <em>streams</em>. La política de una tabla se aplica también a sus índices. Se gestionan desde la consola en <strong>DynamoDB → Tablas → <em>tabla</em> → pestaña Permisos → Política de la tabla basada en recursos</strong>, o con las operaciones <code>PutResourcePolicy</code>, <code>GetResourcePolicy</code> y <code>DeleteResourcePolicy</code>. Su tamaño máximo es de <strong>20 KB</strong>.</p>
+<p>Estas políticas presentan dos ventajas fundamentales frente a las basadas en identidad:</p>
+<ul>
+<li>Permiten <strong>conceder acceso entre cuentas</strong> sin necesidad de asumir roles.</li>
+<li>Permiten <strong>imponer restricciones a todas las identidades</strong> que intenten acceder a la tabla, con independencia de los permisos que tengan en sus propias políticas. Es decir, el propietario de la tabla controla el acceso aunque no controle las identidades.</li>
+</ul>
+<h3 id="permitir-el-acceso-solo-a-determinados-roles">Permitir el acceso solo a determinados roles<a class="headerlink" href="#permitir-el-acceso-solo-a-determinados-roles" title="Permanent link">&para;</a></h3>
+<p>Supóngase que la tabla <code>Productos</code> solo debe ser accesible por el rol de la aplicación (<code>RolAppWeb</code>) y por el rol de los administradores de bases de datos (<code>RolAdminBD</code>), aunque en la cuenta existan otros usuarios y roles con permisos amplios sobre DynamoDB.</p>
+<p><strong>Por qué no basta con un <code>Allow</code>.</strong> Si la política de la tabla se limitara a permitir el acceso a esos dos roles, cualquier otra identidad de la misma cuenta cuya política de identidad conceda <code>dynamodb:*</code> seguiría pudiendo acceder (regla 4 de la evaluación). Es necesaria una <strong>denegación explícita</strong> para todos los demás:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DenegarDatosSalvoRolesAutorizados"</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="s2">"dynamodb:GetItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:BatchGetItem"</span><span class="p">,</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="s2">"dynamodb:Query"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Scan"</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="s2">"dynamodb:PutItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:UpdateItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:DeleteItem"</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="s2">"dynamodb:BatchWriteItem"</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos"</span><span class="p">,</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos/index/*"</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="nt">"ArnNotEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">          </span><span class="nt">"aws:PrincipalArn"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">            </span><span class="s2">"arn:aws:iam::111122223333:role/RolAppWeb"</span><span class="p">,</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="s2">"arn:aws:iam::111122223333:role/RolAdminBD"</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="p">]</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">        </span><span class="p">}</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Análisis de la política:</p>
+<ul>
+<li><strong><code>"Principal": "*"</code></strong> aplica la sentencia a cualquier identidad que realice la petición.</li>
+<li><strong><code>aws:PrincipalArn</code></strong> contiene el ARN de la identidad que firma la petición. Cuando se trata de un rol asumido (como el de una instancia EC2), la clave contiene el <strong>ARN del rol</strong> (<code>arn:aws:iam::…:role/RolAppWeb</code>) y no el de la sesión temporal (<code>arn:aws:sts::…:assumed-role/RolAppWeb/i-0abc…</code>). Por eso la condición funciona con cualquier instancia que tenga asociado el rol.</li>
+<li><strong><code>ArnNotEquals</code> con varios valores</strong> se evalúa como «el ARN no coincide con <strong>ninguno</strong> de los valores de la lista». La petición se deniega si no procede de ninguno de los dos roles.</li>
+<li>Solo se deniegan <strong>acciones del plano de datos</strong>. Si la aplicación utiliza PartiQL, deben añadirse también las acciones <code>dynamodb:PartiQLSelect</code>, <code>dynamodb:PartiQLInsert</code>, <code>dynamodb:PartiQLUpdate</code> y <code>dynamodb:PartiQLDelete</code>, ya que se autorizan por separado. Si se denegasen también las del plano de control (<code>dynamodb:*</code>), se correría el riesgo de que nadie pudiera volver a modificar o eliminar la política de la tabla.</li>
+<li>Incluir un <strong>rol de administración</strong> en la lista es una buena práctica para no perder el acceso a los datos si cambia el rol de la aplicación.</li>
+</ul>
+<p>Si las identidades autorizadas pertenecen a otras cuentas, la política debe incluir además una sentencia <code>Allow</code> que les conceda las acciones, ya que en el acceso entre cuentas el permiso debe existir en ambos lados.</p>
+<p>Existen alternativas a la enumeración de ARN que escalan mejor cuando el número de roles crece:</p>
+<table>
+<thead>
+<tr>
+<th>Condición</th>
+<th>Ejemplo de uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aws:PrincipalArn</code> con comodines (<code>StringNotLike</code>)</td>
+<td>Todos los roles cuyo nombre empiece por <code>app-produccion-</code></td>
+</tr>
+<tr>
+<td><code>aws:PrincipalTag/clave</code></td>
+<td>Solo identidades con la etiqueta <code>departamento = ventas</code></td>
+</tr>
+<tr>
+<td><code>aws:PrincipalAccount</code></td>
+<td>Solo identidades de determinadas cuentas</td>
+</tr>
+<tr>
+<td><code>aws:PrincipalOrgID</code></td>
+<td>Solo identidades de la organización de AWS Organizations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bloqueo-del-acceso-publico-bpa">Bloqueo del acceso público (BPA)<a class="headerlink" href="#bloqueo-del-acceso-publico-bpa" title="Permanent link">&para;</a></h3>
+<p>DynamoDB incorpora de forma automática y sin configuración un mecanismo de <strong>bloqueo del acceso público</strong> (<em>Block Public Access</em>) en las políticas basadas en recursos. Mediante razonamiento automatizado, el servicio analiza cada política que se crea o modifica y <strong>rechaza aquellas que conceden acceso público</strong>, es decir, las que permiten el acceso a <code>"Principal": "*"</code> sin una condición que lo restrinja.</p>
+<p>Una política con <code>Principal</code> comodín se considera no pública si incluye una condición sobre alguna de las claves admitidas, entre ellas <code>aws:PrincipalArn</code>, <code>aws:PrincipalAccount</code>, <code>aws:PrincipalOrgID</code>, <code>aws:SourceVpc</code>, <code>aws:SourceVpce</code> o <code>aws:SourceAccount</code>, con valores <strong>sin comodines ni variables</strong>. Este mecanismo protege frente a errores de configuración, pero solo analiza las políticas de DynamoDB; las políticas de identidad y las de otros recursos relacionados (como las claves de KMS) deben revisarse por separado.</p>
+<hr />
+<h2 id="evitar-el-acceso-publico-puntos-de-enlace-de-vpc">Evitar el acceso público: puntos de enlace de VPC<a class="headerlink" href="#evitar-el-acceso-publico-puntos-de-enlace-de-vpc" title="Permanent link">&para;</a></h2>
+<p>Las políticas anteriores controlan <strong>quién</strong> accede. Para controlar <strong>por dónde</strong> llega el tráfico se utilizan los <strong>puntos de enlace de VPC</strong> (<em>VPC endpoints</em>), que permiten que los recursos de una VPC se comuniquen con DynamoDB a través de la <strong>red privada de AWS</strong>, sin atravesar Internet y sin necesidad de un Internet Gateway ni de un NAT Gateway.</p>
+<p><img alt="image" src="../imgs/DynamoDB-endpoints.png" /></p>
+<p>DynamoDB admite dos tipos de punto de enlace.</p>
+<h3 id="punto-de-enlace-de-tipo-puerta-de-enlace-gateway">Punto de enlace de tipo puerta de enlace (<em>Gateway</em>)<a class="headerlink" href="#punto-de-enlace-de-tipo-puerta-de-enlace-gateway" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Se asocia a una o varias <strong>tablas de rutas</strong> de la VPC. Al hacerlo, AWS añade automáticamente una ruta cuyo destino es la <strong>lista de prefijos</strong> gestionada de DynamoDB (<code>pl-xxxxxxxx</code>, con los rangos IP públicos del servicio) y cuyo objetivo es el punto de enlace (<code>vpce-xxxxxxxx</code>).</li>
+<li>Las aplicaciones siguen usando el <strong>nombre DNS estándar</strong> (<code>dynamodb.us-east-1.amazonaws.com</code>); es la tabla de rutas la que desvía el tráfico hacia el punto de enlace. <strong>No requiere cambios en la aplicación.</strong></li>
+<li><strong>No tiene coste</strong> adicional.</li>
+<li>No crea interfaces de red ni admite grupos de seguridad. La lista de prefijos puede utilizarse, no obstante, en las reglas de salida de los grupos de seguridad de las instancias.</li>
+<li>Solo admite <strong>IPv4</strong> y <strong>no es accesible desde fuera de la VPC</strong>: ni desde redes locales (VPN, Direct Connect), ni desde VPC emparejadas de otra región, ni a través de Transit Gateway.</li>
+</ul>
+<h3 id="punto-de-enlace-de-tipo-interfaz-interface-aws-privatelink">Punto de enlace de tipo interfaz (<em>Interface</em>, AWS PrivateLink)<a class="headerlink" href="#punto-de-enlace-de-tipo-interfaz-interface-aws-privatelink" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Crea una <strong>interfaz de red elástica (ENI)</strong> con una <strong>dirección IP privada</strong> en cada subred seleccionada. Es la «presencia» de DynamoDB dentro de la subred privada que se observó en la práctica (<code>10.0.2.x</code>).</li>
+<li>Se protege con <strong>grupos de seguridad</strong>, que deben permitir el tráfico HTTPS (TCP 443) desde los clientes autorizados. En las prácticas, el grupo del punto de enlace solo admite tráfico procedente del grupo de seguridad de los servidores.</li>
+<li>Genera <strong>nombres DNS propios</strong>, regional y zonales, con el formato <code>vpce-1a2b3c4d-5e6f.dynamodb.us-east-1.vpce.amazonaws.com</code>.</li>
+<li><strong>No admite DNS privado</strong>: el nombre estándar de DynamoDB sigue resolviendo a direcciones públicas. La aplicación debe configurarse <strong>explícitamente</strong> para usar el nombre del punto de enlace (parámetro <code>--endpoint-url</code> en la CLI, <code>endpoint_url</code> en boto3 o la variable <code>dynamo.endpoint</code> de la práctica evaluable). AWS desaconseja crear zonas alojadas privadas que sobrescriban los nombres de DynamoDB para forzar este comportamiento.</li>
+<li>Es accesible desde <strong>redes locales</strong> mediante VPN o Direct Connect y desde otras regiones mediante emparejamiento de VPC o Transit Gateway.</li>
+<li><strong>Tiene coste</strong> por hora y por GB procesado.</li>
+</ul>
+<h3 id="comparativa">Comparativa<a class="headerlink" href="#comparativa" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Característica</th>
+<th>Gateway</th>
+<th>Interface (PrivateLink)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direcciones utilizadas</td>
+<td>IP públicas de DynamoDB, encaminadas por la red de AWS</td>
+<td>IP privadas de la VPC</td>
+</tr>
+<tr>
+<td>Mecanismo</td>
+<td>Ruta en la tabla de rutas (lista de prefijos)</td>
+<td>ENI en la subred + nombre DNS propio</td>
+</tr>
+<tr>
+<td>Cambios en la aplicación</td>
+<td>Ninguno</td>
+<td>Indicar el nombre DNS del punto de enlace</td>
+</tr>
+<tr>
+<td>Grupos de seguridad</td>
+<td>No (sí la lista de prefijos en las reglas de salida)</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Acceso desde redes locales u otras regiones</td>
+<td>No</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Coste</td>
+<td>Gratuito</td>
+<td>Por hora y por GB</td>
+</tr>
+<tr>
+<td>Uso recomendado</td>
+<td>Cargas que se ejecutan dentro de la VPC</td>
+<td>Entornos híbridos o acceso entre regiones</td>
+</tr>
+</tbody>
+</table>
+<p>Ambos tipos pueden coexistir en la misma VPC: un diseño habitual consiste en usar el punto de enlace <strong>Gateway</strong> para las aplicaciones de la VPC y el de tipo <strong>Interface</strong> solo para los clientes locales.</p>
+<div class="admonition note">
+<p class="admonition-title">¿Por qué se usa un punto de enlace de tipo interfaz en las prácticas?</p>
+<p>Como se indica en la práctica evaluable, en un entorno real sin requisitos híbridos lo más adecuado sería un punto de enlace de tipo <strong>Gateway</strong>, por ser gratuito y transparente para la aplicación. En las prácticas se utiliza el de tipo <strong>Interface</strong> porque hace <strong>visible</strong> cuándo se usa el punto de enlace (al configurar <code>--endpoint-url</code>) y cuándo no, lo que facilita comprobar el efecto de las políticas.</p>
+</div>
+<h3 id="el-punto-de-enlace-por-si-solo-no-impide-el-acceso-publico">El punto de enlace por sí solo no impide el acceso público<a class="headerlink" href="#el-punto-de-enlace-por-si-solo-no-impide-el-acceso-publico" title="Permanent link">&para;</a></h3>
+<p>Crear un punto de enlace <strong>ofrece</strong> una ruta privada, pero <strong>no cierra</strong> la ruta pública. En la práctica, tras crear el punto de enlace de tipo interfaz, el comando <code>aws dynamodb scan</code> <strong>sin</strong> <code>--endpoint-url</code> seguía funcionando: la petición salía por el Internet Gateway hacia el punto de enlace público. Del mismo modo, la consola web y CloudShell seguían teniendo acceso, y también lo tendría cualquier persona con credenciales válidas desde fuera de AWS.</p>
+<p>Para que la ruta privada sea <strong>la única</strong> posible, es necesario combinar el punto de enlace con una <strong>condición de origen de red</strong> en la política de la tabla.</p>
+<h3 id="obligar-a-que-el-trafico-llegue-por-el-punto-de-enlace">Obligar a que el tráfico llegue por el punto de enlace<a class="headerlink" href="#obligar-a-que-el-trafico-llegue-por-el-punto-de-enlace" title="Permanent link">&para;</a></h3>
+<p>La clave de condición <code>aws:SourceVpce</code> contiene el identificador del punto de enlace de VPC por el que ha llegado la petición; si la petición no ha pasado por ningún punto de enlace, la clave no existe. Una denegación condicionada sobre ella convierte la ruta de red en un <strong>requisito de acceso</strong>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SoloDesdeEndpointPrivado"</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">      </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="s2">"dynamodb:GetItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:BatchGetItem"</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="s2">"dynamodb:Query"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Scan"</span><span class="p">,</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">        </span><span class="s2">"dynamodb:PutItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:UpdateItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:DeleteItem"</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">        </span><span class="s2">"dynamodb:BatchWriteItem"</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos"</span><span class="p">,</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos/index/*"</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">        </span><span class="nt">"StringNotEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:SourceVpce"</span><span class="p">:</span><span class="w"> </span><span class="s2">"vpce-0123456789abcdef0"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esta condición funciona tanto con puntos de enlace de tipo Gateway como de tipo Interface. Otras claves de condición relacionadas con el origen de red son:</p>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Contenido</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aws:SourceVpce</code></td>
+<td>ID del punto de enlace de VPC</td>
+<td>Exigir un punto de enlace concreto</td>
+</tr>
+<tr>
+<td><code>aws:SourceVpc</code></td>
+<td>ID de la VPC desde la que se origina la petición a través de un punto de enlace</td>
+<td>Admitir cualquier punto de enlace de una VPC</td>
+</tr>
+<tr>
+<td><code>aws:VpcSourceIp</code></td>
+<td>IP privada del cliente dentro de la VPC</td>
+<td>Restringir a determinadas subredes o equipos</td>
+</tr>
+<tr>
+<td><code>aws:SourceIp</code></td>
+<td>IP pública del cliente</td>
+<td>Restringir accesos que llegan <strong>por Internet</strong>. <strong>No está disponible</strong> cuando la petición llega por un punto de enlace de VPC</td>
+</tr>
+</tbody>
+</table>
+<p>Consecuencias que deben tenerse en cuenta al aplicar esta política:</p>
+<ul>
+<li>La <strong>consola web</strong> y <strong>CloudShell</strong> dejan de poder consultar los elementos, porque sus peticiones no llegan por el punto de enlace (así se comprobó en la tarea 6 de la práctica). Las operaciones de administración siguen funcionando porque no se han denegado.</li>
+<li>Una aplicación que <strong>olvide</strong> configurar el punto de enlace recibirá un error <code>AccessDeniedException … with an explicit deny in a resource-based policy</code>, como el que se muestra en el paso 12 de la práctica evaluable.</li>
+<li>Si otros servicios de AWS deben acceder a la tabla en nombre del cliente (por ejemplo, en tablas globales o integraciones), es necesario revisar la documentación de buenas prácticas y prever excepciones.</li>
+</ul>
+<h3 id="combinar-condiciones-quien-y-desde-donde">Combinar condiciones: quién <strong>y</strong> desde dónde<a class="headerlink" href="#combinar-condiciones-quien-y-desde-donde" title="Permanent link">&para;</a></h3>
+<p>En un escenario real interesa exigir simultáneamente ambas restricciones: que la petición proceda de un rol autorizado <strong>y</strong> que llegue por el punto de enlace. Para construir correctamente la política es imprescindible conocer cómo combina IAM las condiciones:</p>
+<ul>
+<li><strong>Dentro de una misma sentencia</strong>, las distintas claves de condición se combinan con <strong>Y lógico</strong> (todas deben cumplirse para que la sentencia se aplique).</li>
+<li><strong>Entre sentencias distintas</strong>, cada <code>Deny</code> actúa de forma independiente: basta con que <strong>una</strong> se aplique para que la petición se rechace (equivale a un <strong>O lógico</strong> entre denegaciones).</li>
+</ul>
+<p>Si se colocaran las dos condiciones (<code>aws:PrincipalArn</code> y <code>aws:SourceVpce</code>) en <strong>una sola sentencia</strong> <code>Deny</code>, la denegación solo se produciría cuando <strong>ambas</strong> se cumplieran a la vez, es decir, cuando la petición no procede de un rol autorizado <strong>y además</strong> no llega por el punto de enlace:</p>
+<table>
+<thead>
+<tr>
+<th>Rol autorizado</th>
+<th>Llega por el endpoint</th>
+<th>Una sentencia con ambas condiciones</th>
+<th>Dos sentencias <code>Deny</code> independientes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sí</td>
+<td>Sí</td>
+<td>Permitido</td>
+<td>Permitido</td>
+</tr>
+<tr>
+<td>Sí</td>
+<td>No</td>
+<td><strong>Permitido</strong> (no deseado)</td>
+<td>Denegado</td>
+</tr>
+<tr>
+<td>No</td>
+<td>Sí</td>
+<td><strong>Permitido</strong> (no deseado)</td>
+<td>Denegado</td>
+</tr>
+<tr>
+<td>No</td>
+<td>No</td>
+<td>Denegado</td>
+<td>Denegado</td>
+</tr>
+</tbody>
+</table>
+<p>Por tanto, para exigir las dos condiciones a la vez la política de la tabla debe contener <strong>dos sentencias <code>Deny</code> independientes</strong>, cada una con su propia condición, construidas a partir de los dos ejemplos anteriores.</p>
+<h3 id="politica-del-punto-de-enlace-de-vpc">Política del punto de enlace de VPC<a class="headerlink" href="#politica-del-punto-de-enlace-de-vpc" title="Permanent link">&para;</a></h3>
+<p>Además de la política de la tabla, cada punto de enlace admite su propia <strong>política del punto de enlace</strong>, que restringe qué peticiones pueden atravesarlo. Su valor predeterminado es <em>Acceso completo</em>. Restringirla permite, por ejemplo, impedir que desde la VPC se utilicen tablas distintas de las autorizadas, lo que dificulta la <strong>exfiltración de datos</strong> hacia tablas de otras cuentas:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SoloTablaProductos"</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="s2">"dynamodb:GetItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Query"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:Scan"</span><span class="p">,</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="s2">"dynamodb:PutItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:UpdateItem"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:DeleteItem"</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">      </span><span class="p">],</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos"</span><span class="p">,</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="s2">"arn:aws:dynamodb:us-east-1:111122223333:table/Productos/*"</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="p">]</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La política del punto de enlace y la política de la tabla son complementarias: la primera protege <strong>la red</strong> (qué puede salir de la VPC), la segunda protege <strong>el dato</strong> (por dónde y quién puede entrar a la tabla).</p>
+<hr />
+<h2 id="otras-tecnicas-de-securizacion">Otras técnicas de securización<a class="headerlink" href="#otras-tecnicas-de-securizacion" title="Permanent link">&para;</a></h2>
+<p>Además de las anteriores, AWS ofrece otros mecanismos que permiten construir una estrategia de <strong>defensa en profundidad</strong>.</p>
+<h3 id="control-de-acceso-detallado-por-elemento-y-atributo">Control de acceso detallado por elemento y atributo<a class="headerlink" href="#control-de-acceso-detallado-por-elemento-y-atributo" title="Permanent link">&para;</a></h3>
+<p>Las claves de condición propias de DynamoDB permiten restringir el acceso <strong>dentro</strong> de una tabla:</p>
+<ul>
+<li><code>dynamodb:LeadingKeys</code>: limita los elementos accesibles a aquellos cuya <strong>clave de partición</strong> coincide con un valor, habitualmente el identificador del usuario autenticado. Es la base de las aplicaciones móviles o web en las que cada usuario solo puede leer sus propios datos (por ejemplo, mediante <strong>Amazon Cognito</strong>).</li>
+<li><code>dynamodb:Attributes</code>: limita los <strong>atributos</strong> que pueden leerse o escribirse.</li>
+<li><code>dynamodb:Select</code> y <code>dynamodb:ReturnValues</code>: impiden que se devuelvan atributos no autorizados por otras vías.</li>
+</ul>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"ForAllValues:StringEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">"dynamodb:LeadingKeys"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"${cognito-identity.amazonaws.com:sub}"</span><span class="p">]</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="control-de-acceso-basado-en-atributos-abac">Control de acceso basado en atributos (ABAC)<a class="headerlink" href="#control-de-acceso-basado-en-atributos-abac" title="Permanent link">&para;</a></h3>
+<p>Disponible de forma general desde noviembre de 2024, permite autorizar en función de las <strong>etiquetas</strong> de la identidad y de la tabla. Por ejemplo, una política puede permitir el acceso solo cuando la etiqueta <code>proyecto</code> del rol coincide con la etiqueta <code>proyecto</code> de la tabla (<code>aws:ResourceTag/proyecto</code> = <code>${aws:PrincipalTag/proyecto}</code>). Esto evita mantener listas de ARN y escala bien en organizaciones con muchas tablas y equipos.</p>
+<h3 id="perimetro-de-datos-con-aws-organizations-scp-y-rcp">Perímetro de datos con AWS Organizations: SCP y RCP<a class="headerlink" href="#perimetro-de-datos-con-aws-organizations-scp-y-rcp" title="Permanent link">&para;</a></h3>
+<p>En organizaciones con varias cuentas se pueden establecer <strong>barreras de protección centralizadas</strong>:</p>
+<ul>
+<li>Las <strong>SCP</strong> limitan lo que pueden hacer las identidades de las cuentas de la organización (por ejemplo, impedir que desactiven la protección contra eliminación o que usen DynamoDB fuera de determinadas regiones).</li>
+<li>Las <strong>RCP</strong>, que admiten DynamoDB desde febrero de 2026, limitan quién puede acceder a los recursos de la organización. Permiten, por ejemplo, impedir que <strong>cualquier identidad ajena a la organización</strong> acceda a las tablas, aunque alguien añada por error una política de tabla permisiva:</li>
+</ul>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SoloIdentidadesDeLaOrganizacion"</span><span class="p">,</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="nt">"Principal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"dynamodb:*"</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">        </span><span class="nt">"StringNotEqualsIfExists"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:PrincipalOrgID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"o-a1b2c3d4e5"</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="nt">"BoolIfExists"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:PrincipalIsAWSService"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Estas políticas no pueden utilizarse en el Learner Lab, pero constituyen la práctica recomendada en entornos empresariales.</p>
+<h3 id="cifrado-con-claves-administradas-por-el-cliente">Cifrado con claves administradas por el cliente<a class="headerlink" href="#cifrado-con-claves-administradas-por-el-cliente" title="Permanent link">&para;</a></h3>
+<p>Utilizar una <strong>clave de AWS KMS administrada por el cliente</strong> añade una capa de control independiente: la política de la clave determina qué identidades y servicios pueden usarla, toda utilización queda registrada en CloudTrail y, si la clave se deshabilita o se programa su eliminación, <strong>la tabla deja de ser accesible</strong>.</p>
+<h3 id="exigir-cifrado-en-transito">Exigir cifrado en tránsito<a class="headerlink" href="#exigir-cifrado-en-transito" title="Permanent link">&para;</a></h3>
+<p>Aunque los SDK utilizan HTTPS por defecto, puede imponerse mediante una denegación sobre la clave <code>aws:SecureTransport</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"Bool"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:SecureTransport"</span><span class="p">:</span><span class="w"> </span><span class="s2">"false"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="restringir-donde-pueden-usarse-las-credenciales-de-una-instancia">Restringir dónde pueden usarse las credenciales de una instancia<a class="headerlink" href="#restringir-donde-pueden-usarse-las-credenciales-de-una-instancia" title="Permanent link">&para;</a></h3>
+<p>Las claves de condición <code>aws:Ec2InstanceSourceVpc</code> y <code>aws:Ec2InstanceSourcePrivateIPv4</code> permiten garantizar que las credenciales de un rol de instancia EC2 <strong>solo se utilicen desde la propia instancia</strong> o desde su VPC. Si un atacante extrae las credenciales temporales de la instancia y trata de usarlas desde fuera, la petición se deniega.</p>
+<h3 id="seguridad-de-red-complementaria">Seguridad de red complementaria<a class="headerlink" href="#seguridad-de-red-complementaria" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Grupos de seguridad</strong> en los puntos de enlace de tipo interfaz, que admitan HTTPS solo desde los grupos de seguridad de los servidores (técnica usada en las prácticas).</li>
+<li><strong>Reglas de salida</strong> en los grupos de seguridad de las instancias que solo permitan el tráfico hacia la lista de prefijos de DynamoDB o hacia el grupo del punto de enlace.</li>
+<li><strong>Subredes privadas sin ruta a Internet</strong>: si las instancias no tienen salida a Internet (ni Internet Gateway ni NAT), el punto de enlace es la única vía posible hacia DynamoDB.</li>
+</ul>
+<h3 id="auditoria-y-deteccion">Auditoría y detección<a class="headerlink" href="#auditoria-y-deteccion" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>AWS CloudTrail</strong> registra por defecto los eventos del plano de control (crear tablas, modificar políticas…). Los <strong>eventos de datos</strong> (<code>GetItem</code>, <code>PutItem</code>, etc.) deben activarse expresamente y tienen coste adicional.</li>
+<li><strong>IAM Access Analyzer</strong> analiza las políticas de las tablas e informa de los accesos concedidos a entidades externas a la cuenta o a la organización.</li>
+<li><strong>AWS Config</strong> permite evaluar de forma continua reglas como <code>dynamodb-pitr-enabled</code> o <code>dynamodb-table-encrypted-kms</code>.</li>
+</ul>
+<h3 id="proteccion-frente-a-perdida-de-datos">Protección frente a pérdida de datos<a class="headerlink" href="#proteccion-frente-a-perdida-de-datos" title="Permanent link">&para;</a></h3>
+<p>La seguridad incluye también la <strong>disponibilidad</strong> de la información: protección contra eliminación, recuperación a un momento dado (PITR) y copias de seguridad, ya descritas en el apartado de características.</p>
+<hr />
+<h2 id="resumen-defensa-en-profundidad">Resumen: defensa en profundidad<a class="headerlink" href="#resumen-defensa-en-profundidad" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Técnica</th>
+<th>Protege frente a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identidad</td>
+<td>Roles con credenciales temporales; mínimo privilegio</td>
+<td>Robo de claves de larga duración; permisos excesivos</td>
+</tr>
+<tr>
+<td>Recurso</td>
+<td>Política de tabla con <code>Deny</code> y <code>aws:PrincipalArn</code></td>
+<td>Accesos de identidades no autorizadas aunque tengan permisos amplios</td>
+</tr>
+<tr>
+<td>Recurso</td>
+<td>Bloqueo del acceso público (automático)</td>
+<td>Políticas de tabla públicas por error</td>
+</tr>
+<tr>
+<td>Red</td>
+<td>Punto de enlace de VPC (Gateway o Interface)</td>
+<td>Tráfico a través de Internet</td>
+</tr>
+<tr>
+<td>Red + recurso</td>
+<td>Política de tabla con <code>aws:SourceVpce</code> / <code>aws:SourceVpc</code></td>
+<td>Uso de credenciales válidas desde fuera de la red corporativa</td>
+</tr>
+<tr>
+<td>Red</td>
+<td>Política del punto de enlace</td>
+<td>Exfiltración de datos hacia otras tablas o cuentas</td>
+</tr>
+<tr>
+<td>Dato</td>
+<td><code>dynamodb:LeadingKeys</code>, <code>dynamodb:Attributes</code>, ABAC</td>
+<td>Acceso a elementos o atributos ajenos</td>
+</tr>
+<tr>
+<td>Organización</td>
+<td>SCP y RCP</td>
+<td>Errores de configuración en cuentas individuales; acceso externo</td>
+</tr>
+<tr>
+<td>Cifrado</td>
+<td>KMS con clave del cliente; <code>aws:SecureTransport</code></td>
+<td>Acceso al almacenamiento; interceptación</td>
+</tr>
+<tr>
+<td>Auditoría</td>
+<td>CloudTrail, IAM Access Analyzer, AWS Config</td>
+<td>Accesos no detectados; desviaciones de configuración</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Identity and Access Management for Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/security-iam.html">IAM en DynamoDB</a></li>
+<li>AWS. <em>Using resource-based policies for DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html">Políticas basadas en recursos</a></li>
+<li>AWS. <em>Amazon DynamoDB now supports resource-based policies</em> (20/03/2024) — <a href="https://aws.amazon.com/about-aws/whats-new/2024/03/amazon-dynamodb-resource-based-policies">Anuncio</a></li>
+<li>AWS. <em>Blocking public access with resource-based policies in DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-bpa-rbp.html">Bloqueo del acceso público</a></li>
+<li>AWS. <em>DynamoDB resource-based policy best practices</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-best-practices.html">Buenas prácticas</a></li>
+<li>AWS. <em>Policy evaluation logic</em> — <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html">Lógica de evaluación de políticas</a></li>
+<li>AWS. <em>AWS global condition context keys</em> — <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_condition-keys.html">Claves de condición globales</a></li>
+<li>AWS. <em>Gateway endpoints for Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-ddb.html">Punto de enlace Gateway</a></li>
+<li>AWS. <em>AWS PrivateLink for DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/privatelink-interface-endpoints.html">Punto de enlace Interface</a></li>
+<li>AWS. <em>Simplify private connectivity to Amazon DynamoDB with AWS PrivateLink</em> (AWS Database Blog) — <a href="https://aws.amazon.com/blogs/database/simplify-private-connectivity-to-amazon-dynamodb-with-aws-privatelink">Artículo</a></li>
+<li>AWS. <em>Amazon DynamoDB endpoints and quotas</em> — <a href="https://docs.aws.amazon.com/general/latest/gr/ddb.html">Puntos de enlace públicos</a></li>
+<li>AWS. <em>Using IAM policy conditions for fine-grained access control</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/specifying-conditions.html">Control de acceso detallado</a></li>
+<li>AWS. <em>Using attribute-based access control with DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/attribute-based-access-control.html">ABAC</a></li>
+<li>AWS. <em>AWS expands Resource Control Policies support to Amazon DynamoDB</em> (12/02/2026) — <a href="https://aws.amazon.com/about-aws/whats-new/2026/02/aws-expands-resource-control-policies-amazon/">Anuncio RCP</a></li>
+<li>AWS. <em>Resource control policies (RCPs)</em> — <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_rcps.html">RCP en AWS Organizations</a></li>
+<li>AWS. <em>Building a data perimeter on AWS</em> (whitepaper) — <a href="https://docs.aws.amazon.com/whitepapers/latest/building-a-data-perimeter-on-aws/building-a-data-perimeter-on-aws.html">Perímetros de datos</a></li>
+<li>AWS. <em>DynamoDB encryption at rest</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/EncryptionAtRest.html">Cifrado en reposo con KMS</a></li>
+<li>AWS Security Blog. <em>How to use policies to restrict where EC2 instance credentials can be used from</em> — <a href="https://aws.amazon.com/blogs/security/how-to-use-policies-to-restrict-where-ec2-instance-credentials-can-be-used-from">Artículo</a></li>
+<li>AWS. <em>Logging DynamoDB operations by using AWS CloudTrail</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html">CloudTrail</a></li>
+<li>AWS. <em>Security best practices for Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices-security.html">Buenas prácticas de seguridad</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

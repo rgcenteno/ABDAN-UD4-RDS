@@ -1,0 +1,1918 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../BD-Region/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Visión general de Amazon RDS - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#amazon-rds-vision-general" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Visión general de Amazon RDS
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-gestiona-aws-y-que-gestiona-el-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué gestiona AWS y qué gestiona el cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motores-disponibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motores disponibles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptos-basicos-del-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptos básicos del servicio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptos básicos del servicio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opciones-de-despliegue-y-alta-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de despliegue y alta disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-rds-frente-a-amazon-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon RDS frente a Amazon Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#herramientas-de-operacion-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas de operación habituales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-gestiona-aws-y-que-gestiona-el-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Qué gestiona AWS y qué gestiona el cliente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motores-disponibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Motores disponibles
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceptos-basicos-del-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conceptos básicos del servicio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceptos básicos del servicio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opciones-de-despliegue-y-alta-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opciones de despliegue y alta disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#amazon-rds-frente-a-amazon-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Amazon RDS frente a Amazon Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#herramientas-de-operacion-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Herramientas de operación habituales
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="amazon-rds-vision-general">Amazon RDS: visión general<a class="headerlink" href="#amazon-rds-vision-general" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/RDS-familia.png" /></p>
+<p><strong>Amazon Relational Database Service (Amazon RDS)</strong> es el servicio de AWS que permite desplegar, operar y escalar bases de datos relacionales en la nube sin necesidad de administrar el hardware, el sistema operativo ni la instalación del motor. Bajo el nombre RDS se agrupa en realidad una <strong>familia de servicios</strong>: por un lado, los motores comerciales y de código abierto que AWS ofrece en su versión «estándar» y, por otro, <strong>Amazon Aurora</strong>, un motor relacional diseñado por AWS para la nube y compatible con MySQL y PostgreSQL.</p>
+<p>En este apartado se presenta una visión de conjunto del servicio. A continuación, el apartado de <strong>elección de la región</strong> recoge la decisión previa a cualquier despliegue; los apartados de <strong>Creación de sistema RDS</strong> describen en detalle cada decisión de configuración de una instancia; el apartado de <strong>securización</strong> profundiza en el control de acceso; el de <strong>RDS Proxy</strong> analiza la gestión de conexiones; y los apartados dedicados a <strong>Aurora</strong> estudian su arquitectura y sus variantes.</p>
+<hr />
+<h2 id="que-gestiona-aws-y-que-gestiona-el-cliente">Qué gestiona AWS y qué gestiona el cliente<a class="headerlink" href="#que-gestiona-aws-y-que-gestiona-el-cliente" title="Permanent link">&para;</a></h2>
+<p>RDS se sitúa en un punto intermedio entre instalar un motor de base de datos en una máquina virtual (por ejemplo, MySQL sobre EC2) y utilizar un servicio completamente sin servidor como DynamoDB. El reparto de responsabilidades es el siguiente:</p>
+<table>
+<thead>
+<tr>
+<th>Tarea</th>
+<th>Base de datos en EC2</th>
+<th>Amazon RDS / Aurora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hardware, red física, centro de datos</td>
+<td>AWS</td>
+<td>AWS</td>
+</tr>
+<tr>
+<td>Sistema operativo e instalación del motor</td>
+<td>Cliente</td>
+<td>AWS</td>
+</tr>
+<tr>
+<td>Parches del sistema operativo y del motor</td>
+<td>Cliente</td>
+<td>AWS (en la ventana de mantenimiento)</td>
+</tr>
+<tr>
+<td>Copias de seguridad automáticas y recuperación a un momento dado</td>
+<td>Cliente</td>
+<td>AWS (configurables)</td>
+</tr>
+<tr>
+<td>Alta disponibilidad y conmutación por error</td>
+<td>Cliente</td>
+<td>AWS (Multi-AZ, réplicas)</td>
+</tr>
+<tr>
+<td>Supervisión de la infraestructura</td>
+<td>Cliente</td>
+<td>AWS (CloudWatch, Database Insights)</td>
+</tr>
+<tr>
+<td>Elección de clase, almacenamiento y red</td>
+<td>Cliente</td>
+<td><strong>Cliente</strong></td>
+</tr>
+<tr>
+<td>Diseño del esquema, índices y consultas</td>
+<td>Cliente</td>
+<td><strong>Cliente</strong></td>
+</tr>
+<tr>
+<td>Usuarios, privilegios y seguridad de los datos</td>
+<td>Cliente</td>
+<td><strong>Cliente</strong></td>
+</tr>
+<tr>
+<td>Reglas de red, cifrado y políticas de acceso</td>
+<td>Cliente</td>
+<td><strong>Cliente</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Este reparto es una aplicación concreta del <strong>modelo de responsabilidad compartida</strong> de AWS: el proveedor es responsable de la seguridad <em>de</em> la nube, y el cliente de la seguridad <em>en</em> la nube. En RDS, <strong>el cliente no tiene acceso al sistema operativo</strong> de la instancia (no hay SSH) ni privilegios de superusuario completos en el motor; el usuario maestro dispone de los privilegios necesarios para administrar la base de datos, pero no de los que permitirían alterar la plataforma.</p>
+<div class="admonition note">
+<p class="admonition-title">RDS Custom</p>
+<p>Para aplicaciones que necesitan acceso al sistema operativo o privilegios que RDS no concede (por ejemplo, ciertas aplicaciones empresariales de Oracle o SQL Server), AWS ofrece <strong>Amazon RDS Custom</strong>, una variante en la que el cliente asume parte de la administración del sistema a cambio de ese acceso.</p>
+</div>
+<hr />
+<h2 id="motores-disponibles">Motores disponibles<a class="headerlink" href="#motores-disponibles" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Motor</th>
+<th>Tipo</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RDS for MySQL</strong></td>
+<td>Código abierto</td>
+<td>Versiones de la rama 8.0 y 8.4</td>
+</tr>
+<tr>
+<td><strong>RDS for MariaDB</strong></td>
+<td>Código abierto</td>
+<td>Motor utilizado en los apartados de creación de este módulo</td>
+</tr>
+<tr>
+<td><strong>RDS for PostgreSQL</strong></td>
+<td>Código abierto</td>
+<td>Amplio catálogo de extensiones (PostGIS, pgvector, pgAudit…)</td>
+</tr>
+<tr>
+<td><strong>RDS for Oracle</strong></td>
+<td>Comercial</td>
+<td>Licencia incluida o «trae tu propia licencia» (BYOL)</td>
+</tr>
+<tr>
+<td><strong>RDS for SQL Server</strong></td>
+<td>Comercial</td>
+<td>Ediciones Express, Web, Standard y Enterprise</td>
+</tr>
+<tr>
+<td><strong>RDS for Db2</strong></td>
+<td>Comercial</td>
+<td>Incorporado en 2023</td>
+</tr>
+<tr>
+<td><strong>Amazon Aurora MySQL</strong></td>
+<td>Motor de AWS compatible con MySQL</td>
+<td>Arquitectura de almacenamiento distribuido</td>
+</tr>
+<tr>
+<td><strong>Amazon Aurora PostgreSQL</strong></td>
+<td>Motor de AWS compatible con PostgreSQL</td>
+<td>Arquitectura de almacenamiento distribuido</td>
+</tr>
+</tbody>
+</table>
+<p>La elección del motor depende de la compatibilidad requerida por las aplicaciones, de las licencias disponibles y de los requisitos de rendimiento y disponibilidad. Cambiar de motor posteriormente implica una <strong>migración</strong>, que puede apoyarse en servicios como AWS Database Migration Service (DMS).</p>
+<hr />
+<h2 id="conceptos-basicos-del-servicio">Conceptos básicos del servicio<a class="headerlink" href="#conceptos-basicos-del-servicio" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Instancia de base de datos</strong> (<em>DB instance</em>)</td>
+<td>Entorno de base de datos aislado con una clase de cómputo, un almacenamiento y un punto de enlace DNS propios</td>
+</tr>
+<tr>
+<td><strong>Clúster de base de datos</strong> (<em>DB cluster</em>)</td>
+<td>En Aurora y en los clústeres Multi-AZ, conjunto de instancias que comparten datos (una de escritura y varias de lectura)</td>
+</tr>
+<tr>
+<td><strong>Clase de instancia</strong></td>
+<td>Combinación de vCPU y memoria (<code>db.t4g</code>, <code>db.m7g</code>, <code>db.r7g</code>…), estudiada en el apartado de capacidad</td>
+</tr>
+<tr>
+<td><strong>Punto de enlace</strong> (<em>endpoint</em>)</td>
+<td>Nombre DNS al que se conectan las aplicaciones (<code>mibd.xxxx.us-east-1.rds.amazonaws.com</code>)</td>
+</tr>
+<tr>
+<td><strong>Grupo de subredes</strong></td>
+<td>Subredes de la VPC, en al menos dos zonas de disponibilidad, donde RDS puede situar las instancias</td>
+</tr>
+<tr>
+<td><strong>Grupo de parámetros</strong></td>
+<td>Configuración del motor (equivalente a <code>my.cnf</code> o <code>postgresql.conf</code>)</td>
+</tr>
+<tr>
+<td><strong>Grupo de opciones</strong></td>
+<td>Funcionalidades adicionales del motor (sobre todo en Oracle, SQL Server y MySQL/MariaDB)</td>
+</tr>
+<tr>
+<td><strong>Instantánea</strong> (<em>snapshot</em>)</td>
+<td>Copia de seguridad completa del almacenamiento, automática o manual</td>
+</tr>
+</tbody>
+</table>
+<h3 id="almacenamiento">Almacenamiento<a class="headerlink" href="#almacenamiento" title="Permanent link">&para;</a></h3>
+<p>En RDS «estándar», cada instancia utiliza volúmenes <strong>Amazon EBS</strong> dedicados: SSD de propósito general (<code>gp3</code>, recomendado), SSD de IOPS aprovisionadas (<code>io2 Block Express</code>) o tipos de generaciones anteriores. El tamaño máximo es de <strong>64 TiB</strong> para MySQL, MariaDB, PostgreSQL y Db2; Oracle y SQL Server pueden alcanzar <strong>256 TiB</strong> mediante volúmenes de almacenamiento adicionales. En Aurora, como se verá, el almacenamiento no es un volumen EBS sino un <strong>volumen de clúster distribuido</strong> que crece automáticamente.</p>
+<hr />
+<h2 id="opciones-de-despliegue-y-alta-disponibilidad">Opciones de despliegue y alta disponibilidad<a class="headerlink" href="#opciones-de-despliegue-y-alta-disponibilidad" title="Permanent link">&para;</a></h2>
+<p><img alt="image" src="../imgs/RDS-despliegues.png" /></p>
+<p>RDS ofrece tres modalidades de despliegue con distintos niveles de disponibilidad:</p>
+<table>
+<thead>
+<tr>
+<th>Modalidad</th>
+<th>Componentes</th>
+<th>Replicación</th>
+<th>¿Standby legible?</th>
+<th>Conmutación por error</th>
+<th>Motores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Instancia Single-AZ</strong></td>
+<td>Una instancia</td>
+<td>—</td>
+<td>—</td>
+<td>Sin conmutación automática; se recupera la instancia o se restaura una copia</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td><strong>Instancia Multi-AZ</strong></td>
+<td>Primaria + 1 <em>standby</em> en otra AZ</td>
+<td>Síncrona a nivel de almacenamiento</td>
+<td><strong>No</strong></td>
+<td>Automática, normalmente en 1–2 minutos, sin pérdida de datos</td>
+<td>Todos</td>
+</tr>
+<tr>
+<td><strong>Clúster Multi-AZ</strong></td>
+<td>Escritora + 2 <em>standby</em> legibles en 3 AZ</td>
+<td>Semisíncrona</td>
+<td><strong>Sí</strong> (punto de enlace de lectura)</td>
+<td>Automática, normalmente en menos de 35 segundos</td>
+<td>MySQL y PostgreSQL</td>
+</tr>
+</tbody>
+</table>
+<p>Además de estas modalidades, pueden crearse <strong>réplicas de lectura</strong> (<em>read replicas</em>), que se alimentan mediante replicación asíncrona nativa del motor y sirven para <strong>escalar las lecturas</strong>, incluso en otras regiones. Una réplica de lectura puede <strong>promocionarse</strong> a instancia independiente, por ejemplo como parte de un plan de recuperación ante desastres.</p>
+<div class="admonition warning">
+<p class="admonition-title">No confundir alta disponibilidad con escalado</p>
+<p>Como se desarrollará en el apartado de capacidad, la <em>standby</em> de una instancia Multi-AZ <strong>no atiende consultas</strong>: su única función es tomar el relevo en caso de fallo. Para repartir la carga de lectura se necesitan réplicas de lectura, un clúster Multi-AZ o Aurora.</p>
+</div>
+<hr />
+<h2 id="amazon-rds-frente-a-amazon-aurora">Amazon RDS frente a Amazon Aurora<a class="headerlink" href="#amazon-rds-frente-a-amazon-aurora" title="Permanent link">&para;</a></h2>
+<p>Aurora forma parte de la familia RDS (se administra desde la misma consola y la misma API, y comparte conceptos como grupos de parámetros, grupos de subredes o instantáneas), pero su arquitectura es distinta:</p>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>RDS (MySQL, MariaDB, PostgreSQL…)</th>
+<th>Amazon Aurora</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almacenamiento</td>
+<td>Volumen EBS por instancia</td>
+<td>Volumen de clúster compartido, 6 copias en 3 AZ</td>
+</tr>
+<tr>
+<td>Crecimiento del almacenamiento</td>
+<td>Se aprovisiona (con autoescalado opcional)</td>
+<td>Automático, hasta 128–256 TiB según la versión; se paga por lo usado</td>
+</tr>
+<tr>
+<td>Réplicas de lectura</td>
+<td>Hasta 15 (según motor), replicación asíncrona del motor</td>
+<td>Hasta 15, comparten el almacenamiento: retraso normalmente de milisegundos</td>
+</tr>
+<tr>
+<td>Conmutación por error</td>
+<td>1–2 min (instancia Multi-AZ)</td>
+<td>Normalmente menos de 30 s promocionando una réplica</td>
+</tr>
+<tr>
+<td>Copias de seguridad</td>
+<td>Instantáneas EBS</td>
+<td>Continuas y sin impacto en el rendimiento</td>
+</tr>
+<tr>
+<td>Funcionalidades exclusivas</td>
+<td>—</td>
+<td>Aurora Serverless, Global Database, clonado rápido, Backtrack (MySQL), Limitless (PostgreSQL)…</td>
+</tr>
+<tr>
+<td>Coste</td>
+<td>Menor en cargas pequeñas</td>
+<td>Mayor por instancia, pero puede compensar en cargas exigentes</td>
+</tr>
+</tbody>
+</table>
+<p>En términos generales, RDS «estándar» es adecuado para cargas pequeñas o medianas, para motores comerciales o cuando se requiere la máxima compatibilidad con el motor original. Aurora está orientado a cargas de producción que exigen alta disponibilidad, escalado de lecturas y recuperación rápida.</p>
+<hr />
+<h2 id="herramientas-de-operacion-habituales">Herramientas de operación habituales<a class="headerlink" href="#herramientas-de-operacion-habituales" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Implementaciones azul/verde</strong> (<em>Blue/Green Deployments</em>): crean una copia sincronizada del entorno (verde) sobre la que aplicar cambios, como una actualización de versión principal, y permiten conmutar en segundos con mínima interrupción.</li>
+<li><strong>RDS Proxy</strong>: grupo de conexiones gestionado que reduce la sobrecarga de conexiones y acelera la conmutación por error. Se presenta en el apartado de redes y se estudia en su propio apartado.</li>
+<li><strong>Database Insights</strong> (antes Performance Insights): análisis de la carga de la base de datos, descrito en el apartado de monitorización del rendimiento.</li>
+<li><strong>AWS Backup</strong>: gestión centralizada de copias de seguridad y retención.</li>
+<li><strong>AWS DMS</strong>: migración homogénea o heterogénea de datos hacia RDS y Aurora.</li>
+</ul>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>What is Amazon Relational Database Service (Amazon RDS)?</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html">Guía del usuario de RDS</a></li>
+<li>AWS. <em>Shared responsibility model</em> — <a href="https://aws.amazon.com/compliance/shared-responsibility-model/">Modelo de responsabilidad compartida</a></li>
+<li>AWS. <em>Amazon RDS DB instance storage</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Storage.html">Almacenamiento de RDS</a></li>
+<li>AWS. <em>Amazon RDS for Oracle and SQL Server now support up to 256 TiB storage with additional storage volumes</em> (12/2025) — <a href="https://aws.amazon.com/about-aws/whats-new/2025/12/rds-oracle-sql-server-256-tib-storage-support">Anuncio</a></li>
+<li>AWS Database Blog. <em>Choose the right Amazon RDS deployment option: Single-AZ instance, Multi-AZ instance, or Multi-AZ database cluster</em> — <a href="https://aws.amazon.com/blogs/database/choose-the-right-amazon-rds-deployment-option-single-az-instance-multi-az-instance-or-multi-az-database-cluster">Artículo</a></li>
+<li>AWS. <em>Working with DB instance read replicas</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">Réplicas de lectura</a></li>
+<li>AWS. <em>Amazon RDS Custom</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-custom.html">RDS Custom</a></li>
+<li>AWS. <em>Using Amazon RDS Blue/Green Deployments for database updates</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/blue-green-deployments.html">Implementaciones azul/verde</a></li>
+<li>AWS. <em>Amazon RDS FAQs</em> — <a href="https://aws.amazon.com/rds/faqs/">Preguntas frecuentes</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

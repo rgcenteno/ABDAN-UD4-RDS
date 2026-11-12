@@ -1,0 +1,2164 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../DynamoDB-03/">
+      
+      
+        <link rel="next" href="../DynamoDB-05/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Clave primaria, clave de ordenación y tipos de atributos - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#clave-primaria-clave-de-ordenacion-y-tipos-de-atributos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Clave primaria, clave de ordenación y tipos de atributos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-clave-primaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La clave primaria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La clave primaria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clave-primaria-simple-clave-de-particion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave primaria simple (clave de partición)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clave-primaria-compuesta-particion-ordenacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave primaria compuesta (partición + ordenación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-datos-admitidos-en-los-atributos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de datos admitidos en los atributos clave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de datos admitidos en los atributos clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-tipo-condiciona-el-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El tipo condiciona el orden
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-datos-del-resto-de-atributos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de datos del resto de atributos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de datos del resto de atributos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamodb-json-frente-a-json-convencional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DynamoDB JSON frente a JSON convencional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definicion-de-la-clave-al-crear-una-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definición de la clave al crear una tabla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Definición de la clave al crear una tabla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#desde-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desde la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desde-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desde la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operadores-disponibles-sobre-la-clave-en-una-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operadores disponibles sobre la clave en una Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-para-elegir-una-buena-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para elegir una buena clave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Criterios para elegir una buena clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clave-de-particion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave de partición
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clave-de-ordenacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave de ordenación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-de-los-indices-secundarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves de los índices secundarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-clave-primaria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La clave primaria
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La clave primaria">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clave-primaria-simple-clave-de-particion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave primaria simple (clave de partición)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clave-primaria-compuesta-particion-ordenacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave primaria compuesta (partición + ordenación)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-datos-admitidos-en-los-atributos-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de datos admitidos en los atributos clave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de datos admitidos en los atributos clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-tipo-condiciona-el-orden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El tipo condiciona el orden
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tipos-de-datos-del-resto-de-atributos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de datos del resto de atributos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tipos de datos del resto de atributos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dynamodb-json-frente-a-json-convencional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DynamoDB JSON frente a JSON convencional
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definicion-de-la-clave-al-crear-una-tabla" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definición de la clave al crear una tabla
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Definición de la clave al crear una tabla">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#desde-la-consola" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desde la consola
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#desde-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Desde la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operadores-disponibles-sobre-la-clave-en-una-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operadores disponibles sobre la clave en una Query
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-para-elegir-una-buena-clave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para elegir una buena clave
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Criterios para elegir una buena clave">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clave-de-particion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave de partición
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clave-de-ordenacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clave de ordenación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claves-de-los-indices-secundarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claves de los índices secundarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="clave-primaria-clave-de-ordenacion-y-tipos-de-atributos">Clave primaria, clave de ordenación y tipos de atributos<a class="headerlink" href="#clave-primaria-clave-de-ordenacion-y-tipos-de-atributos" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/DynamoDB-claves.png" /></p>
+<p>Al crear una tabla en DynamoDB, la única estructura que debe definirse obligatoriamente es la <strong>clave primaria</strong>. Esta decisión es la más importante del diseño: determina cómo se distribuyen los datos entre las particiones, qué consultas pueden resolverse de forma eficiente y <strong>no puede modificarse una vez creada la tabla</strong>. Si la clave elegida no es adecuada, la única solución es crear una tabla nueva y migrar los datos.</p>
+<hr />
+<h2 id="la-clave-primaria">La clave primaria<a class="headerlink" href="#la-clave-primaria" title="Permanent link">&para;</a></h2>
+<p>La clave primaria identifica de forma unívoca cada elemento de la tabla. Sus propiedades son:</p>
+<ul>
+<li><strong>Obligatoria</strong>: todo elemento debe contener los atributos que forman la clave.</li>
+<li><strong>Única</strong>: no pueden existir dos elementos con la misma clave primaria. Un <code>PutItem</code> con una clave existente <strong>sustituye</strong> el elemento anterior (de ahí el uso de <code>attribute_not_exists</code> en la práctica).</li>
+<li><strong>Inmutable</strong>: los valores de los atributos clave de un elemento no pueden modificarse con <code>UpdateItem</code>. Para «cambiar» la clave es necesario borrar el elemento y crearlo de nuevo, preferiblemente dentro de una transacción.</li>
+<li><strong>Definida en la creación</strong>: el esquema de la clave (nombres, tipos y papel de cada atributo) se fija en <code>CreateTable</code> y no puede alterarse.</li>
+</ul>
+<p>DynamoDB admite dos tipos de clave primaria.</p>
+<h3 id="clave-primaria-simple-clave-de-particion">Clave primaria simple (clave de partición)<a class="headerlink" href="#clave-primaria-simple-clave-de-particion" title="Permanent link">&para;</a></h3>
+<p>Está formada por <strong>un único atributo</strong>, denominado <strong>clave de partición</strong> (<em>partition key</em>). En la documentación y en la API también recibe el nombre de <strong>atributo hash</strong> (<code>HASH</code>), porque su valor es la entrada de la función <em>hash</em> que decide la partición.</p>
+<p>En una tabla con clave simple, <strong>el valor de la clave de partición debe ser único</strong> para cada elemento. Solo es posible recuperar elementos individuales (<code>GetItem</code>) o recorrer la tabla (<code>Scan</code>); la operación <code>Query</code> devolvería como máximo un elemento.</p>
+<p><em>Ejemplo</em>: la tabla <code>sessions</code> de la práctica evaluable utiliza como clave de partición el identificador de la sesión (<code>id</code>). Cada sesión se recupera siempre por su identificador, por lo que no se necesita nada más.</p>
+<h3 id="clave-primaria-compuesta-particion-ordenacion">Clave primaria compuesta (partición + ordenación)<a class="headerlink" href="#clave-primaria-compuesta-particion-ordenacion" title="Permanent link">&para;</a></h3>
+<p>Está formada por <strong>dos atributos</strong>:</p>
+<ol>
+<li><strong>Clave de partición</strong> (<code>HASH</code>): determina la partición, igual que en la clave simple.</li>
+<li><strong>Clave de ordenación</strong> (<em>sort key</em>), también denominada <strong>atributo de rango</strong> (<code>RANGE</code>): determina el orden de los elementos dentro de la colección que comparte una misma clave de partición.</li>
+</ol>
+<p>En este caso, <strong>varios elementos pueden compartir clave de partición</strong>, siempre que tengan claves de ordenación distintas: lo que debe ser único es la <strong>combinación</strong> de ambos valores. No existe un límite al número de valores de clave de ordenación distintos para una misma clave de partición (salvo el límite de 10 GB por colección cuando la tabla tiene índices secundarios locales).</p>
+<p><em>Ejemplo</em>: en la tabla <code>Productos</code> de la práctica, <code>categoria</code> es la clave de partición e <code>id_producto</code> la clave de ordenación. Pueden existir muchos productos de la categoría <code>Portatiles</code>, pero no dos portátiles con el mismo <code>id_producto</code>.</p>
+<p>La clave compuesta habilita los patrones de acceso más potentes de DynamoDB:</p>
+<ul>
+<li>Recuperar <strong>todos</strong> los elementos de una colección (<code>categoria = :c</code>).</li>
+<li>Recuperar un <strong>rango</strong> de la colección mediante condiciones sobre la clave de ordenación.</li>
+<li>Obtener los resultados <strong>ordenados</strong> de forma ascendente o descendente.</li>
+</ul>
+<hr />
+<h2 id="tipos-de-datos-admitidos-en-los-atributos-clave">Tipos de datos admitidos en los atributos clave<a class="headerlink" href="#tipos-de-datos-admitidos-en-los-atributos-clave" title="Permanent link">&para;</a></h2>
+<p>Aunque DynamoDB admite una gran variedad de tipos para los atributos ordinarios, <strong>los atributos que forman la clave primaria (y las claves de los índices secundarios) solo pueden ser de uno de estos tres tipos escalares</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Descriptor</th>
+<th>Contenido</th>
+<th>Observaciones para su uso como clave</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>String</strong> (cadena)</td>
+<td><code>S</code></td>
+<td>Texto Unicode codificado en UTF-8</td>
+<td>No puede estar vacía si es clave. Es el tipo más habitual</td>
+</tr>
+<tr>
+<td><strong>Number</strong> (número)</td>
+<td><code>N</code></td>
+<td>Número positivo, negativo o cero, entero o decimal, con hasta <strong>38 dígitos</strong> de precisión</td>
+<td>Se transmite como cadena en la API (<code>{"N": "749"}</code>) para no perder precisión</td>
+</tr>
+<tr>
+<td><strong>Binary</strong> (binario)</td>
+<td><code>B</code></td>
+<td>Secuencia de bytes arbitraria (datos comprimidos, cifrados, identificadores binarios)</td>
+<td>El cliente debe codificarla en <strong>base64</strong> al enviarla. No puede estar vacía si es clave</td>
+</tr>
+</tbody>
+</table>
+<p>No pueden utilizarse como clave los tipos booleanos, nulos, mapas, listas ni conjuntos. La longitud máxima es de <strong>2 048 bytes</strong> para la clave de partición y de <strong>1 024 bytes</strong> para la clave de ordenación.</p>
+<p>En la consola, estos tipos aparecen como <strong>Cadena</strong>, <strong>Número</strong> y <strong>Binario</strong> en los desplegables de <em>Clave de partición</em> y <em>Clave de ordenación</em>. En la AWS CLI se indican con las letras <code>S</code>, <code>N</code> y <code>B</code>.</p>
+<h3 id="el-tipo-condiciona-el-orden">El tipo condiciona el orden<a class="headerlink" href="#el-tipo-condiciona-el-orden" title="Permanent link">&para;</a></h3>
+<p>La elección del tipo de la <strong>clave de ordenación</strong> no es indiferente, porque determina cómo se ordenan los elementos y cómo se evalúan las condiciones de rango:</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Criterio de ordenación</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>N</code></td>
+<td>Valor numérico</td>
+<td><code>2 &lt; 9 &lt; 10 &lt; 100</code></td>
+</tr>
+<tr>
+<td><code>S</code></td>
+<td>Orden de los <strong>bytes UTF-8</strong> (lexicográfico, no alfabético)</td>
+<td><code>"10" &lt; "100" &lt; "2" &lt; "9"</code>; las mayúsculas preceden a las minúsculas (<code>"Z" &lt; "a"</code>) y las letras acentuadas se sitúan después de <code>"z"</code></td>
+</tr>
+<tr>
+<td><code>B</code></td>
+<td>Bytes interpretados como valores sin signo</td>
+<td><code>0x00 &lt; 0x7F &lt; 0xFF</code></td>
+</tr>
+</tbody>
+</table>
+<p>De esta tabla se derivan algunas recomendaciones de diseño:</p>
+<ul>
+<li>Si la clave de ordenación es un número que se va a comparar con <code>&lt;</code>, <code>&gt;</code> o <code>BETWEEN</code>, debe declararse como <code>N</code>. Si se declara como <code>S</code>, el valor <code>"1099"</code> sería «menor» que <code>"749"</code>.</li>
+<li>Las <strong>fechas</strong> suelen almacenarse como cadenas en formato <strong>ISO 8601</strong> (<code>2026-11-10T11:30:00Z</code>), cuyo orden lexicográfico coincide con el cronológico, o bien como números con el tiempo UNIX.</li>
+<li>Cuando se usan cadenas con números, conviene <strong>rellenar con ceros</strong> a la izquierda (<code>P-001</code>, <code>P-002</code>, …, <code>P-010</code>) para que el orden sea el esperado.</li>
+</ul>
+<hr />
+<h2 id="tipos-de-datos-del-resto-de-atributos">Tipos de datos del resto de atributos<a class="headerlink" href="#tipos-de-datos-del-resto-de-atributos" title="Permanent link">&para;</a></h2>
+<p>Los atributos que no forman parte de la clave pueden ser de cualquiera de los siguientes tipos, y no es necesario declararlos al crear la tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Categoría</th>
+<th>Tipo</th>
+<th>Descriptor</th>
+<th>Ejemplo en DynamoDB JSON</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Escalar</td>
+<td>String</td>
+<td><code>S</code></td>
+<td><code>{"S": "Monitor 27\" QHD"}</code></td>
+</tr>
+<tr>
+<td>Escalar</td>
+<td>Number</td>
+<td><code>N</code></td>
+<td><code>{"N": "289"}</code></td>
+</tr>
+<tr>
+<td>Escalar</td>
+<td>Binary</td>
+<td><code>B</code></td>
+<td><code>{"B": "dGV4dG8="}</code></td>
+</tr>
+<tr>
+<td>Escalar</td>
+<td>Boolean</td>
+<td><code>BOOL</code></td>
+<td><code>{"BOOL": true}</code></td>
+</tr>
+<tr>
+<td>Escalar</td>
+<td>Null</td>
+<td><code>NULL</code></td>
+<td><code>{"NULL": true}</code></td>
+</tr>
+<tr>
+<td>Documento</td>
+<td>Map (mapa)</td>
+<td><code>M</code></td>
+<td><code>{"M": {"ram_gb": {"N": "32"}, "cpu": {"S": "i7"}}}</code></td>
+</tr>
+<tr>
+<td>Documento</td>
+<td>List (lista)</td>
+<td><code>L</code></td>
+<td><code>{"L": [{"S": "USB-C"}, {"N": "2"}]}</code></td>
+</tr>
+<tr>
+<td>Conjunto</td>
+<td>String Set</td>
+<td><code>SS</code></td>
+<td><code>{"SS": ["oferta", "gaming"]}</code></td>
+</tr>
+<tr>
+<td>Conjunto</td>
+<td>Number Set</td>
+<td><code>NS</code></td>
+<td><code>{"NS": ["1", "2", "3"]}</code></td>
+</tr>
+<tr>
+<td>Conjunto</td>
+<td>Binary Set</td>
+<td><code>BS</code></td>
+<td><code>{"BS": ["U3Vubnk=", "UmFpbnk="]}</code></td>
+</tr>
+</tbody>
+</table>
+<p>Aspectos a tener en cuenta:</p>
+<ul>
+<li>Las <strong>listas</strong> pueden contener elementos de tipos distintos y admiten duplicados; los <strong>conjuntos</strong> solo contienen valores del mismo tipo, sin duplicados y sin orden, y <strong>no pueden estar vacíos</strong>.</li>
+<li>Mapas y listas pueden anidarse hasta <strong>32 niveles</strong> de profundidad.</li>
+<li>Las cadenas y binarios vacíos están permitidos en los atributos que no son clave.</li>
+</ul>
+<h3 id="dynamodb-json-frente-a-json-convencional">DynamoDB JSON frente a JSON convencional<a class="headerlink" href="#dynamodb-json-frente-a-json-convencional" title="Permanent link">&para;</a></h3>
+<p>La API de DynamoDB utiliza un formato denominado <strong>DynamoDB JSON</strong>, en el que cada valor va acompañado de su descriptor de tipo. Por eso en la práctica los comandos de la CLI tenían este aspecto:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"categoria"</span><span class="p">:</span><span class="w">   </span><span class="p">{</span><span class="nt">"S"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Perifericos"</span><span class="p">},</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"id_producto"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"S"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PE-001"</span><span class="p">},</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">"precio"</span><span class="p">:</span><span class="w">      </span><span class="p">{</span><span class="nt">"N"</span><span class="p">:</span><span class="w"> </span><span class="s2">"79.90"</span><span class="p">},</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="nt">"stock"</span><span class="p">:</span><span class="w">       </span><span class="p">{</span><span class="nt">"N"</span><span class="p">:</span><span class="w"> </span><span class="s2">"15"</span><span class="p">}</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>En cambio, la consola (con la opción <em>Ver DynamoDB JSON</em> desactivada) y las interfaces de alto nivel de los SDK, como el recurso <code>Table</code> de <strong>boto3</strong>, permiten trabajar con JSON convencional y realizan la conversión de tipos automáticamente. En Python, los números se devuelven como objetos <code>Decimal</code> para preservar la precisión de 38 dígitos.</p>
+<hr />
+<h2 id="definicion-de-la-clave-al-crear-una-tabla">Definición de la clave al crear una tabla<a class="headerlink" href="#definicion-de-la-clave-al-crear-una-tabla" title="Permanent link">&para;</a></h2>
+<h3 id="desde-la-consola">Desde la consola<a class="headerlink" href="#desde-la-consola" title="Permanent link">&para;</a></h3>
+<p>En <strong>DynamoDB → Tablas → Crear tabla</strong> se solicitan:</p>
+<ol>
+<li><strong>Nombre de la tabla</strong>: entre 3 y 255 caracteres (<code>A-Z</code>, <code>a-z</code>, <code>0-9</code>, <code>_</code>, <code>-</code>, <code>.</code>).</li>
+<li><strong>Clave de partición</strong>: nombre del atributo y tipo (<em>Cadena</em>, <em>Número</em> o <em>Binario</em>).</li>
+<li><strong>Clave de ordenación – opcional</strong>: nombre y tipo. Si se deja vacía, la tabla tendrá clave simple.</li>
+</ol>
+<h3 id="desde-la-aws-cli">Desde la AWS CLI<a class="headerlink" href="#desde-la-aws-cli" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>create-table<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--attribute-definitions<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nv">AttributeName</span><span class="o">=</span>categoria,AttributeType<span class="o">=</span>S<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nv">AttributeName</span><span class="o">=</span>id_producto,AttributeType<span class="o">=</span>S<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--key-schema<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nv">AttributeName</span><span class="o">=</span>categoria,KeyType<span class="o">=</span>HASH<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">      </span><span class="nv">AttributeName</span><span class="o">=</span>id_producto,KeyType<span class="o">=</span>RANGE<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--billing-mode<span class="w"> </span>PAY_PER_REQUEST
+</span></code></pre></div>
+<ul>
+<li><code>--attribute-definitions</code> declara el <strong>tipo</strong> (<code>S</code>, <code>N</code> o <code>B</code>) de los atributos que actúan como clave de la tabla o de sus índices. <strong>Solo deben declararse esos atributos</strong>: incluir aquí atributos ordinarios como <code>precio</code> produce un error de validación.</li>
+<li><code>--key-schema</code> indica el <strong>papel</strong> de cada atributo: <code>HASH</code> para la clave de partición y <code>RANGE</code> para la de ordenación.</li>
+<li><code>--billing-mode PAY_PER_REQUEST</code> selecciona el modo de capacidad bajo demanda (el alternativo es <code>PROVISIONED</code>).</li>
+</ul>
+<hr />
+<h2 id="operadores-disponibles-sobre-la-clave-en-una-query">Operadores disponibles sobre la clave en una <code>Query</code><a class="headerlink" href="#operadores-disponibles-sobre-la-clave-en-una-query" title="Permanent link">&para;</a></h2>
+<p>La expresión <code>KeyConditionExpression</code> de una <code>Query</code> está limitada por la naturaleza de cada clave:</p>
+<table>
+<thead>
+<tr>
+<th>Clave</th>
+<th>Operadores permitidos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clave de partición</td>
+<td>Solo igualdad: <code>=</code></td>
+</tr>
+<tr>
+<td>Clave de ordenación</td>
+<td><code>=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>BETWEEN … AND …</code>, <code>begins_with(…)</code></td>
+</tr>
+</tbody>
+</table>
+<p>La clave de partición <strong>siempre</strong> debe compararse por igualdad, porque se necesita su valor exacto para calcular el <em>hash</em>. Las condiciones sobre cualquier otro atributo deben expresarse en una <code>FilterExpression</code>, que, como se ha indicado, no reduce la capacidad consumida.</p>
+<p>Ejemplos con la tabla <code>Productos</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Periféricos cuyo código empieza por "PE-"</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>--key-condition-expression<span class="w"> </span><span class="s2">"categoria = :c AND begins_with(id_producto, :p)"</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Portátiles con código entre P-001 y P-005</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>--key-condition-expression<span class="w"> </span><span class="s2">"categoria = :c AND id_producto BETWEEN :desde AND :hasta"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="criterios-para-elegir-una-buena-clave">Criterios para elegir una buena clave<a class="headerlink" href="#criterios-para-elegir-una-buena-clave" title="Permanent link">&para;</a></h2>
+<h3 id="clave-de-particion">Clave de partición<a class="headerlink" href="#clave-de-particion" title="Permanent link">&para;</a></h3>
+<p>La clave de partición debe cumplir dos condiciones: <strong>alta cardinalidad</strong> (muchos valores distintos) y <strong>acceso uniforme</strong> (ningún valor concentra una parte desproporcionada del tráfico).</p>
+<table>
+<thead>
+<tr>
+<th>Clave de partición</th>
+<th>Cardinalidad</th>
+<th>Uniformidad</th>
+<th>Valoración</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificador de usuario, de sesión o de dispositivo</td>
+<td>Muy alta</td>
+<td>Alta</td>
+<td>Muy adecuada</td>
+</tr>
+<tr>
+<td>Código de producto</td>
+<td>Alta</td>
+<td>Media (productos superventas)</td>
+<td>Adecuada</td>
+</tr>
+<tr>
+<td>Categoría de producto</td>
+<td>Baja</td>
+<td>Baja</td>
+<td>Válida solo para volúmenes pequeños, como el de la práctica</td>
+</tr>
+<tr>
+<td>Estado de un pedido (<code>PENDIENTE</code>, <code>ENVIADO</code>…)</td>
+<td>Muy baja</td>
+<td>Muy baja</td>
+<td>Inadecuada: crea particiones calientes</td>
+</tr>
+<tr>
+<td>Fecha del día</td>
+<td>Baja</td>
+<td>Muy baja (todo el tráfico va al día actual)</td>
+<td>Inadecuada</td>
+</tr>
+</tbody>
+</table>
+<p>Cuando un valor de clave recibe inevitablemente mucho tráfico, puede aplicarse la técnica de <strong>fragmentación de escrituras</strong> (<em>write sharding</em>): añadir un sufijo aleatorio o calculado a la clave (<code>2026-11-10#1</code>, <code>2026-11-10#2</code>, …) para repartir los elementos entre varias particiones.</p>
+<h3 id="clave-de-ordenacion">Clave de ordenación<a class="headerlink" href="#clave-de-ordenacion" title="Permanent link">&para;</a></h3>
+<p>La clave de ordenación debe reflejar <strong>cómo se consultan los elementos dentro de la colección</strong>:</p>
+<ul>
+<li><strong>Claves jerárquicas</strong>: concatenar niveles con un separador permite consultar a distintos niveles de detalle con <code>begins_with</code>. Por ejemplo, <code>ESP#GALICIA#PONTEVEDRA#VIGO</code> admite consultas por país, comunidad, provincia o ciudad.</li>
+<li><strong>Fechas o marcas de tiempo</strong>: permiten obtener los registros más recientes o los de un intervalo.</li>
+<li><strong>Versionado</strong>: prefijos como <code>v0</code> (versión actual) y <code>v1</code>, <code>v2</code>… (históricas) permiten conservar el histórico de cambios de un elemento.</li>
+</ul>
+<h3 id="claves-de-los-indices-secundarios">Claves de los índices secundarios<a class="headerlink" href="#claves-de-los-indices-secundarios" title="Permanent link">&para;</a></h3>
+<p>Las claves de los índices secundarios siguen las mismas reglas de tipo (<code>S</code>, <code>N</code>, <code>B</code>). En los GSI, desde noviembre de 2025, la clave de partición y la de ordenación pueden componerse de <strong>hasta cuatro atributos cada una</strong>, lo que evita construir claves concatenadas como la del ejemplo jerárquico anterior.</p>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Core components of Amazon DynamoDB: primary key</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html#HowItWorks.CoreComponents.PrimaryKey">Clave primaria</a></li>
+<li>AWS. <em>Supported data types and naming rules in Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html">Tipos de datos y reglas de nomenclatura</a></li>
+<li>AWS. <em>Constraints in Amazon DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Constraints.html">Restricciones</a></li>
+<li>AWS. <em>Key condition expressions for the Query operation</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.KeyConditionExpressions.html">Expresiones de condición de clave</a></li>
+<li>AWS. <em>Best practices for designing and using partition keys effectively</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-design.html">Diseño de la clave de partición</a></li>
+<li>AWS. <em>Best practices for using sort keys to organize data</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-sort-keys.html">Diseño de la clave de ordenación</a></li>
+<li>AWS. <em>Using write sharding to distribute workloads evenly</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-partition-key-sharding.html">Fragmentación de escrituras</a></li>
+<li>AWS. <em>AWS CLI Command Reference: create-table</em> — <a href="https://awscli.amazonaws.com/v2/documentation/api/latest/reference/dynamodb/create-table.html">create-table</a></li>
+<li>AWS. <em>Multi-key support for global secondary index in Amazon DynamoDB</em> (AWS Database Blog) — <a href="https://aws.amazon.com/blogs/database/multi-key-support-for-global-secondary-index-in-amazon-dynamodb">Claves multiatributo en GSI</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

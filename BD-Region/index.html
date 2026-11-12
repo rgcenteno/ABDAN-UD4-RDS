@@ -1,0 +1,1873 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../RDS-Introduccion/">
+      
+      
+        <link rel="next" href="../Crear-RDS-01/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Elección de la región y residencia de los datos - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#eleccion-de-la-region-y-residencia-de-los-datos" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Elección de la región y residencia de los datos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#regiones-y-zonas-de-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regiones y zonas de disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-para-elegir-la-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para elegir la región
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Criterios para elegir la región">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#medir-la-latencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medir la latencia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coste-segun-la-region-y-la-ubicacion-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coste según la región y la ubicación de la aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#residencia-de-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Residencia de los datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Residencia de los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-garantizar-la-residencia-en-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo garantizar la residencia en AWS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-region-en-la-consola-y-en-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La región en la consola y en la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guia-de-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guía de decisión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#regiones-y-zonas-de-disponibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regiones y zonas de disponibilidad
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#criterios-para-elegir-la-region" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Criterios para elegir la región
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Criterios para elegir la región">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#medir-la-latencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medir la latencia
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coste-segun-la-region-y-la-ubicacion-de-la-aplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coste según la región y la ubicación de la aplicación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#residencia-de-los-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Residencia de los datos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Residencia de los datos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#como-garantizar-la-residencia-en-aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cómo garantizar la residencia en AWS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-region-en-la-consola-y-en-la-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        La región en la consola y en la AWS CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guia-de-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guía de decisión
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="eleccion-de-la-region-y-residencia-de-los-datos">Elección de la región y residencia de los datos<a class="headerlink" href="#eleccion-de-la-region-y-residencia-de-los-datos" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/BD-region-eleccion.png" /></p>
+<p>Antes de crear una base de datos en la nube hay que decidir <strong>dónde</strong> van a residir los datos. Es la primera decisión del despliegue y una de las más costosas de cambiar: una instancia RDS o una tabla DynamoDB pertenecen a una región concreta, y trasladarlas a otra exige copiar o replicar los datos. La elección de la región condiciona el <strong>cumplimiento normativo</strong>, los <strong>servicios disponibles</strong>, la <strong>latencia</strong> que perciben los usuarios y el <strong>coste</strong>.</p>
+<p>Este apartado se centra en esa elección inicial. Cuánta redundancia geográfica añadir después (varias zonas, varias regiones) se estudia en el apartado <a href="../BD-Replicacion/">Replicación y recuperación ante desastres</a>, una vez conocidas las opciones de alta disponibilidad de RDS, Aurora y DynamoDB.</p>
+<hr />
+<h2 id="regiones-y-zonas-de-disponibilidad">Regiones y zonas de disponibilidad<a class="headerlink" href="#regiones-y-zonas-de-disponibilidad" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Descripción</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Región</strong></td>
+<td>Área geográfica independiente con varios centros de datos. Los datos <strong>no salen de la región</strong> salvo que el cliente lo configure</td>
+<td><code>eu-south-2</code> (España), <code>eu-west-3</code> (París), <code>us-east-1</code> (Norte de Virginia)</td>
+</tr>
+<tr>
+<td><strong>Zona de disponibilidad (AZ)</strong></td>
+<td>Uno o varios centros de datos con alimentación, refrigeración y red independientes, conectados con baja latencia a las demás zonas de la región</td>
+<td><code>eu-south-2a</code>, <code>eu-south-2b</code>, <code>eu-south-2c</code></td>
+</tr>
+<tr>
+<td><strong>Zona local</strong> (<em>Local Zone</em>)</td>
+<td>Extensión de una región situada cerca de grandes ciudades para cargas de latencia muy baja</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>España dispone de la región <strong>Europa (España), <code>eu-south-2</code></strong>, situada en Aragón, con tres zonas de disponibilidad. El Learner Lab de AWS Academy, en cambio, limita los recursos a las regiones <code>us-east-1</code> y <code>us-west-2</code>, por lo que los criterios de este apartado deben entenderse aplicados a un entorno real.</p>
+<hr />
+<h2 id="criterios-para-elegir-la-region">Criterios para elegir la región<a class="headerlink" href="#criterios-para-elegir-la-region" title="Permanent link">&para;</a></h2>
+<p>Los criterios se aplican en un orden lógico: primero se descartan las regiones que no cumplen los requisitos obligatorios y, entre las restantes, se elige la que ofrece el mejor equilibrio entre latencia y coste.</p>
+<table>
+<thead>
+<tr>
+<th>Orden</th>
+<th>Criterio</th>
+<th>Qué valorar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Residencia de los datos y normativa</strong></td>
+<td>Requisitos legales o contractuales sobre la ubicación de los datos (ver apartado siguiente). Suele ser el criterio <strong>eliminatorio</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Disponibilidad de servicios y funcionalidades</strong></td>
+<td>No todas las regiones ofrecen todos los motores, versiones, clases de instancia o funcionalidades (por ejemplo, algunas variantes de Aurora que se estudiarán más adelante o determinadas clases Graviton)</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>Número de zonas de disponibilidad</strong></td>
+<td>Determina las opciones de alta disponibilidad: el clúster Multi-AZ de RDS, presentado en la visión general, necesita tres zonas</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>Latencia</strong></td>
+<td>Cercanía a los usuarios y, sobre todo, a los <strong>servidores de aplicación</strong>: la base de datos debe estar en la misma región que la aplicación que la consulta</td>
+</tr>
+<tr>
+<td>5</td>
+<td><strong>Coste</strong></td>
+<td>Los precios de instancias, almacenamiento y transferencia <strong>varían entre regiones</strong>; la misma instancia puede costar sensiblemente más en una región que en otra</td>
+</tr>
+<tr>
+<td>6</td>
+<td><strong>Recuperación ante desastres</strong></td>
+<td>Disponibilidad de una segunda región adecuada, cercana pero suficientemente separada, para copias o réplicas</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>Sostenibilidad</strong></td>
+<td>AWS publica información sobre el origen de la energía de sus regiones, un criterio cada vez más presente en las organizaciones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="medir-la-latencia">Medir la latencia<a class="headerlink" href="#medir-la-latencia" title="Permanent link">&para;</a></h3>
+<p>La latencia entre un cliente y una región puede estimarse midiendo el tiempo de conexión con el punto de enlace de un servicio en esa región. Dentro de AWS, como referencia orientativa, la latencia entre zonas de una misma región es del orden de <strong>milisegundos de un solo dígito</strong>, mientras que entre regiones de continentes distintos puede superar los <strong>100 ms</strong>. Por eso, situar la aplicación y la base de datos en regiones distintas penaliza cada consulta.</p>
+<h3 id="coste-segun-la-region-y-la-ubicacion-de-la-aplicacion">Coste según la región y la ubicación de la aplicación<a class="headerlink" href="#coste-segun-la-region-y-la-ubicacion-de-la-aplicacion" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Los <strong>precios</strong> de RDS, Aurora y DynamoDB se publican <strong>por región</strong>. Conviene compararlos con la <strong>Calculadora de precios de AWS</strong> antes de decidir.</li>
+<li>Dentro de una región, el <strong>tráfico entre zonas de disponibilidad</strong> de la aplicación (por ejemplo, un servidor web en <code>us-east-1a</code> que consulta una base de datos en <code>us-east-1b</code>) tiene coste por GB.</li>
+<li>El tráfico <strong>entre regiones</strong> se factura siempre, por lo que una aplicación y su base de datos en regiones distintas suman coste además de latencia.</li>
+</ul>
+<hr />
+<h2 id="residencia-de-los-datos">Residencia de los datos<a class="headerlink" href="#residencia-de-los-datos" title="Permanent link">&para;</a></h2>
+<p>La <strong>residencia de los datos</strong> (<em>data residency</em>) es el requisito de que la información se almacene y procese en una ubicación geográfica concreta. En el contexto europeo y español conviene distinguir:</p>
+<ul>
+<li><strong>Reglamento General de Protección de Datos (RGPD)</strong>. No obliga a que los datos personales residan en la Unión Europea, pero <strong>regula las transferencias internacionales</strong> fuera del Espacio Económico Europeo, que solo pueden realizarse con garantías adecuadas (decisiones de adecuación, cláusulas contractuales tipo, etc.). Elegir una región de la UE simplifica notablemente el cumplimiento.</li>
+<li><strong>Esquema Nacional de Seguridad (ENS)</strong>. Obligatorio para el sector público español y sus proveedores; exige que los servicios en la nube estén certificados para el nivel correspondiente.</li>
+<li><strong>Requisitos sectoriales o contractuales</strong>: banca, sanidad o administraciones pueden exigir que los datos no salgan del país o de la UE.</li>
+<li><strong>Soberanía digital</strong>: algunas organizaciones exigen, además, que la infraestructura esté <strong>operada</strong> por personal residente en la UE y sometida a la legislación europea. Para estos casos, AWS lanzó en enero de 2026 la <strong>AWS European Sovereign Cloud</strong>, una infraestructura separada del resto de regiones, con su primera región (<code>eusc-de-east-1</code>) en Brandeburgo (Alemania).</li>
+</ul>
+<h3 id="como-garantizar-la-residencia-en-aws">Cómo garantizar la residencia en AWS<a class="headerlink" href="#como-garantizar-la-residencia-en-aws" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mecanismo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elegir la región</td>
+<td>AWS no traslada los datos de una región a otra por iniciativa propia</td>
+</tr>
+<tr>
+<td>Revisar las funciones que copian datos</td>
+<td>Algunas funcionalidades que se estudiarán más adelante <strong>sacan los datos de la región</strong>: réplicas de lectura entre regiones, copias de instantáneas entre regiones, Aurora Global Database, tablas globales de DynamoDB o planes de AWS Backup con copia a otra región. Deben configurarse solo hacia regiones permitidas</td>
+</tr>
+<tr>
+<td>Restringir regiones con políticas</td>
+<td>Una <strong>SCP</strong> de AWS Organizations con la condición <code>aws:RequestedRegion</code> impide crear recursos fuera de las regiones autorizadas</td>
+</tr>
+<tr>
+<td>Auditar</td>
+<td>AWS Config y CloudTrail permiten detectar recursos creados en regiones no autorizadas</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo de SCP que limita el uso de RDS y DynamoDB a dos regiones europeas:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SoloRegionesEuropeas"</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Deny"</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"rds:*"</span><span class="p">,</span><span class="w"> </span><span class="s2">"dynamodb:*"</span><span class="p">],</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">      </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">      </span><span class="nt">"Condition"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nt">"StringNotEquals"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"aws:RequestedRegion"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"eu-south-2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"eu-west-3"</span><span class="p">]</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="p">}</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h2 id="la-region-en-la-consola-y-en-la-aws-cli">La región en la consola y en la AWS CLI<a class="headerlink" href="#la-region-en-la-consola-y-en-la-aws-cli" title="Permanent link">&para;</a></h2>
+<p>La región no es una opción del asistente de creación de la base de datos, sino del <strong>contexto</strong> en el que se trabaja:</p>
+<ul>
+<li>En la <strong>consola</strong>, la región activa se selecciona en el desplegable de la esquina superior derecha. La base de datos se crea en la región que esté seleccionada en ese momento, y <strong>solo se ve en esa región</strong>. Una base de datos que «ha desaparecido» de la consola suele estar en otra región.</li>
+<li>En la <strong>AWS CLI</strong>, la región se toma de la configuración (<code>aws configure set region eu-south-2</code>), de la variable de entorno <code>AWS_REGION</code> o del parámetro <code>--region</code> de cada comando.</li>
+<li>La región forma parte del <strong>punto de enlace</strong> de la base de datos (<code>mi-base-datos.xxxx.eu-south-2.rds.amazonaws.com</code>) y de los <strong>ARN</strong> de sus recursos (<code>arn:aws:rds:eu-south-2:…</code>).</li>
+<li>Los recursos relacionados (VPC, subredes, grupos de seguridad, claves de KMS) también son <strong>regionales</strong>: deben existir en la misma región que la base de datos.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Región configurada por defecto</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>configure<span class="w"> </span>get<span class="w"> </span>region
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Listar las instancias RDS de una región concreta</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--region<span class="w"> </span>eu-south-2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"DBInstances[].[DBInstanceIdentifier,AvailabilityZone]"</span><span class="w"> </span>--output<span class="w"> </span>table
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Zonas de disponibilidad de la región</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-availability-zones<span class="w"> </span>--region<span class="w"> </span>eu-south-2<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"AvailabilityZones[].ZoneName"</span>
+</span></code></pre></div>
+<hr />
+<h2 id="guia-de-decision">Guía de decisión<a class="headerlink" href="#guia-de-decision" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Situación</th>
+<th>Región recomendada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Laboratorios de AWS Academy</td>
+<td><code>us-east-1</code> (impuesta por el entorno)</td>
+</tr>
+<tr>
+<td>Aplicación para usuarios en España sin requisitos especiales</td>
+<td><code>eu-south-2</code> (España), comprobando que ofrece los servicios necesarios</td>
+</tr>
+<tr>
+<td>Datos personales de ciudadanos de la UE</td>
+<td>Una región de la UE, con restricción mediante SCP</td>
+</tr>
+<tr>
+<td>Sector público español</td>
+<td>Región de la UE con servicios certificados en el ENS para el nivel requerido</td>
+</tr>
+<tr>
+<td>Requisito de soberanía digital europea</td>
+<td>AWS European Sovereign Cloud</td>
+</tr>
+<tr>
+<td>Servicio o funcionalidad no disponible en la región más cercana</td>
+<td>La región más próxima que lo ofrezca y cumpla los requisitos normativos</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Regions and Availability Zones</em> — <a href="https://aws.amazon.com/about-aws/global-infrastructure/regions_az/">Infraestructura global de AWS</a></li>
+<li>AWS. <em>AWS Europe (Spain) Region</em> — <a href="https://aws.amazon.com/local/spain/region/">Región de España</a></li>
+<li>AWS Architecture Blog. <em>What to consider when selecting a Region for your workloads</em> — <a href="https://aws.amazon.com/blogs/architecture/what-to-consider-when-selecting-a-region-for-your-workloads/">Criterios de elección de región</a></li>
+<li>AWS News Blog. <em>Opening the AWS European Sovereign Cloud</em> (14/01/2026) — <a href="https://aws.amazon.com/blogs/aws/opening-the-aws-european-sovereign-cloud">Anuncio</a></li>
+<li>AWS. <em>Data protection and privacy at AWS / GDPR Center</em> — <a href="https://aws.amazon.com/compliance/gdpr-center/">Centro RGPD de AWS</a></li>
+<li>AWS. <em>Esquema Nacional de Seguridad (ENS)</em> — <a href="https://aws.amazon.com/compliance/esquema-nacional-de-seguridad/">Cumplimiento ENS</a></li>
+<li>AWS. <em>Example SCPs: deny access to AWS based on the requested AWS Region</em> — <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps_examples_general.html">Restricción de regiones con SCP</a></li>
+<li>AWS. <em>Regions, Availability Zones, and Local Zones (Amazon RDS)</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.RegionsAndAvailabilityZones.html">Regiones en RDS</a></li>
+<li>AWS. <em>Configuring the AWS Region for the AWS CLI</em> — <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-options.html">Región en la CLI</a></li>
+<li>AWS. <em>Amazon RDS pricing</em> — <a href="https://aws.amazon.com/rds/pricing/">Precios de RDS</a></li>
+<li>AWS. <em>AWS Pricing Calculator</em> — <a href="https://calculator.aws/">Calculadora de precios</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

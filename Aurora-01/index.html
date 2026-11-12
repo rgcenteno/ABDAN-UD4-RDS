@@ -1,0 +1,1984 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../RDS-Proxy/">
+      
+      
+        <link rel="next" href="../Aurora-02/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Arquitectura - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#amazon-aurora-arquitectura" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Arquitectura
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-de-la-arquitectura-tradicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema de la arquitectura tradicional
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separacion-entre-computo-y-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separación entre cómputo y almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-volumen-de-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El volumen de clúster
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El volumen de clúster">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quorum-de-escritura-y-de-lectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quórum de escritura y de lectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instancias-y-replicas-de-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instancias y réplicas de Aurora
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instancias y réplicas de Aurora">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instancia-de-escritura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instancia de escritura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replicas-de-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Réplicas de Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conmutacion-por-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conmutación por error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#puntos-de-enlace-de-un-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de enlace de un clúster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copias-de-seguridad-restauracion-y-clonado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad, restauración y clonado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelos-de-facturacion-del-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelos de facturación del almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparativa-arquitectonica-con-rds-multi-az" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa arquitectónica con RDS Multi-AZ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-CicloVida/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-de-la-arquitectura-tradicional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El problema de la arquitectura tradicional
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#separacion-entre-computo-y-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Separación entre cómputo y almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-volumen-de-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        El volumen de clúster
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="El volumen de clúster">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quorum-de-escritura-y-de-lectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quórum de escritura y de lectura
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#instancias-y-replicas-de-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instancias y réplicas de Aurora
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Instancias y réplicas de Aurora">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instancia-de-escritura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instancia de escritura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#replicas-de-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Réplicas de Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conmutacion-por-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conmutación por error
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#puntos-de-enlace-de-un-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Puntos de enlace de un clúster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#copias-de-seguridad-restauracion-y-clonado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias de seguridad, restauración y clonado
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelos-de-facturacion-del-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelos de facturación del almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparativa-arquitectonica-con-rds-multi-az" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparativa arquitectónica con RDS Multi-AZ
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="amazon-aurora-arquitectura">Amazon Aurora: arquitectura<a class="headerlink" href="#amazon-aurora-arquitectura" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/Aurora-arquitectura.png" /></p>
+<p><strong>Amazon Aurora</strong> es un motor de base de datos relacional desarrollado por AWS, compatible con <strong>MySQL</strong> y <strong>PostgreSQL</strong>, que forma parte de la familia Amazon RDS. Su característica distintiva no es el lenguaje ni la interfaz, que son los de los motores originales, sino su <strong>arquitectura</strong>: Aurora separa el cómputo del almacenamiento y sustituye el disco local de cada servidor por un <strong>sistema de almacenamiento distribuido</strong> diseñado específicamente para la nube.</p>
+<p>Esta decisión de diseño, descrita por los ingenieros de AWS en la conferencia SIGMOD 2017, es la que explica la mayoría de sus propiedades: durabilidad, conmutación por error rápida, réplicas con un retraso mínimo, copias de seguridad sin impacto en el rendimiento y crecimiento automático del almacenamiento.</p>
+<hr />
+<h2 id="el-problema-de-la-arquitectura-tradicional">El problema de la arquitectura tradicional<a class="headerlink" href="#el-problema-de-la-arquitectura-tradicional" title="Permanent link">&para;</a></h2>
+<p>En una base de datos relacional convencional, como MySQL o PostgreSQL sobre RDS, cada escritura genera varias operaciones de entrada/salida sobre el disco: el registro de transacciones (<em>redo log</em> o WAL), las páginas de datos modificadas, el registro binario para la replicación, la escritura doble (<em>double-write</em>) para evitar páginas corruptas, etc. Si además la instancia es Multi-AZ, todas estas escrituras se replican de forma síncrona a la <em>standby</em>.</p>
+<p>En la nube, el cuello de botella no suele estar en la CPU ni en el disco, sino en la <strong>red</strong>: cada escritura atraviesa la red varias veces y la latencia se acumula.</p>
+<p><strong>La idea central de Aurora es que «el registro es la base de datos»</strong> (<em>the log is the database</em>): la instancia de base de datos solo envía a la capa de almacenamiento los <strong>registros de <em>redo</em></strong>, y es el propio almacenamiento distribuido el que, de forma asíncrona y en segundo plano, aplica esos registros para materializar las páginas de datos. Esto reduce drásticamente el volumen de E/S por red.</p>
+<hr />
+<h2 id="separacion-entre-computo-y-almacenamiento">Separación entre cómputo y almacenamiento<a class="headerlink" href="#separacion-entre-computo-y-almacenamiento" title="Permanent link">&para;</a></h2>
+<p>Un <strong>clúster de Aurora</strong> se compone de dos capas independientes:</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Componentes</th>
+<th>Función</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cómputo</strong></td>
+<td>1 <strong>instancia de escritura</strong> (<em>writer</em>, primaria) y hasta <strong>15 réplicas de Aurora</strong> (<em>readers</em>)</td>
+<td>Ejecutan el motor SQL: análisis de consultas, planificación, transacciones, caché de páginas (<em>buffer pool</em>)</td>
+</tr>
+<tr>
+<td><strong>Almacenamiento</strong></td>
+<td><strong>Volumen de clúster</strong> compartido, distribuido en tres zonas de disponibilidad</td>
+<td>Persiste los datos, aplica los registros de <em>redo</em>, se replica y se repara automáticamente</td>
+</tr>
+</tbody>
+</table>
+<p>Todas las instancias del clúster leen <strong>el mismo volumen</strong>. En consecuencia:</p>
+<ul>
+<li>Añadir una réplica <strong>no copia datos</strong>: la nueva instancia se conecta al volumen existente y empieza a servir lecturas en pocos minutos.</li>
+<li>Eliminar instancias <strong>no borra datos</strong>: los datos solo desaparecen al eliminar el clúster completo.</li>
+<li>El número de copias de los datos <strong>no depende del número de instancias</strong>: incluso un clúster con una sola instancia mantiene sus datos replicados en tres zonas.</li>
+</ul>
+<hr />
+<h2 id="el-volumen-de-cluster">El volumen de clúster<a class="headerlink" href="#el-volumen-de-cluster" title="Permanent link">&para;</a></h2>
+<p>El volumen de clúster es un almacenamiento virtual respaldado por discos SSD con estas características:</p>
+<ul>
+<li><strong>Seis copias en tres zonas de disponibilidad</strong>: el volumen se divide en <strong>segmentos de 10 GiB</strong>, y cada segmento se replica seis veces, dos en cada zona de disponibilidad. Cada grupo de seis copias de un segmento se denomina <strong>grupo de protección</strong>.</li>
+<li><strong>Escrituras y lecturas por quórum</strong>: una escritura se confirma cuando <strong>4 de las 6 copias</strong> la han persistido; la recuperación de un segmento requiere <strong>3 de 6</strong> copias.</li>
+<li><strong>Tolerancia a fallos «AZ+1»</strong>: el diseño permite perder una zona de disponibilidad completa sin perder la capacidad de escribir, y una zona más una copia adicional sin perder datos.</li>
+<li><strong>Autorreparación</strong>: los bloques y discos se comprueban de forma continua. Un segmento dañado se reconstruye a partir de las demás copias; al ser segmentos pequeños, la reparación se completa en minutos.</li>
+<li><strong>Crecimiento automático</strong>: el volumen crece a medida que se insertan datos, hasta <strong>128 TiB</strong> o <strong>256 TiB</strong> según la versión del motor, y <strong>se reduce</strong> cuando se eliminan tablas o datos en las versiones que lo admiten. Solo se paga por el espacio realmente utilizado.</li>
+<li><strong>Archivos temporales</strong>: las ordenaciones grandes o la creación de índices utilizan almacenamiento local de la instancia, no el volumen compartido.</li>
+</ul>
+<h3 id="quorum-de-escritura-y-de-lectura">Quórum de escritura y de lectura<a class="headerlink" href="#quorum-de-escritura-y-de-lectura" title="Permanent link">&para;</a></h3>
+<p>La elección de 4/6 y 3/6 no es arbitraria. Para que el sistema sea coherente, cualquier conjunto de lectura debe solaparse con cualquier conjunto de escritura (3 + 4 &gt; 6), y dos escrituras no pueden ignorarse mutuamente (4 + 4 &gt; 6). Con dos copias por zona, la pérdida de una zona completa deja <strong>4 copias</strong>, suficientes para seguir escribiendo.</p>
+<table>
+<thead>
+<tr>
+<th>Situación</th>
+<th>Copias disponibles</th>
+<th>¿Escritura?</th>
+<th>¿Datos íntegros?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Funcionamiento normal</td>
+<td>6</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Fallo de un disco</td>
+<td>5</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Caída de una zona de disponibilidad</td>
+<td>4</td>
+<td>Sí</td>
+<td>Sí</td>
+</tr>
+<tr>
+<td>Caída de una zona + un disco adicional</td>
+<td>3</td>
+<td>No, hasta reparar</td>
+<td>Sí (puede reconstruirse)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="instancias-y-replicas-de-aurora">Instancias y réplicas de Aurora<a class="headerlink" href="#instancias-y-replicas-de-aurora" title="Permanent link">&para;</a></h2>
+<h3 id="instancia-de-escritura">Instancia de escritura<a class="headerlink" href="#instancia-de-escritura" title="Permanent link">&para;</a></h3>
+<p>Es la única instancia que acepta operaciones de escritura (las variantes distribuidas Aurora PostgreSQL Limitless Database y Aurora DSQL, descritas en el apartado de despliegue, siguen un modelo distinto). Envía los registros de <em>redo</em> a las seis copias del segmento afectado y confirma la transacción al alcanzar el quórum.</p>
+<h3 id="replicas-de-aurora">Réplicas de Aurora<a class="headerlink" href="#replicas-de-aurora" title="Permanent link">&para;</a></h3>
+<p>Las réplicas leen del mismo volumen, por lo que <strong>no necesitan reproducir las escrituras</strong>: la instancia de escritura les envía los registros de <em>redo</em> únicamente para que actualicen las páginas que tienen en su caché. El retraso de réplica (<em>replica lag</em>) suele ser de <strong>milisegundos</strong>, frente a los segundos o minutos que puede alcanzar la replicación asíncrona de un motor convencional.</p>
+<p>Cada réplica tiene asignado un <strong>nivel de prioridad</strong> (<em>promotion tier</em>, de 0 a 15) que determina el orden en el que se promociona en caso de fallo de la instancia de escritura.</p>
+<h3 id="conmutacion-por-error">Conmutación por error<a class="headerlink" href="#conmutacion-por-error" title="Permanent link">&para;</a></h3>
+<p>Cuando la instancia de escritura falla, Aurora <strong>promociona automáticamente una réplica</strong> (la de mayor prioridad y, en caso de empate, la de mayor tamaño). Como la réplica ya tiene acceso a todos los datos, la conmutación suele completarse en <strong>menos de 30 segundos</strong>. Si el clúster no tiene réplicas, Aurora intenta crear una nueva instancia, lo que lleva más tiempo.</p>
+<p>Además, la <strong>recuperación tras un reinicio</strong> es muy rápida (normalmente menos de 60 segundos), porque no es necesario reproducir el registro de transacciones al arrancar: la capa de almacenamiento ya aplica los registros de <em>redo</em> de forma continua.</p>
+<hr />
+<h2 id="puntos-de-enlace-de-un-cluster">Puntos de enlace de un clúster<a class="headerlink" href="#puntos-de-enlace-de-un-cluster" title="Permanent link">&para;</a></h2>
+<p><img alt="image" src="../imgs/Aurora-endpoints.png" /></p>
+<p>Aurora proporciona varios nombres DNS que abstraen a las aplicaciones de las instancias concretas:</p>
+<table>
+<thead>
+<tr>
+<th>Punto de enlace</th>
+<th>Formato</th>
+<th>Apunta a</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>De clúster</strong> (escritura)</td>
+<td><code>mi-cluster.cluster-xxxx.us-east-1.rds.amazonaws.com</code></td>
+<td>La instancia de escritura actual</td>
+<td>Todas las escrituras; tras una conmutación por error apunta automáticamente a la nueva primaria</td>
+</tr>
+<tr>
+<td><strong>De lectura</strong> (<em>reader</em>)</td>
+<td><code>mi-cluster.cluster-ro-xxxx.us-east-1.rds.amazonaws.com</code></td>
+<td>Las réplicas, con reparto de conexiones</td>
+<td>Consultas de solo lectura</td>
+</tr>
+<tr>
+<td><strong>Personalizado</strong> (<em>custom</em>)</td>
+<td><code>mi-grupo.cluster-custom-xxxx…</code></td>
+<td>Un subconjunto de instancias elegido por el administrador</td>
+<td>Separar cargas, por ejemplo informes en instancias más grandes</td>
+</tr>
+<tr>
+<td><strong>De instancia</strong></td>
+<td><code>mi-instancia.xxxx.us-east-1.rds.amazonaws.com</code></td>
+<td>Una instancia concreta</td>
+<td>Diagnóstico o ajustes muy específicos</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Buena práctica</p>
+<p>Las aplicaciones deben conectarse siempre a los <strong>puntos de enlace de clúster y de lectura</strong>, nunca a los de instancia, para beneficiarse de la conmutación por error automática. El reparto que realiza el punto de enlace de lectura se produce <strong>por conexión</strong>, no por consulta.</p>
+</div>
+<hr />
+<h2 id="copias-de-seguridad-restauracion-y-clonado">Copias de seguridad, restauración y clonado<a class="headerlink" href="#copias-de-seguridad-restauracion-y-clonado" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Copias continuas</strong>: Aurora envía de forma continua e incremental los datos del volumen a Amazon S3, <strong>sin afectar al rendimiento</strong> ni requerir ventana de copia. Permiten restaurar el clúster a cualquier segundo del periodo de retención (de 1 a 35 días).</li>
+<li><strong>Instantáneas manuales</strong>: se conservan hasta que se eliminan y pueden copiarse a otras regiones o compartirse con otras cuentas.</li>
+<li><strong>Clonado rápido</strong> (<em>fast cloning</em>): crea un clúster nuevo que comparte inicialmente las páginas del original mediante <strong>copia en escritura</strong> (<em>copy-on-write</em>). El clon se crea en minutos, independientemente del tamaño de la base de datos, y solo consume espacio adicional por las páginas que se modifican. Es muy útil para crear entornos de pruebas a partir de datos de producción.</li>
+<li><strong>Backtrack</strong> (solo Aurora MySQL): permite «rebobinar» el clúster a un momento anterior <strong>sin restaurar</strong> una copia, por ejemplo para deshacer un <code>DELETE</code> sin <code>WHERE</code>. Debe activarse al crear el clúster.</li>
+</ul>
+<hr />
+<h2 id="modelos-de-facturacion-del-almacenamiento">Modelos de facturación del almacenamiento<a class="headerlink" href="#modelos-de-facturacion-del-almacenamiento" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Qué se factura</th>
+<th>Recomendado cuando</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aurora Standard</strong></td>
+<td>Instancias + almacenamiento + <strong>E/S</strong> (por millón de peticiones)</td>
+<td>El gasto en E/S es inferior al 25 % del total</td>
+</tr>
+<tr>
+<td><strong>Aurora I/O-Optimized</strong></td>
+<td>Instancias + almacenamiento (más caros), <strong>sin coste por E/S</strong></td>
+<td>El gasto en E/S supera el 25 % del total</td>
+</tr>
+</tbody>
+</table>
+<p>Puede pasarse de Standard a I/O-Optimized una vez cada 30 días, y en sentido contrario en cualquier momento.</p>
+<hr />
+<h2 id="comparativa-arquitectonica-con-rds-multi-az">Comparativa arquitectónica con RDS Multi-AZ<a class="headerlink" href="#comparativa-arquitectonica-con-rds-multi-az" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>RDS for MySQL Multi-AZ</th>
+<th>Aurora MySQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Almacenamiento</td>
+<td>Un volumen EBS por instancia</td>
+<td>Volumen compartido, 6 copias en 3 AZ</td>
+</tr>
+<tr>
+<td>Datos replicados</td>
+<td>Bloques completos del volumen</td>
+<td>Solo registros de <em>redo</em></td>
+</tr>
+<tr>
+<td>Instancias que leen</td>
+<td>Solo la primaria</td>
+<td>Primaria + hasta 15 réplicas</td>
+</tr>
+<tr>
+<td>Retraso de las réplicas de lectura</td>
+<td>Segundos o más (replicación asíncrona)</td>
+<td>Milisegundos</td>
+</tr>
+<tr>
+<td>Conmutación por error</td>
+<td>1–2 minutos</td>
+<td>Normalmente &lt; 30 segundos</td>
+</tr>
+<tr>
+<td>Copia de seguridad</td>
+<td>Instantánea EBS (breve impacto de E/S en Single-AZ)</td>
+<td>Continua, sin impacto</td>
+</tr>
+<tr>
+<td>Crecimiento del almacenamiento</td>
+<td>Aprovisionado / autoescalado</td>
+<td>Automático, pago por uso</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Verbitski, A., Gupta, A., Saha, D., Brahmadesam, M., Gupta, K., Mittal, R., Krishnamurthy, S., Maurice, S., Kharatishvili, T., Bao, X. (2017). <em>Amazon Aurora: Design Considerations for High Throughput Cloud-Native Relational Databases</em>. ACM SIGMOD 2017 — <a href="https://www.amazon.science/publications/amazon-aurora-design-considerations-for-high-throughput-cloud-native-relational-databases">Amazon Science</a></li>
+<li>AWS. <em>What is Amazon Aurora?</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html">Guía del usuario de Aurora</a></li>
+<li>AWS. <em>Amazon Aurora storage</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.StorageReliability.html">Almacenamiento de Aurora</a></li>
+<li>AWS Database Blog. <em>Amazon Aurora under the hood: quorums and correlated failure</em> — <a href="https://aws.amazon.com/blogs/database/amazon-aurora-under-the-hood-quorum-and-correlated-failure">Artículo</a></li>
+<li>AWS. <em>Amazon Aurora MySQL/PostgreSQL database clusters now support up to 256 TiB of storage volume</em> (07/2025) — <a href="https://aws.amazon.com/about-aws/whats-new/2025/07/amazon-aurora-mysql-database-clusters-256-tib-storage-volume">Anuncio</a></li>
+<li>AWS. <em>High availability for Amazon Aurora</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Concepts.AuroraHighAvailability.html">Alta disponibilidad</a></li>
+<li>AWS. <em>Amazon Aurora FAQ: availability and durability</em> — <a href="https://docs.aws.amazon.com/rds/latest/auroraextendedcontent/aurora-faq-availability-and-durability.html">Preguntas frecuentes</a></li>
+<li>AWS. <em>Amazon Aurora endpoint connections</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html">Puntos de enlace</a></li>
+<li>AWS. <em>Cloning a volume for an Amazon Aurora DB cluster</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Managing.Clone.html">Clonado</a></li>
+<li>AWS. <em>Backtracking an Aurora DB cluster</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraMySQL.Managing.Backtrack.html">Backtrack</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2246 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../BD-Replicacion/">
+      
+      
+        <link rel="next" href="../BD-Rendimiento/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+    
+    
+      
+        <title>Ciclo de vida: modificaciones, copias y recuperación - Amazon RDS</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ciclo-de-vida-modificaciones-copias-y-recuperacion" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Amazon RDS" class="md-header__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Amazon RDS
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ciclo de vida: modificaciones, copias y recuperación
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Amazon RDS" class="md-nav__button md-logo" aria-label="Amazon RDS" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Amazon RDS
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inicio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon RDS y Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon RDS y Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Introduccion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visión general de Amazon RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Region/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Elección de la región y residencia de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creación de sistema RDS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Creación de sistema RDS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuración inicial, credenciales
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Capacidad de cómputo, almacenamiento y alta disponibilidad
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Redes, conectividad y seguridad de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Crear-RDS-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización, copias de seguridad, mantenimiento y protección de los datos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Seguridad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Securización y control de acceso
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RDS-Proxy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDS Proxy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon Aurora
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon Aurora
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aurora MySQL y Aurora PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Aurora-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Opciones de despliegue y escalado
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Amazon DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Amazon DynamoDB
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-01/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Introducción y modelo clave-valor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-02/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Características
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitectura
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-04/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Clave primaria, clave de ordenación y tipos de atributos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../DynamoDB-05/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Acceso y securización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Administración de bases de datos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Administración de bases de datos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-IaC/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Infraestructura como código
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Replicacion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Replicación y recuperación ante desastres
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ciclo de vida: modificaciones, copias y recuperación
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-modificacion-de-una-instancia-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Modificación de una instancia RDS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Modificación de una instancia RDS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aplicar-inmediatamente-o-en-la-ventana-de-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicar inmediatamente o en la ventana de mantenimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impacto-de-los-cambios-mas-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impacto de los cambios más habituales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones-del-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restricciones del almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-estaticos-y-dinamicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros estáticos y dinámicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actualizaciones-del-motor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones del motor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detener-e-iniciar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detener e iniciar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-modificaciones-en-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Modificaciones en Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-modificaciones-en-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Modificaciones en DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-copias-de-seguridad-y-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Copias de seguridad y recuperación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Copias de seguridad y recuperación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objetivos-de-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos de recuperación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-copia-en-rds-y-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de copia en RDS y Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restaurar-no-sobrescribe-crea-una-base-de-datos-nueva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restaurar no sobrescribe: crea una base de datos nueva
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copias-en-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias en DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planes-de-aws-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planes de AWS Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probar-la-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probar la recuperación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../BD-Rendimiento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitorización del rendimiento y optimización
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Supervision-RDS/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anexo: referencia de métricas de RDS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Chuleta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chuleta de comandos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prácticas
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Prácticas
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Practica-DynamoDB-solucion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solución
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practica-rds-dynamodb-sesiones/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    [EVALUABLE] Servidor Web + MySQL + DynamoDB
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-modificacion-de-una-instancia-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Modificación de una instancia RDS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Modificación de una instancia RDS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aplicar-inmediatamente-o-en-la-ventana-de-mantenimiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aplicar inmediatamente o en la ventana de mantenimiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impacto-de-los-cambios-mas-habituales" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impacto de los cambios más habituales
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones-del-almacenamiento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restricciones del almacenamiento
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parametros-estaticos-y-dinamicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parámetros estáticos y dinámicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#actualizaciones-del-motor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actualizaciones del motor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#detener-e-iniciar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detener e iniciar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-modificaciones-en-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Modificaciones en Aurora
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-modificaciones-en-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Modificaciones en DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-copias-de-seguridad-y-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Copias de seguridad y recuperación
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Copias de seguridad y recuperación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objetivos-de-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivos de recuperación
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos-de-copia-en-rds-y-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tipos de copia en RDS y Aurora
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restaurar-no-sobrescribe-crea-una-base-de-datos-nueva" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restaurar no sobrescribe: crea una base de datos nueva
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copias-en-dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copias en DynamoDB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#planes-de-aws-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Planes de AWS Backup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#probar-la-recuperacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Probar la recuperación
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#referencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Referencias
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ciclo-de-vida-modificaciones-copias-y-recuperacion">Ciclo de vida: modificaciones, copias y recuperación<a class="headerlink" href="#ciclo-de-vida-modificaciones-copias-y-recuperacion" title="Permanent link">&para;</a></h1>
+<p><img alt="image" src="../imgs/BD-ciclo-vida.png" /></p>
+<p>Una base de datos no se configura una única vez. A lo largo de su vida es necesario <strong>ampliar su capacidad</strong>, <strong>ajustar su configuración</strong>, <strong>actualizar el motor</strong> y, llegado el caso, <strong>recuperar los datos</strong> tras un error. Este apartado describe cómo se realizan estos cambios en RDS, Aurora y DynamoDB, qué impacto tienen sobre el servicio y cómo planificar las copias de seguridad para poder recuperar la información <strong>en el tiempo y la forma</strong> que exige la organización.</p>
+<hr />
+<h2 id="1-modificacion-de-una-instancia-rds">1. Modificación de una instancia RDS<a class="headerlink" href="#1-modificacion-de-una-instancia-rds" title="Permanent link">&para;</a></h2>
+<p>Casi todos los parámetros elegidos al crear una instancia pueden modificarse después desde <strong>Modificar</strong> en la consola, con <code>aws rds modify-db-instance</code> o actualizando la plantilla de IaC.</p>
+<h3 id="aplicar-inmediatamente-o-en-la-ventana-de-mantenimiento">Aplicar inmediatamente o en la ventana de mantenimiento<a class="headerlink" href="#aplicar-inmediatamente-o-en-la-ventana-de-mantenimiento" title="Permanent link">&para;</a></h3>
+<p>Al modificar una instancia se elige cuándo aplicar el cambio:</p>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Comportamiento</th>
+<th>Cuándo usarla</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Aplicar durante la próxima ventana de mantenimiento</strong> (predeterminada)</td>
+<td>El cambio queda <strong>pendiente</strong> y se aplica en la ventana semanal configurada</td>
+<td>Cambios que provocan interrupción en producción</td>
+</tr>
+<tr>
+<td><strong>Aplicar inmediatamente</strong> (<code>--apply-immediately</code>)</td>
+<td>El cambio comienza al momento, junto con cualquier otro cambio pendiente</td>
+<td>Urgencias o entornos sin usuarios</td>
+</tr>
+</tbody>
+</table>
+<p>Los cambios pendientes pueden consultarse en la pestaña <em>Mantenimiento y copias de seguridad</em> o con:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>tienda-db-server<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s2">"DBInstances[0].PendingModifiedValues"</span>
+</span></code></pre></div>
+<h3 id="impacto-de-los-cambios-mas-habituales">Impacto de los cambios más habituales<a class="headerlink" href="#impacto-de-los-cambios-mas-habituales" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cambio</th>
+<th>¿Interrupción?</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clase de instancia</strong> (cómputo y memoria)</td>
+<td><strong>Sí</strong></td>
+<td>Single-AZ: reinicio de varios minutos. Multi-AZ: se modifica primero la <em>standby</em> y se conmuta; la interrupción se reduce a la conmutación</td>
+</tr>
+<tr>
+<td><strong>Ampliar el almacenamiento</strong></td>
+<td>No</td>
+<td>La instancia entra en estado <em>storage-optimization</em>. <strong>No se puede reducir</strong> el almacenamiento asignado</td>
+</tr>
+<tr>
+<td><strong>Tipo de almacenamiento, IOPS o rendimiento (gp3, io2)</strong></td>
+<td>Normalmente no</td>
+<td>Igual que la ampliación, con optimización posterior</td>
+</tr>
+<tr>
+<td><strong>Activar Multi-AZ</strong></td>
+<td>No</td>
+<td>Se crea la <em>standby</em> a partir de una instantánea; puede afectar al rendimiento durante el proceso</td>
+</tr>
+<tr>
+<td><strong>Periodo de retención de copias</strong></td>
+<td>No (salvo pasar de 0 a un valor positivo o viceversa)</td>
+<td>Pasar a 0 desactiva las copias automáticas y <strong>elimina</strong> las existentes</td>
+</tr>
+<tr>
+<td><strong>Grupo de seguridad, etiquetas, protección contra eliminación</strong></td>
+<td>No</td>
+<td>Efecto inmediato</td>
+</tr>
+<tr>
+<td><strong>Cambiar el grupo de parámetros</strong></td>
+<td><strong>Requiere reinicio</strong></td>
+<td>La instancia queda en estado <code>pending-reboot</code></td>
+</tr>
+<tr>
+<td><strong>Actualizar versión secundaria del motor</strong></td>
+<td><strong>Sí</strong> (breve)</td>
+<td>Puede ser automática en la ventana de mantenimiento</td>
+</tr>
+<tr>
+<td><strong>Actualizar versión principal</strong></td>
+<td><strong>Sí</strong></td>
+<td>Manual; recomendable con implementaciones azul/verde</td>
+</tr>
+</tbody>
+</table>
+<h3 id="restricciones-del-almacenamiento">Restricciones del almacenamiento<a class="headerlink" href="#restricciones-del-almacenamiento" title="Permanent link">&para;</a></h3>
+<ul>
+<li>El almacenamiento asignado <strong>solo puede aumentarse</strong>. Para reducirlo hay que crear una instancia nueva y migrar los datos.</li>
+<li>Tras una modificación del almacenamiento, no puede realizarse otra hasta que finalice la optimización y hayan transcurrido <strong>al menos seis horas</strong>.</li>
+<li>
+<p>El <strong>autoescalado del almacenamiento</strong> (<em>Storage autoscaling</em>), activado indicando un <strong>umbral máximo</strong> de almacenamiento, amplía el volumen automáticamente cuando:</p>
+<ul>
+<li>el espacio libre es igual o inferior al <strong>10 %</strong> del asignado,</li>
+<li>la situación se mantiene al menos <strong>5 minutos</strong>, y</li>
+<li>no se han producido más de cuatro modificaciones en las últimas 24 horas.</li>
+</ul>
+<p>El incremento es el mayor entre 10 GiB, el 10 % del almacenamiento asignado o el crecimiento previsto para las siguientes horas.</p>
+</li>
+</ul>
+<h3 id="parametros-estaticos-y-dinamicos">Parámetros estáticos y dinámicos<a class="headerlink" href="#parametros-estaticos-y-dinamicos" title="Permanent link">&para;</a></h3>
+<p>Los parámetros del motor se modifican en un <strong>grupo de parámetros personalizado</strong> (el grupo predeterminado no admite cambios):</p>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Ejemplo (MySQL)</th>
+<th>Aplicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Dinámico</strong></td>
+<td><code>long_query_time</code>, <code>max_connections</code>, <code>slow_query_log</code></td>
+<td>Inmediata, sin reinicio</td>
+</tr>
+<tr>
+<td><strong>Estático</strong></td>
+<td><code>innodb_log_file_size</code>, <code>performance_schema</code></td>
+<td>En el siguiente <strong>reinicio</strong></td>
+</tr>
+</tbody>
+</table>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-parameter-group<span class="w"> </span>--db-parameter-group-name<span class="w"> </span>tienda-mysql84<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--db-parameter-group-family<span class="w"> </span>mysql8.4<span class="w"> </span>--description<span class="w"> </span><span class="s2">"Parametros de la tienda"</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-parameter-group<span class="w"> </span>--db-parameter-group-name<span class="w"> </span>tienda-mysql84<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--parameters<span class="w"> </span><span class="s2">"ParameterName=long_query_time,ParameterValue=1,ApplyMethod=immediate"</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>aws<span class="w"> </span>rds<span class="w"> </span>modify-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>tienda-db-server<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>--db-parameter-group-name<span class="w"> </span>tienda-mysql84<span class="w"> </span>--apply-immediately
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>tienda-db-server<span class="w">   </span><span class="c1"># para aplicar la asociación</span>
+</span></code></pre></div>
+<h3 id="actualizaciones-del-motor">Actualizaciones del motor<a class="headerlink" href="#actualizaciones-del-motor" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Versiones secundarias</strong> (por ejemplo, 8.4.5 → 8.4.6): incluyen correcciones de errores y seguridad. Con la opción <em>Actualización automática de versiones secundarias</em> se aplican en la ventana de mantenimiento.</li>
+<li><strong>Versiones principales</strong> (por ejemplo, MySQL 8.0 → 8.4): pueden incluir cambios incompatibles. Se recomienda:<ol>
+<li>Probar la aplicación en una copia (restauración de instantánea o clon de Aurora).</li>
+<li>Usar una <strong>implementación azul/verde</strong>: RDS crea un entorno verde sincronizado mediante replicación, se actualiza y se prueba, y la <strong>conmutación</strong> se realiza normalmente en menos de un minuto, con posibilidad de volver atrás antes de conmutar.</li>
+</ol>
+</li>
+<li>Las versiones que alcanzan su fin de soporte estándar pasan a <strong>RDS Extended Support</strong>, con coste adicional, o se actualizan automáticamente.</li>
+</ul>
+<h3 id="detener-e-iniciar">Detener e iniciar<a class="headerlink" href="#detener-e-iniciar" title="Permanent link">&para;</a></h3>
+<p>Una instancia RDS puede <strong>detenerse</strong> para ahorrar el coste de cómputo (el almacenamiento y las copias se siguen facturando). AWS la <strong>vuelve a iniciar automáticamente a los 7 días</strong> para aplicar el mantenimiento pendiente. Es útil en entornos de desarrollo y en los laboratorios.</p>
+<hr />
+<h2 id="2-modificaciones-en-aurora">2. Modificaciones en Aurora<a class="headerlink" href="#2-modificaciones-en-aurora" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cambio</th>
+<th>Cómo se realiza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Escalar las lecturas</td>
+<td>Añadir o eliminar <strong>réplicas de Aurora</strong>; no copian datos y están disponibles en minutos</td>
+</tr>
+<tr>
+<td>Cambiar la clase de la instancia de escritura</td>
+<td>Cambiar primero la clase de una réplica y <strong>conmutar</strong> (<code>failover-db-cluster</code>) hacia ella para minimizar la interrupción</td>
+</tr>
+<tr>
+<td>Ajustar Aurora Serverless</td>
+<td>Modificar la capacidad mínima y máxima en ACU; se aplica sin interrupción</td>
+</tr>
+<tr>
+<td>Almacenamiento</td>
+<td>No se gestiona: crece y decrece automáticamente</td>
+</tr>
+<tr>
+<td>Probar cambios</td>
+<td>Crear un <strong>clon</strong> del clúster en minutos y aplicar en él el cambio</td>
+</tr>
+<tr>
+<td>Pasar a I/O-Optimized</td>
+<td>Cambio de configuración del clúster, sin interrupción en la mayoría de instancias</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="3-modificaciones-en-dynamodb">3. Modificaciones en DynamoDB<a class="headerlink" href="#3-modificaciones-en-dynamodb" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Cambio</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cambiar el <strong>modo de capacidad</strong></td>
+<td>De aprovisionado a bajo demanda hasta 4 veces cada 24 horas; a la inversa, en cualquier momento</td>
+</tr>
+<tr>
+<td>Ajustar <strong>RCU/WCU</strong> o el autoescalado</td>
+<td>Sin interrupción; las reducciones tienen un límite diario</td>
+</tr>
+<tr>
+<td>Fijar el <strong>rendimiento máximo</strong> bajo demanda</td>
+<td>Sin interrupción</td>
+</tr>
+<tr>
+<td><strong>Añadir un GSI</strong></td>
+<td>Se crea en línea: DynamoDB rellena el índice (<em>backfilling</em>) sin bloquear la tabla</td>
+</tr>
+<tr>
+<td>Cambiar la <strong>clase de tabla</strong> (Standard ↔ Standard-IA)</td>
+<td>Sin interrupción; con un límite de cambios en un periodo de tiempo</td>
+</tr>
+<tr>
+<td>Activar <strong>TTL</strong>, <strong>Streams</strong>, <strong>PITR</strong> o la <strong>protección contra eliminación</strong></td>
+<td>Sin interrupción</td>
+</tr>
+<tr>
+<td>Cambiar la <strong>clave primaria</strong> o añadir un <strong>LSI</strong></td>
+<td><strong>No es posible</strong>: requiere crear una tabla nueva y migrar los datos</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-copias-de-seguridad-y-recuperacion">4. Copias de seguridad y recuperación<a class="headerlink" href="#4-copias-de-seguridad-y-recuperacion" title="Permanent link">&para;</a></h2>
+<h3 id="objetivos-de-recuperacion">Objetivos de recuperación<a class="headerlink" href="#objetivos-de-recuperacion" title="Permanent link">&para;</a></h3>
+<p>Antes de configurar las copias, la organización debe fijar dos objetivos para cada sistema:</p>
+<table>
+<thead>
+<tr>
+<th>Objetivo</th>
+<th>Pregunta</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RPO</strong> (<em>Recovery Point Objective</em>)</td>
+<td>¿Cuántos datos podemos permitirnos perder?</td>
+<td>«Como máximo, los últimos 5 minutos»</td>
+</tr>
+<tr>
+<td><strong>RTO</strong> (<em>Recovery Time Objective</em>)</td>
+<td>¿Cuánto tiempo podemos estar sin servicio?</td>
+<td>«Como máximo, 1 hora»</td>
+</tr>
+</tbody>
+</table>
+<p>Estos objetivos determinan qué mecanismos son necesarios:</p>
+<table>
+<thead>
+<tr>
+<th>Mecanismo</th>
+<th>RPO típico</th>
+<th>RTO típico</th>
+<th>Protege frente a</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-AZ</td>
+<td>0</td>
+<td>1–2 minutos</td>
+<td>Fallo de una instancia o una zona</td>
+</tr>
+<tr>
+<td>Aurora (réplicas)</td>
+<td>0</td>
+<td>&lt; 30 segundos</td>
+<td>Fallo de una instancia o una zona</td>
+</tr>
+<tr>
+<td>Restauración a un momento dado (PITR)</td>
+<td>≈ 5 minutos</td>
+<td>Minutos a horas (según el tamaño)</td>
+<td>Errores humanos, corrupción lógica</td>
+</tr>
+<tr>
+<td>Instantánea manual</td>
+<td>Desde la última instantánea</td>
+<td>Minutos a horas</td>
+<td>Errores, cambios arriesgados</td>
+</tr>
+<tr>
+<td>Copia en otra región</td>
+<td>Desde la última copia</td>
+<td>Horas</td>
+<td>Desastre regional</td>
+</tr>
+<tr>
+<td>Réplica entre regiones / Global Database</td>
+<td>Segundos</td>
+<td>Minutos</td>
+<td>Desastre regional</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">La alta disponibilidad no es una copia de seguridad</p>
+<p>Multi-AZ y las réplicas replican <strong>también los errores</strong>: un <code>DELETE</code> sin <code>WHERE</code> se propaga a la <em>standby</em> en milisegundos. Solo las copias de seguridad y la restauración a un momento dado protegen frente a errores humanos.</p>
+</div>
+<h3 id="tipos-de-copia-en-rds-y-aurora">Tipos de copia en RDS y Aurora<a class="headerlink" href="#tipos-de-copia-en-rds-y-aurora" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Creación</th>
+<th>Retención</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Copias automáticas</strong></td>
+<td>Diarias en la ventana de copia + registros de transacciones</td>
+<td>1 a 35 días (0 las desactiva)</td>
+<td>Permiten la <strong>restauración a un momento dado</strong>; se eliminan al borrar la instancia, salvo que se indique conservarlas</td>
+</tr>
+<tr>
+<td><strong>Instantáneas manuales</strong></td>
+<td>Bajo demanda (<code>create-db-snapshot</code>)</td>
+<td>Hasta que se eliminan</td>
+<td>Sobreviven a la eliminación de la instancia; pueden copiarse a otra región o compartirse con otra cuenta</td>
+</tr>
+<tr>
+<td><strong>Instantánea final</strong></td>
+<td>Al eliminar la instancia</td>
+<td>Hasta que se elimina</td>
+<td>Se recomienda crearla siempre</td>
+</tr>
+<tr>
+<td><strong>AWS Backup</strong></td>
+<td>Según un <strong>plan de copias</strong></td>
+<td>Según las reglas del plan</td>
+<td>Centraliza la política de copias de varios servicios y cuentas</td>
+</tr>
+<tr>
+<td><strong>Exportación de instantáneas a S3</strong></td>
+<td>Bajo demanda</td>
+<td>Según S3</td>
+<td>Formato Parquet para análisis, no para restaurar</td>
+</tr>
+</tbody>
+</table>
+<h3 id="restaurar-no-sobrescribe-crea-una-base-de-datos-nueva">Restaurar no sobrescribe: crea una base de datos nueva<a class="headerlink" href="#restaurar-no-sobrescribe-crea-una-base-de-datos-nueva" title="Permanent link">&para;</a></h3>
+<p>Cualquier restauración en RDS, Aurora o DynamoDB <strong>crea un recurso nuevo</strong> con otro identificador y otro punto de enlace. La base de datos original no se modifica. El procedimiento habitual es:</p>
+<ol>
+<li><strong>Identificar el momento</strong> al que se quiere volver (por ejemplo, el instante anterior al borrado erróneo) y comprobar el <strong>último momento restaurable</strong>.</li>
+<li>
+<p><strong>Restaurar</strong> en una instancia nueva:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>restore-db-instance-to-point-in-time<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--source-db-instance-identifier<span class="w"> </span>tienda-db-server<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--target-db-instance-identifier<span class="w"> </span>tienda-db-restaurada<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--restore-time<span class="w"> </span><span class="m">2026</span>-11-10T09:45:00Z<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--db-subnet-group-name<span class="w"> </span>tienda-subredes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--vpc-security-group-ids<span class="w"> </span>sg-0ccc<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--no-publicly-accessible
+</span></code></pre></div>
+</li>
+<li>
+<p><strong>Revisar la configuración</strong> de la instancia restaurada: grupo de seguridad, grupo de parámetros, opciones de supervisión y etiquetas, que no siempre se heredan.</p>
+</li>
+<li><strong>Validar los datos</strong> restaurados.</li>
+<li><strong>Redirigir la aplicación</strong>: cambiar el punto de enlace en la configuración, o bien renombrar la instancia original y asignar su identificador a la restaurada para conservar el mismo nombre DNS.</li>
+<li><strong>Eliminar</strong> la instancia que ya no se necesite, tras crear una instantánea final.</li>
+</ol>
+<p>En ocasiones no es necesario sustituir la base de datos completa: basta con restaurarla aparte y <strong>copiar solo las filas perdidas</strong> a la base de datos de producción.</p>
+<h3 id="copias-en-dynamodb">Copias en DynamoDB<a class="headerlink" href="#copias-en-dynamodb" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>PITR</strong>: restauración a cualquier segundo del periodo configurado (1 a 35 días) en una <strong>tabla nueva</strong>.</li>
+<li><strong>Copias bajo demanda</strong> y <strong>AWS Backup</strong>.</li>
+<li>Al restaurar <strong>no se recuperan</strong> algunos ajustes, como las políticas de autoescalado, las alarmas de CloudWatch, las etiquetas, la configuración de Streams o el TTL, que deben volver a configurarse.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>aws<span class="w"> </span>dynamodb<span class="w"> </span>restore-table-to-point-in-time<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--source-table-name<span class="w"> </span>Productos<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--target-table-name<span class="w"> </span>Productos-restaurada<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--restore-date-time<span class="w"> </span><span class="m">2026</span>-11-10T09:45:00Z
+</span></code></pre></div>
+<h3 id="planes-de-aws-backup">Planes de AWS Backup<a class="headerlink" href="#planes-de-aws-backup" title="Permanent link">&para;</a></h3>
+<p>Un <strong>plan de copias</strong> de AWS Backup define de forma centralizada:</p>
+<ul>
+<li><strong>Frecuencia</strong> (cada hora, diaria, semanal…) y <strong>ventana</strong> de ejecución.</li>
+<li><strong>Retención</strong> y, en su caso, transición a almacenamiento en frío.</li>
+<li><strong>Copias automáticas a otra región o a otra cuenta</strong>, como protección frente a desastres o frente al compromiso de la cuenta principal.</li>
+<li><strong>Asignación de recursos</strong> por etiquetas: por ejemplo, todas las bases de datos con <code>copia = diaria</code>.</li>
+<li><strong>Almacenes bloqueados</strong> (<em>Vault Lock</em>), que impiden eliminar las copias antes de tiempo incluso a los administradores.</li>
+</ul>
+<h3 id="probar-la-recuperacion">Probar la recuperación<a class="headerlink" href="#probar-la-recuperacion" title="Permanent link">&para;</a></h3>
+<p>Una copia que nunca se ha restaurado <strong>no garantiza</strong> que se pueda recuperar. Las organizaciones deben <strong>ensayar periódicamente</strong> la restauración y medir el tiempo real empleado, para comprobar que se cumple el RTO. AWS Backup incluye la funcionalidad de <strong>pruebas de restauración</strong> (<em>restore testing</em>), que automatiza estas comprobaciones.</p>
+<hr />
+<h2 id="referencias">Referencias<a class="headerlink" href="#referencias" title="Permanent link">&para;</a></h2>
+<ul>
+<li>AWS. <em>Modifying an Amazon RDS DB instance</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.DBInstance.Modifying.html">Modificación de instancias</a></li>
+<li>AWS. <em>Settings for DB instances</em> (impacto de cada cambio) — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ModifyInstance.Settings.html">Ajustes y tiempo de inactividad</a></li>
+<li>AWS. <em>Increasing DB instance storage capacity</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.ModifyingExisting.html">Ampliación del almacenamiento</a></li>
+<li>AWS. <em>Managing capacity automatically with Amazon RDS storage autoscaling</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIOPS.Autoscaling.html">Autoescalado del almacenamiento</a></li>
+<li>AWS. <em>Working with parameter groups</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_WorkingWithParamGroups.html">Grupos de parámetros</a></li>
+<li>AWS. <em>Upgrading a DB instance engine version</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_UpgradeDBInstance.Upgrading.html">Actualizaciones del motor</a></li>
+<li>AWS. <em>Using Amazon RDS Blue/Green Deployments for database updates</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/blue-green-deployments.html">Implementaciones azul/verde</a></li>
+<li>AWS. <em>Stopping an Amazon RDS DB instance temporarily</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_StopInstance.html">Detener una instancia</a></li>
+<li>AWS. <em>Backing up, restoring, and exporting data</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_CommonTasks.BackupRestore.html">Copias de seguridad en RDS</a></li>
+<li>AWS. <em>Restoring a DB instance to a specified time</em> — <a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PIT.html">Restauración a un momento dado</a></li>
+<li>AWS. <em>Backup and restore for DynamoDB</em> — <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Backup-and-Restore.html">Copias en DynamoDB</a></li>
+<li>AWS. <em>What is AWS Backup?</em> — <a href="https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html">AWS Backup</a></li>
+<li>AWS. <em>Restore testing</em> — <a href="https://docs.aws.amazon.com/aws-backup/latest/devguide/restore-testing.html">Pruebas de restauración</a></li>
+<li>AWS. <em>Disaster recovery of workloads on AWS</em> (whitepaper: RPO y RTO) — <a href="https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-workloads-on-aws.html">Recuperación ante desastres</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.expand", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
