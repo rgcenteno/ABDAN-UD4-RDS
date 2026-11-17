@@ -49,25 +49,6 @@ Aurora PostgreSQL sigue la numeración de PostgreSQL. A finales de 2026 admite l
 
 ---
 
-## Funcionalidades específicas de cada edición
-
-Además de las funcionalidades comunes de Aurora (almacenamiento distribuido, réplicas, clonado, Aurora Serverless, Global Database, implementaciones azul/verde, integración *zero-ETL* con Amazon Redshift, autenticación IAM o Database Activity Streams), cada edición ofrece capacidades propias:
-
-| Funcionalidad | Aurora MySQL | Aurora PostgreSQL | Descripción |
-| --- | --- | --- | --- |
-| **Backtrack** | ✔ | — | Rebobina el clúster a un instante anterior sin restaurar una copia |
-| **Parallel Query** | ✔ | — | Delega parte del procesamiento de consultas analíticas en la capa de almacenamiento |
-| **Reenvío de escrituras local** | ✔ | ✔ | Las réplicas reenvían escrituras a la instancia primaria |
-| **Babelfish** | — | ✔ | Permite que aplicaciones de **SQL Server** se conecten mediante el protocolo TDS y T-SQL |
-| **Limitless Database** | — | ✔ | Escalado horizontal automático de escrituras mediante particionado (*sharding*) |
-| **Query Plan Management** | — | ✔ | Estabiliza los planes de ejecución para evitar regresiones de rendimiento |
-| **Optimized Reads** | ✔ | ✔ | Usa el almacenamiento NVMe local de ciertas instancias como caché y para objetos temporales |
-| **Integración con S3** | `LOAD DATA FROM S3`, `SELECT … INTO OUTFILE S3` | Extensión `aws_s3` | Importación y exportación de datos desde y hacia S3 |
-| **Integración con Lambda** | Procedimientos y funciones nativas | Extensión `aws_lambda` | Invocar funciones Lambda desde la base de datos |
-| **Extensiones destacadas** | — | `pgvector`, `PostGIS`, `pgAudit`, `pg_stat_statements`… | Búsqueda vectorial, datos geográficos, auditoría, estadísticas |
-
----
-
 ## Diferencias de administración
 
 ### Grupos de parámetros en Aurora
@@ -100,19 +81,6 @@ psql "host=mi-cluster.cluster-xxxx.us-east-1.rds.amazonaws.com port=5432 \
 
 ---
 
-## Migración hacia Aurora
-
-| Origen | Método habitual |
-| --- | --- |
-| RDS for MySQL | Crear una **réplica de lectura de Aurora** a partir de la instancia y promocionarla, o restaurar una instantánea como clúster Aurora |
-| RDS for PostgreSQL | Réplica de lectura de Aurora o restauración de instantánea |
-| MySQL autogestionado | Copia física con **Percona XtraBackup** cargada desde S3, `mysqldump` o AWS DMS |
-| PostgreSQL autogestionado | `pg_dump`/`pg_restore`, replicación lógica o AWS DMS |
-| SQL Server | AWS DMS + **Babelfish for Aurora PostgreSQL** |
-| Oracle y otros motores | AWS Schema Conversion Tool / DMS Schema Conversion + AWS DMS |
-
----
-
 ## Criterios de elección entre ambas ediciones
 
 | Criterio | Aurora MySQL | Aurora PostgreSQL |
@@ -123,6 +91,40 @@ psql "host=mi-cluster.cluster-xxxx.us-east-1.rds.amazonaws.com port=5432 \
 | Escalado horizontal de escrituras | No (salvo varias bases de datos) | Limitless Database |
 
 En la práctica evaluable se utiliza RDS for MySQL. Migrar esa aplicación a **Aurora MySQL** no requeriría cambios en el código: bastaría con sustituir el punto de enlace de la instancia por el punto de enlace de clúster.
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Funcionalidades específicas de cada edición"
+
+    Además de las funcionalidades comunes de Aurora (almacenamiento distribuido, réplicas, clonado, Aurora Serverless, Global Database, implementaciones azul/verde, integración *zero-ETL* con Amazon Redshift, autenticación IAM o Database Activity Streams), cada edición ofrece capacidades propias:
+
+    | Funcionalidad | Aurora MySQL | Aurora PostgreSQL | Descripción |
+    | --- | --- | --- | --- |
+    | **Backtrack** | ✔ | — | Rebobina el clúster a un instante anterior sin restaurar una copia |
+    | **Parallel Query** | ✔ | — | Delega parte del procesamiento de consultas analíticas en la capa de almacenamiento |
+    | **Reenvío de escrituras local** | ✔ | ✔ | Las réplicas reenvían escrituras a la instancia primaria |
+    | **Babelfish** | — | ✔ | Permite que aplicaciones de **SQL Server** se conecten mediante el protocolo TDS y T-SQL |
+    | **Limitless Database** | — | ✔ | Escalado horizontal automático de escrituras mediante particionado (*sharding*) |
+    | **Query Plan Management** | — | ✔ | Estabiliza los planes de ejecución para evitar regresiones de rendimiento |
+    | **Optimized Reads** | ✔ | ✔ | Usa el almacenamiento NVMe local de ciertas instancias como caché y para objetos temporales |
+    | **Integración con S3** | `LOAD DATA FROM S3`, `SELECT … INTO OUTFILE S3` | Extensión `aws_s3` | Importación y exportación de datos desde y hacia S3 |
+    | **Integración con Lambda** | Procedimientos y funciones nativas | Extensión `aws_lambda` | Invocar funciones Lambda desde la base de datos |
+    | **Extensiones destacadas** | — | `pgvector`, `PostGIS`, `pgAudit`, `pg_stat_statements`… | Búsqueda vectorial, datos geográficos, auditoría, estadísticas |
+
+??? info "Migración hacia Aurora"
+
+    | Origen | Método habitual |
+    | --- | --- |
+    | RDS for MySQL | Crear una **réplica de lectura de Aurora** a partir de la instancia y promocionarla, o restaurar una instantánea como clúster Aurora |
+    | RDS for PostgreSQL | Réplica de lectura de Aurora o restauración de instantánea |
+    | MySQL autogestionado | Copia física con **Percona XtraBackup** cargada desde S3, `mysqldump` o AWS DMS |
+    | PostgreSQL autogestionado | `pg_dump`/`pg_restore`, replicación lógica o AWS DMS |
+    | SQL Server | AWS DMS + **Babelfish for Aurora PostgreSQL** |
+    | Oracle y otros motores | AWS Schema Conversion Tool / DMS Schema Conversion + AWS DMS |
 
 ---
 

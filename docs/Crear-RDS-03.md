@@ -98,35 +98,13 @@ La utilización adecuada de grupos de seguridad constituye **una de las medidas 
 
 ![image](imgs/RDS-proxy.jpg)
 
-Las aplicaciones modernas suelen gestionar un elevado número de conexiones simultáneas contra las bases de datos.
-
-Cada conexión consume recursos y, cuando la carga aumenta considerablemente, la apertura y cierre constante de sesiones puede afectar al rendimiento global del sistema.
-
-Para responder a este problema, Amazon ofrece RDS Proxy.
-
-Un proxy actúa como una **capa intermedia entre las aplicaciones y la base de datos**. En lugar de crear conexiones directas para cada petición, el proxy mantiene un conjunto optimizado de conexiones reutilizables y gestiona su distribución entre las aplicaciones que las solicitan.
-
-Esta arquitectura permite reducir la sobrecarga del servidor, mejorar la escalabilidad y aumentar la estabilidad bajo cargas elevadas.
-
-Además, determinadas operaciones de mantenimiento o cambios en la infraestructura pueden resultar más transparentes para las aplicaciones cuando se utiliza un proxy, ya que las conexiones se gestionan desde esta capa intermedia.
-
-No obstante, la incorporación de un proxy introduce cierta complejidad adicional y puede incrementar los costes del despliegue, por lo que normalmente se reserva para sistemas con un número importante de usuarios o conexiones concurrentes.
+El asistente ofrece crear un **RDS Proxy**: una capa intermedia que mantiene un conjunto de conexiones reutilizables con la base de datos y las reparte entre las aplicaciones. Aporta escalabilidad y conmutaciones por error más rápidas, a cambio de coste y complejidad adicionales, por lo que se reserva para aplicaciones con muchas conexiones concurrentes. En la práctica evaluable no se activa. Su funcionamiento se describe en [RDS Proxy](RDS-Proxy.md), dentro del contenido de ampliación.
 
 ---
 
 ### Certificados y cifrado de las comunicaciones
 
-La seguridad de una base de datos no depende únicamente de quién puede conectarse, sino también de cómo se transmiten los datos a través de la red.
-
-Cuando una aplicación establece una conexión con MariaDB intercambia información sensible que puede incluir credenciales, datos personales o información empresarial.
-
-Para proteger estas comunicaciones, Amazon RDS permite utilizar certificados digitales emitidos por autoridades certificadoras reconocidas.
-
-El uso de certificados posibilita establecer conexiones cifradas mediante TLS, garantizando que **la información transmitida entre clientes y servidores no pueda ser interpretada por terceros** durante su tránsito por la red.
-
-Además del cifrado, los certificados permiten verificar la identidad del servidor, reduciendo el riesgo de ataques basados en la suplantación de sistemas legítimos.
-
-La utilización de conexiones cifradas constituye actualmente una práctica fundamental en cualquier entorno profesional donde se gestione información sensible o crítica.
+En **Configuración adicional → Entidad de certificación** (*Certificate authority*) se elige la autoridad que firma el certificado del servidor (por defecto, `rds-ca-rsa2048-g1`). Con ese certificado, los clientes cifran la conexión con **TLS** y verifican la identidad del servidor, como se hace en la práctica evaluable con el fichero de la variable `db.ssl_pem`. Cómo exigir y verificar TLS se explica en [Securización y control de acceso](RDS-Seguridad.md#6-cifrado-en-transito).
 
 ---
 

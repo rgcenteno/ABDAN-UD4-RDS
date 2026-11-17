@@ -119,27 +119,13 @@ En entornos formativos suele ser una solución suficiente, mientras que en siste
 
 ## Métodos de autenticación
 
-Además de la gestión de credenciales, Amazon RDS permite seleccionar el mecanismo de autenticación que utilizarán los usuarios para acceder al sistema.
-
-La opción tradicional consiste en utilizar usuarios y contraseñas almacenados directamente en MariaDB. Este modelo continúa siendo el más extendido debido a su simplicidad y compatibilidad con cualquier aplicación capaz de conectarse a una base de datos relacional.
-
-Sin embargo, AWS también ofrece la posibilidad de integrar la autenticación con AWS Identity and Access Management (IAM).
-
-Mediante este mecanismo, la gestión de identidades se centraliza dentro de la plataforma AWS, permitiendo controlar accesos, asignar permisos y registrar actividades utilizando las mismas herramientas de gobierno y seguridad empleadas en el resto de servicios de la nube.
-
-Esta aproximación resulta especialmente interesante en entornos corporativos donde la trazabilidad y el control de accesos constituyen requisitos importantes de seguridad.
+Además de las credenciales del usuario maestro, el asistente permite elegir el mecanismo de **autenticación de base de datos**: solo **contraseña** (usuarios y contraseñas almacenados en MariaDB, la opción más extendida y la que se utiliza en las prácticas) o **contraseña y autenticación de IAM**, que centraliza las identidades en AWS. Los mecanismos disponibles y sus diferencias se explican en [Securización y control de acceso](RDS-Seguridad.md#3-autenticacion-en-la-base-de-datos).
 
 ---
 
 ## Cifrado de credenciales y claves KMS
 
-Cuando se utilizan mecanismos avanzados de gestión de identidades o servicios como AWS Secrets Manager, es necesario proteger la información almacenada mediante técnicas de cifrado.
-
-Para ello, Amazon RDS se integra con AWS Key Management Service (KMS), el servicio encargado de la gestión centralizada de claves criptográficas.
-
-KMS permite crear, almacenar y administrar las claves utilizadas para proteger información sensible dentro de AWS. Gracias a este mecanismo, incluso aunque un tercero obtuviera acceso a los datos almacenados, no podría interpretar su contenido sin disponer de las claves correspondientes.
-
-El uso de claves administradas por AWS simplifica la puesta en marcha del sistema, mientras que la utilización de claves personalizadas proporciona un mayor nivel de control para organizaciones sujetas a requisitos normativos o políticas de seguridad más estrictas.
+Si la contraseña se administra en Secrets Manager, el asistente pide la **clave de AWS KMS** con la que se cifra el secreto: la clave administrada por AWS (`aws/secretsmanager`), que no requiere configuración, o una **clave administrada por el cliente**, que da más control sobre quién puede usarla. Las claves de KMS se explican en [Infraestructura como código](BD-IaC.md#claves-de-cifrado-especificas-con-aws-kms).
 
 ---
 

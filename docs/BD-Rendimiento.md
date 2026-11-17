@@ -2,7 +2,7 @@
 
 ![image](imgs/BD-ciclo-optimizacion.png)
 
-Las métricas de CloudWatch indican el estado de una instancia: CPU, memoria, IOPS, latencia, conexiones. Se describen una a una, con valores orientativos, en el anexo [Referencia de métricas de RDS](Supervision-RDS.md). Estas métricas dicen **que** algo va mal, pero no siempre **por qué**. Este apartado baja al nivel de las **operaciones de inserción, actualización y consulta**: cómo identificar las sentencias que consumen más recursos, cómo analizarlas y qué optimizaciones sencillas pueden aplicarse, tanto en RDS y Aurora como en DynamoDB, para cumplir los requisitos de **rendimiento** y de **coste**.
+Las métricas de CloudWatch indican el estado de una instancia: CPU, memoria, IOPS, latencia, conexiones. Se describen una a una, con valores orientativos, en la página de ampliación [Referencia de métricas de RDS](Supervision-RDS.md). Estas métricas dicen **que** algo va mal, pero no siempre **por qué**. Este apartado baja al nivel de las **operaciones de inserción, actualización y consulta**: cómo identificar las sentencias que consumen más recursos, cómo analizarlas y qué optimizaciones sencillas pueden aplicarse, tanto en RDS y Aurora como en DynamoDB, para cumplir los requisitos de **rendimiento** y de **coste**.
 
 El trabajo de optimización sigue siempre el mismo ciclo: **medir → identificar la causa → aplicar un cambio → volver a medir**. Optimizar sin medir lleva a cambios que no resuelven el problema o que lo trasladan a otro sitio.
 
@@ -48,9 +48,9 @@ El registro de consultas lentas guarda las sentencias que superan un tiempo de e
 
 === "Consola AWS"
 
-    1. **RDS → Grupos de parámetros**, seleccionar el grupo personalizado de la instancia (`mydb-mysql84`, véase [Ciclo de vida](BD-CicloVida.md)) → **Editar**.
+    1. **Aurora and RDS → Grupos de parámetros**, seleccionar el grupo personalizado de la instancia (`mydb-mysql84`, véase [Ciclo de vida](BD-CicloVida.md)) → **Editar**.
     2. Asignar `slow_query_log = 1` y `long_query_time = 1` y pulsar **Guardar cambios**.
-    3. **RDS → Bases de datos → `mydb-server` → Modificar**. En **Configuración adicional → Exportaciones de registros** (*Log exports*), marcar **Registro de consultas lentas** (*Slow query log*).
+    3. **Aurora and RDS → Bases de datos → `mydb-server` → Modificar**. En **Configuración adicional → Exportaciones de registros** (*Log exports*), marcar **Registro de consultas lentas** (*Slow query log*).
     4. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
 
 === "AWS CLI"
@@ -94,24 +94,6 @@ fields @timestamp, @message
 
     aws logs get-query-results --query-id "$QID"
     ```
-
-### Estadísticas de sentencias en el motor
-
-```sql
--- MySQL: sentencias con mayor tiempo total de ejecución
-SELECT DIGEST_TEXT, COUNT_STAR AS ejecuciones,
-       ROUND(SUM_TIMER_WAIT/1e12, 2) AS segundos_totales,
-       SUM_ROWS_EXAMINED AS filas_examinadas
-FROM performance_schema.events_statements_summary_by_digest
-ORDER BY SUM_TIMER_WAIT DESC LIMIT 10;
-
--- PostgreSQL (extensión pg_stat_statements)
-SELECT query, calls, round(total_exec_time) AS ms_totales, rows
-FROM pg_stat_statements
-ORDER BY total_exec_time DESC LIMIT 10;
-```
-
-Una consulta que se ejecuta miles de veces con un coste moderado puede consumir más recursos que una consulta muy lenta que se ejecuta una vez al día. Por eso conviene ordenar por **tiempo total** y no solo por tiempo medio.
 
 ### Analizar una consulta con `EXPLAIN`
 
@@ -266,6 +248,30 @@ Además:
 5. **Acción**: crear el índice `idx_producto_stock`.
 6. **Verificación**: la CPU baja al 20 %, la consulta desaparece del registro de consultas lentas y la carga queda por debajo de la línea de vCPU.
 7. **Optimización de coste**: con la nueva carga, la instancia está sobredimensionada y puede pasar a una clase menor.
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Estadísticas de sentencias en el motor"
+
+    ```sql
+    -- MySQL: sentencias con mayor tiempo total de ejecución
+    SELECT DIGEST_TEXT, COUNT_STAR AS ejecuciones,
+           ROUND(SUM_TIMER_WAIT/1e12, 2) AS segundos_totales,
+           SUM_ROWS_EXAMINED AS filas_examinadas
+    FROM performance_schema.events_statements_summary_by_digest
+    ORDER BY SUM_TIMER_WAIT DESC LIMIT 10;
+
+    -- PostgreSQL (extensión pg_stat_statements)
+    SELECT query, calls, round(total_exec_time) AS ms_totales, rows
+    FROM pg_stat_statements
+    ORDER BY total_exec_time DESC LIMIT 10;
+    ```
+
+    Una consulta que se ejecuta miles de veces con un coste moderado puede consumir más recursos que una consulta muy lenta que se ejecuta una vez al día. Por eso conviene ordenar por **tiempo total** y no solo por tiempo medio.
 
 ---
 

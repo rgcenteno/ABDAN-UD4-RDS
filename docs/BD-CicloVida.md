@@ -23,7 +23,7 @@ Por ejemplo, para cambiar la clase de la instancia:
 
 === "Consola AWS"
 
-    1. **RDS → Bases de datos**, seleccionar la instancia `mydb-server` y pulsar **Modificar** (*Modify*).
+    1. **Aurora and RDS → Bases de datos**, seleccionar la instancia `mydb-server` y pulsar **Modificar** (*Modify*).
     2. En **Configuración de la instancia**, elegir la nueva clase (por ejemplo, `db.t3.small`).
     3. Pulsar **Continuar** al final de la página.
     4. En **Programación de modificaciones**, elegir **Aplicar inmediatamente** o **Aplicar durante la próxima ventana de mantenimiento programada**.
@@ -79,7 +79,7 @@ Los parámetros del motor se modifican en un **grupo de parámetros personalizad
 
 === "Consola AWS"
 
-    1. **RDS → Grupos de parámetros** (*Parameter groups*) → **Crear grupo de parámetros**.
+    1. **Aurora and RDS → Grupos de parámetros** (*Parameter groups*) → **Crear grupo de parámetros**.
     2. Indicar el **nombre** (`mydb-mysql84`), una **descripción**, el motor y la **familia** (`mysql8.4`), y el tipo **Grupo de parámetros de base de datos**. Pulsar **Crear**.
     3. Seleccionar el grupo creado → **Editar**, buscar `long_query_time`, escribir `1` y pulsar **Guardar cambios**.
     4. Asociarlo a la instancia: **Bases de datos → `mydb-server` → Modificar → Configuración adicional → Grupo de parámetros de base de datos**. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
@@ -118,7 +118,7 @@ Una instancia RDS puede **detenerse** para ahorrar el coste de cómputo (el alma
 
 === "Consola AWS"
 
-    1. **RDS → Bases de datos**, seleccionar la instancia.
+    1. **Aurora and RDS → Bases de datos**, seleccionar la instancia.
     2. **Acciones → Detener temporalmente** (*Stop temporarily*), confirmar el aviso de reinicio automático a los 7 días y pulsar **Detener temporalmente**.
     3. Para volver a arrancarla: **Acciones → Iniciar**.
 
@@ -214,7 +214,7 @@ En ocasiones no es necesario sustituir la base de datos completa: basta con rest
 
 === "Consola AWS"
 
-    1. **RDS → Bases de datos**, seleccionar la instancia. En la pestaña **Mantenimiento y copias de seguridad** figura el **Último momento restaurable**.
+    1. **Aurora and RDS → Bases de datos**, seleccionar la instancia. En la pestaña **Mantenimiento y copias de seguridad** figura el **Último momento restaurable**.
     2. **Acciones → Restaurar a un momento dado** (*Restore to point in time*).
     3. En **Hora de restauración**, elegir **Fecha y hora personalizadas** e indicar el instante (o **Último momento restaurable**).
     4. **Identificador de instancias de bases de datos**: `mydb-restaurada`.

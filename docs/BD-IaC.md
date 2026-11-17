@@ -20,30 +20,13 @@ La **infraestructura como código** (*Infrastructure as Code*, IaC) resuelve est
 | **SDK / API** | Programática, imperativa | Integración en aplicaciones (boto3, AWS SDK para PHP…) | Mismos problemas que la CLI para gestionar infraestructura |
 | **IaC** | Declarativa | Reproducible, versionable, revisable, idempotente | Requiere aprender el lenguaje de la herramienta |
 
-### Enfoque imperativo frente a declarativo
+La CLI y los SDK son **imperativos**: se indican los pasos («crea una clave», «crea una instancia con esa clave»). La IaC es **declarativa**: se describe el **estado final deseado** y la herramienta calcula qué debe crear, modificar o eliminar, y en qué orden. De ahí sus propiedades principales:
 
-- En el enfoque **imperativo** (CLI, SDK) se indican **los pasos**: «crea una clave», «crea un grupo de subredes», «crea una instancia con esta clave».
-- En el enfoque **declarativo** (IaC) se describe **el estado final deseado**: «quiero una clave, un grupo de subredes y una instancia cifrada con esa clave». La herramienta calcula qué debe crear, modificar o eliminar para alcanzar ese estado y en qué orden.
+- **Reproducibilidad e idempotencia**: la misma plantilla crea entornos idénticos y, aplicada dos veces, no duplica recursos.
+- **Control de versiones y revisión previa**: la plantilla se guarda en Git y, antes de aplicar un cambio, se ve qué recursos se van a modificar (conjuntos de cambios en CloudFormation).
+- **Seguridad por defecto**: el cifrado, la protección contra eliminación o el acceso público desactivado quedan fijados en la plantilla, sin depender de que alguien marque una casilla.
 
-### Propiedades de la infraestructura como código
-
-- **Reproducibilidad**: la misma plantilla crea entornos idénticos en distintas cuentas o regiones.
-- **Idempotencia**: aplicar dos veces la misma plantilla no crea recursos duplicados; si el estado ya coincide, no se hace nada.
-- **Control de versiones**: la plantilla se guarda en Git, de modo que cada cambio queda registrado con su autor y su motivo, y puede revertirse.
-- **Revisión previa**: antes de aplicar un cambio se puede ver qué recursos se van a modificar (conjuntos de cambios en CloudFormation, `terraform plan` en Terraform).
-- **Detección de desviaciones** (*drift*): permite descubrir cambios realizados a mano fuera de la plantilla.
-- **Seguridad por defecto**: el cifrado, la protección contra eliminación o el acceso público desactivado quedan fijados en la plantilla y no dependen de que alguien recuerde marcar una casilla.
-
-### Herramientas principales
-
-| Herramienta | Proveedor | Lenguaje | Observaciones |
-| --- | --- | --- | --- |
-| **AWS CloudFormation** | AWS | YAML o JSON | Servicio nativo, sin coste adicional, gestiona el estado de forma automática |
-| **AWS CDK** | AWS | TypeScript, Python, Java… | Genera plantillas de CloudFormation a partir de código de programación |
-| **Terraform / OpenTofu** | HashiCorp / Linux Foundation | HCL | Multiproveedor; guarda el estado en un fichero que debe protegerse |
-| **Pulumi** | Pulumi | Lenguajes de programación | Multiproveedor |
-
-En este apartado se utiliza **CloudFormation**, por ser el servicio nativo de AWS y estar disponible en el Learner Lab, y se muestra el equivalente en **Terraform**.
+En este apartado se utiliza **AWS CloudFormation**, el servicio nativo de AWS, disponible en el Learner Lab. Otras herramientas, como Terraform, se presentan en [Para saber más](#para-saber-mas).
 
 ---
 
@@ -297,66 +280,6 @@ Si la protección contra eliminación está activada, la eliminación de la pila
 
 ---
 
-## Equivalente en Terraform
-
-El mismo diseño en Terraform (fragmento):
-
-```hcl
-resource "aws_kms_key" "bd" {
-  description             = "Clave para las bases de datos del ejemplo"
-  enable_key_rotation     = true
-  deletion_window_in_days = 7
-}
-
-resource "aws_kms_alias" "bd" {
-  name          = "alias/mi-clave-bd"
-  target_key_id = aws_kms_key.bd.key_id
-}
-
-resource "aws_db_instance" "mi_base_datos" {
-  identifier                  = "mi-base-datos"
-  engine                      = "mysql"
-  instance_class              = "db.t4g.micro"
-  allocated_storage           = 20
-  max_allocated_storage       = 100
-  storage_type                = "gp3"
-  storage_encrypted           = true
-  kms_key_id                  = aws_kms_key.bd.arn
-  username                    = "admin"
-  manage_master_user_password = true
-  db_subnet_group_name        = aws_db_subnet_group.bd.name
-  vpc_security_group_ids      = [var.grupo_seguridad_bd]
-  publicly_accessible         = false
-  backup_retention_period     = 7
-  deletion_protection         = false
-  final_snapshot_identifier   = "mi-base-datos-final"
-}
-
-resource "aws_dynamodb_table" "cache" {
-  name         = "cache"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "clave"
-
-  attribute {
-    name = "clave"
-    type = "S"
-  }
-
-  server_side_encryption {
-    enabled     = true
-    kms_key_arn = aws_kms_key.bd.arn
-  }
-
-  point_in_time_recovery {
-    enabled = true
-  }
-}
-```
-
-El ciclo de trabajo es `terraform init` → `terraform plan` (revisión de cambios) → `terraform apply` → `terraform destroy`. A diferencia de CloudFormation, Terraform guarda el estado de la infraestructura en un **fichero de estado** que contiene información sensible, por lo que en equipos se almacena en un *backend* remoto protegido (por ejemplo, un bucket de S3 cifrado).
-
----
-
 ## Buenas prácticas de IaC para bases de datos
 
 - Guardar las plantillas en un **repositorio Git** y aplicar los cambios mediante revisiones (*pull requests*).
@@ -366,6 +289,79 @@ El ciclo de trabajo es `terraform init` → `terraform plan` (revisión de cambi
 - **Revisar siempre** los conjuntos de cambios o el `plan` antes de aplicar, prestando atención a las sustituciones (*Replacement: True*).
 - Parametrizar las diferencias entre entornos (clase de instancia, Multi-AZ, retención) en lugar de duplicar plantillas.
 - Activar la **detección de desviaciones** para descubrir cambios manuales.
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Otras herramientas de IaC"
+
+    | Herramienta | Proveedor | Lenguaje | Observaciones |
+    | --- | --- | --- | --- |
+    | **AWS CloudFormation** | AWS | YAML o JSON | Servicio nativo, sin coste adicional, gestiona el estado de forma automática |
+    | **AWS CDK** | AWS | TypeScript, Python, Java… | Genera plantillas de CloudFormation a partir de código de programación |
+    | **Terraform / OpenTofu** | HashiCorp / Linux Foundation | HCL | Multiproveedor; guarda el estado en un fichero que debe protegerse |
+    | **Pulumi** | Pulumi | Lenguajes de programación | Multiproveedor |
+
+??? info "Equivalente en Terraform"
+
+    El mismo diseño en Terraform (fragmento):
+
+    ```hcl
+    resource "aws_kms_key" "bd" {
+      description             = "Clave para las bases de datos del ejemplo"
+      enable_key_rotation     = true
+      deletion_window_in_days = 7
+    }
+
+    resource "aws_kms_alias" "bd" {
+      name          = "alias/mi-clave-bd"
+      target_key_id = aws_kms_key.bd.key_id
+    }
+
+    resource "aws_db_instance" "mi_base_datos" {
+      identifier                  = "mi-base-datos"
+      engine                      = "mysql"
+      instance_class              = "db.t4g.micro"
+      allocated_storage           = 20
+      max_allocated_storage       = 100
+      storage_type                = "gp3"
+      storage_encrypted           = true
+      kms_key_id                  = aws_kms_key.bd.arn
+      username                    = "admin"
+      manage_master_user_password = true
+      db_subnet_group_name        = aws_db_subnet_group.bd.name
+      vpc_security_group_ids      = [var.grupo_seguridad_bd]
+      publicly_accessible         = false
+      backup_retention_period     = 7
+      deletion_protection         = false
+      final_snapshot_identifier   = "mi-base-datos-final"
+    }
+
+    resource "aws_dynamodb_table" "cache" {
+      name         = "cache"
+      billing_mode = "PAY_PER_REQUEST"
+      hash_key     = "clave"
+
+      attribute {
+        name = "clave"
+        type = "S"
+      }
+
+      server_side_encryption {
+        enabled     = true
+        kms_key_arn = aws_kms_key.bd.arn
+      }
+
+      point_in_time_recovery {
+        enabled = true
+      }
+    }
+    ```
+
+    El ciclo de trabajo es `terraform init` → `terraform plan` (revisión de cambios) → `terraform apply` → `terraform destroy`. A diferencia de CloudFormation, Terraform guarda el estado de la infraestructura en un **fichero de estado** que contiene información sensible, por lo que en equipos se almacena en un *backend* remoto protegido (por ejemplo, un bucket de S3 cifrado).
 
 ---
 

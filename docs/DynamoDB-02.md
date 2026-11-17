@@ -1,8 +1,8 @@
-# Características de Amazon DynamoDB
+# Características y arquitectura de Amazon DynamoDB
 
 ![image](imgs/DynamoDB-caracteristicas.png)
 
-Una vez comprendido el modelo de datos, conviene analizar en detalle las características que AWS ofrece sobre él. Muchas de ellas tienen un equivalente conceptual en Amazon RDS (copias de seguridad, cifrado, alta disponibilidad, réplicas), pero su implementación y su configuración son distintas porque **DynamoDB no se administra como una instancia, sino como un conjunto de tablas**.
+Una vez comprendido el modelo de datos, conviene analizar en detalle las características que AWS ofrece sobre él. Muchas de ellas tienen un equivalente conceptual en Amazon RDS (copias de seguridad, cifrado, alta disponibilidad, réplicas), pero su implementación y su configuración son distintas porque **DynamoDB no se administra como una instancia, sino como un conjunto de tablas**. Este apartado describe también cómo reparte DynamoDB los datos entre **particiones**, la base para entender su escalado y el diseño de las claves.
 
 ---
 
@@ -65,9 +65,38 @@ Las unidades se calculan **redondeando hacia arriba** el tamaño del elemento al
 
 En una `Query` o un `Scan`, el consumo se calcula sobre el **tamaño total de los datos leídos**, no sobre el número de elementos devueltos tras aplicar el filtro.
 
-### Rendimiento en caliente (*warm throughput*)
+---
 
-DynamoDB informa del **rendimiento en caliente** de cada tabla e índice, es decir, el número de lecturas y escrituras por segundo que puede atender de forma inmediata. Este valor puede **preaumentarse** (*pre-warming*) antes de eventos con picos previsibles, como una campaña de ventas, para evitar limitaciones durante los primeros minutos.
+## Particionado y distribución de los datos
+
+Una **partición** es una asignación de almacenamiento para una tabla, respaldada por discos SSD y replicada automáticamente en varias zonas de disponibilidad. El número de particiones de una tabla no se configura ni se consulta directamente: DynamoDB lo gestiona según el volumen de datos y el rendimiento requerido.
+
+![image](imgs/DynamoDB-particionado.png)
+
+### Ubicación de los elementos
+
+- **Tabla con clave simple** (solo partición): DynamoDB aplica una función *hash* interna al valor de la clave. El resultado determina la partición en la que se guarda el elemento. Los elementos **no se almacenan en ningún orden** útil para la aplicación.
+- **Tabla con clave compuesta** (partición + ordenación): el *hash* de la clave de partición determina la partición, y dentro de ella los elementos que comparten clave de partición se guardan **juntos y ordenados de forma ascendente por la clave de ordenación**. Por eso una `Query` puede devolver resultados en orden ascendente o, con `ScanIndexForward = false`, descendente.
+
+### Crecimiento de la tabla
+
+DynamoDB añade particiones de forma automática en dos situaciones:
+
+1. Cuando una partición se llena y se necesita más espacio de almacenamiento.
+2. Cuando la capacidad requerida (aprovisionada o demandada) supera lo que pueden atender las particiones existentes.
+
+La operación consiste en **dividir** (*split*) una partición en dos y repartir su rango de claves, sin interrumpir el servicio. En tablas con clave compuesta y sin LSI, una misma colección de elementos puede llegar a repartirse entre varias particiones si su tamaño o su tráfico lo requieren.
+
+### Límite por partición y particiones calientes
+
+Cada partición puede atender como máximo **3 000 unidades de lectura** y **1 000 unidades de escritura por segundo**. Si una clave de partición concentra una parte desproporcionada del tráfico (una **partición caliente**, *hot partition*), las peticiones dirigidas a ella se limitarán aunque la tabla en su conjunto tenga capacidad disponible.
+
+Para mitigar este problema, DynamoDB incorpora dos mecanismos automáticos y sin coste:
+
+- **Capacidad de ráfaga** (*burst capacity*): conserva hasta **300 segundos** de capacidad no utilizada para absorber picos puntuales.
+- **Capacidad adaptativa** (*adaptive capacity*): aumenta automáticamente la capacidad de las particiones que reciben más tráfico y, si es necesario, **aísla los elementos más accedidos** en particiones propias.
+
+Estos mecanismos no sustituyen a un buen diseño: la medida más eficaz es elegir una **clave de partición con muchos valores distintos y accesos uniformes**, como se explica en el apartado de [claves](DynamoDB-04.md#clave-de-particion).
 
 ---
 
@@ -109,48 +138,11 @@ Siguiendo el ejemplo de la práctica, un GSI con clave de partición `categoria`
 
 ---
 
-## Escrituras condicionales y transacciones
-
-### Escrituras condicionales
-
-Las operaciones `PutItem`, `UpdateItem` y `DeleteItem` admiten una **expresión de condición** (`ConditionExpression`) que se evalúa de forma atómica antes de aplicar el cambio. Si la condición no se cumple, la operación falla con `ConditionalCheckFailedException` y el elemento no se modifica. Esto permite:
-
-- Evitar sobrescrituras accidentales (`attribute_not_exists(clave)`), como en la inserción de periféricos de la práctica.
-- Implementar **control de concurrencia optimista** mediante un atributo de versión.
-- Validar reglas de negocio, como impedir que el stock sea negativo (`stock >= :n`).
-
-### Transacciones ACID
-
-Las operaciones `TransactWriteItems` y `TransactGetItems` agrupan acciones sobre varios elementos, incluso de distintas tablas, que se ejecutan con **todo o nada**. Sus restricciones son:
-
-- Hasta **100 elementos** distintos y **4 MB** de datos por transacción.
-- Todas las tablas deben pertenecer a la misma cuenta y región.
-- Dos acciones de la misma transacción no pueden afectar al mismo elemento.
-- Consumen el **doble de capacidad** que las operaciones equivalentes no transaccionales.
-- Admiten un **token de idempotencia** (`ClientRequestToken`) para que un reintento no aplique dos veces la misma transacción.
-
----
-
 ## Tiempo de vida (TTL)
 
 El **TTL** (*Time to Live*) permite indicar un atributo que contiene la fecha de caducidad del elemento en formato **tiempo UNIX en segundos** (de tipo Number). Una vez superada esa fecha, DynamoDB elimina el elemento de forma automática, normalmente en un plazo de pocos días y **sin consumir capacidad de escritura**.
 
 Mientras no se eliminan físicamente, los elementos caducados siguen apareciendo en las lecturas, por lo que la aplicación debe filtrarlos si necesita precisión. En la práctica evaluable se activa el TTL sobre el atributo `expires` de la tabla de sesiones para que las sesiones caducadas desaparezcan sin procesos de limpieza en la aplicación.
-
----
-
-## DynamoDB Streams
-
-**DynamoDB Streams** captura en orden cronológico cada modificación realizada sobre los elementos de una tabla y la conserva durante **24 horas**. Para cada cambio puede registrarse:
-
-| Tipo de vista | Información registrada |
-| --- | --- |
-| `KEYS_ONLY` | Solo los atributos clave del elemento modificado |
-| `NEW_IMAGE` | El elemento tal como queda tras el cambio |
-| `OLD_IMAGE` | El elemento tal como era antes del cambio |
-| `NEW_AND_OLD_IMAGES` | Ambas versiones |
-
-Los registros aparecen exactamente una vez y en el mismo orden en que se produjeron las modificaciones de cada elemento. El uso más habitual es activar funciones **AWS Lambda** que reaccionan a los cambios (auditoría, notificaciones, sincronización con otros sistemas). Como alternativa, una tabla puede enviar sus cambios a **Amazon Kinesis Data Streams**, que ofrece mayor retención y más consumidores.
 
 ---
 
@@ -188,35 +180,142 @@ Las restauraciones generan siempre una **tabla nueva**; no sobrescriben la exist
 
 ---
 
-## Otras características relevantes
+## Para saber más
 
-- **Clases de tabla**: *DynamoDB Standard* (predeterminada) y *DynamoDB Standard-Infrequent Access* (Standard-IA), que reduce el coste de almacenamiento a cambio de un mayor coste por petición. Esta última es adecuada para tablas con muchos datos y poco acceso, como históricos o registros.
-- **Protección contra eliminación** (*deletion protection*): impide que la tabla se borre hasta que se desactive explícitamente esta opción, de forma similar a la protección contra eliminación de RDS.
-- **DynamoDB Accelerator (DAX)**: caché en memoria totalmente compatible con la API de DynamoDB que reduce la latencia de lectura a **microsegundos**. A diferencia de la tabla, un clúster DAX **sí se despliega en subredes de una VPC**.
-- **PartiQL**: permite ejecutar sentencias `SELECT`, `INSERT`, `UPDATE` y `DELETE` con sintaxis similar a SQL, que el servicio traduce a las operaciones nativas. Un `SELECT` sin condición sobre la clave de partición se ejecuta como un `Scan`.
-- **Integraciones**: AWS Lambda, Amazon Kinesis, integraciones *zero-ETL* con Amazon Redshift y Amazon OpenSearch Service, Amazon CloudWatch (métricas y alarmas) y AWS CloudTrail (auditoría).
-- **Etiquetado y ABAC**: las tablas admiten etiquetas que pueden usarse tanto para la asignación de costes como para el control de acceso basado en atributos (véase el apartado de seguridad).
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
 
----
+??? info "Rendimiento en caliente (warm throughput)"
 
-## Límites relevantes
+    DynamoDB informa del **rendimiento en caliente** de cada tabla e índice, es decir, el número de lecturas y escrituras por segundo que puede atender de forma inmediata. Este valor puede **preaumentarse** (*pre-warming*) antes de eventos con picos previsibles, como una campaña de ventas, para evitar limitaciones durante los primeros minutos.
 
-| Elemento | Límite |
-| --- | --- |
-| Tamaño máximo de un elemento | 400 KB |
-| Longitud de la clave de partición | 1 – 2 048 bytes |
-| Longitud de la clave de ordenación | 1 – 1 024 bytes |
-| Profundidad de anidamiento de atributos | 32 niveles |
-| Precisión de los números | 38 dígitos |
-| Datos devueltos por `Query` / `Scan` | 1 MB por llamada (paginación) |
-| `BatchGetItem` | 100 elementos / 16 MB |
-| `BatchWriteItem` | 25 operaciones / 16 MB |
-| Transacciones | 100 elementos / 4 MB |
-| GSI por tabla | 20 (ampliable) |
-| LSI por tabla | 5 |
-| Tamaño de una política basada en recursos | 20 KB |
-| Rendimiento máximo por partición | 3 000 unidades de lectura y 1 000 de escritura por segundo |
-| Retención de DynamoDB Streams | 24 horas |
+??? info "Escrituras condicionales y transacciones"
+
+    **Escrituras condicionales**
+
+    Las operaciones `PutItem`, `UpdateItem` y `DeleteItem` admiten una **expresión de condición** (`ConditionExpression`) que se evalúa de forma atómica antes de aplicar el cambio. Si la condición no se cumple, la operación falla con `ConditionalCheckFailedException` y el elemento no se modifica. Esto permite:
+
+    - Evitar sobrescrituras accidentales (`attribute_not_exists(clave)`), como en la inserción de periféricos de la práctica.
+    - Implementar **control de concurrencia optimista** mediante un atributo de versión.
+    - Validar reglas de negocio, como impedir que el stock sea negativo (`stock >= :n`).
+
+    **Transacciones ACID**
+
+    Las operaciones `TransactWriteItems` y `TransactGetItems` agrupan acciones sobre varios elementos, incluso de distintas tablas, que se ejecutan con **todo o nada**. Sus restricciones son:
+
+    - Hasta **100 elementos** distintos y **4 MB** de datos por transacción.
+    - Todas las tablas deben pertenecer a la misma cuenta y región.
+    - Dos acciones de la misma transacción no pueden afectar al mismo elemento.
+    - Consumen el **doble de capacidad** que las operaciones equivalentes no transaccionales.
+    - Admiten un **token de idempotencia** (`ClientRequestToken`) para que un reintento no aplique dos veces la misma transacción.
+
+??? info "DynamoDB Streams"
+
+    **DynamoDB Streams** captura en orden cronológico cada modificación realizada sobre los elementos de una tabla y la conserva durante **24 horas**. Para cada cambio puede registrarse:
+
+    | Tipo de vista | Información registrada |
+    | --- | --- |
+    | `KEYS_ONLY` | Solo los atributos clave del elemento modificado |
+    | `NEW_IMAGE` | El elemento tal como queda tras el cambio |
+    | `OLD_IMAGE` | El elemento tal como era antes del cambio |
+    | `NEW_AND_OLD_IMAGES` | Ambas versiones |
+
+    Los registros aparecen exactamente una vez y en el mismo orden en que se produjeron las modificaciones de cada elemento. El uso más habitual es activar funciones **AWS Lambda** que reaccionan a los cambios (auditoría, notificaciones, sincronización con otros sistemas). Como alternativa, una tabla puede enviar sus cambios a **Amazon Kinesis Data Streams**, que ofrece mayor retención y más consumidores.
+
+??? info "Otras características relevantes"
+
+    - **Clases de tabla**: *DynamoDB Standard* (predeterminada) y *DynamoDB Standard-Infrequent Access* (Standard-IA), que reduce el coste de almacenamiento a cambio de un mayor coste por petición. Esta última es adecuada para tablas con muchos datos y poco acceso, como históricos o registros.
+    - **Protección contra eliminación** (*deletion protection*): impide que la tabla se borre hasta que se desactive explícitamente esta opción, de forma similar a la protección contra eliminación de RDS.
+    - **DynamoDB Accelerator (DAX)**: caché en memoria totalmente compatible con la API de DynamoDB que reduce la latencia de lectura a **microsegundos**. A diferencia de la tabla, un clúster DAX **sí se despliega en subredes de una VPC**.
+    - **PartiQL**: permite ejecutar sentencias `SELECT`, `INSERT`, `UPDATE` y `DELETE` con sintaxis similar a SQL, que el servicio traduce a las operaciones nativas. Un `SELECT` sin condición sobre la clave de partición se ejecuta como un `Scan`.
+    - **Integraciones**: AWS Lambda, Amazon Kinesis, integraciones *zero-ETL* con Amazon Redshift y Amazon OpenSearch Service, Amazon CloudWatch (métricas y alarmas) y AWS CloudTrail (auditoría).
+    - **Etiquetado y ABAC**: las tablas admiten etiquetas que pueden usarse tanto para la asignación de costes como para el control de acceso basado en atributos (véase el apartado de seguridad).
+
+??? info "Límites relevantes"
+
+    | Elemento | Límite |
+    | --- | --- |
+    | Tamaño máximo de un elemento | 400 KB |
+    | Longitud de la clave de partición | 1 – 2 048 bytes |
+    | Longitud de la clave de ordenación | 1 – 1 024 bytes |
+    | Profundidad de anidamiento de atributos | 32 niveles |
+    | Precisión de los números | 38 dígitos |
+    | Datos devueltos por `Query` / `Scan` | 1 MB por llamada (paginación) |
+    | `BatchGetItem` | 100 elementos / 16 MB |
+    | `BatchWriteItem` | 25 operaciones / 16 MB |
+    | Transacciones | 100 elementos / 4 MB |
+    | GSI por tabla | 20 (ampliable) |
+    | LSI por tabla | 5 |
+    | Tamaño de una política basada en recursos | 20 KB |
+    | Rendimiento máximo por partición | 3 000 unidades de lectura y 1 000 de escritura por segundo |
+    | Retención de DynamoDB Streams | 24 horas |
+
+??? info "Arquitectura interna: recorrido de una petición y replicación"
+
+    ![image](imgs/DynamoDB-arquitectura.png)
+
+    Según la descripción publicada por AWS, el plano de datos de DynamoDB se compone de varios subsistemas que colaboran en cada petición:
+
+    | Componente | Función |
+    | --- | --- |
+    | **Balanceadores y routers de peticiones** (*request routers*) | Reciben las peticiones de los clientes, las **autentican** y **autorizan** contra IAM, consultan en qué partición se encuentra el elemento y la reenvían al nodo de almacenamiento adecuado |
+    | **Sistema de metadatos de particiones** | Mantiene la correspondencia entre rangos de *hash* de la clave de partición y los nodos de almacenamiento que contienen cada partición |
+    | **Nodos de almacenamiento** (*storage nodes*) | Almacenan las réplicas de las particiones en discos SSD; cada réplica mantiene un **registro de escritura anticipada** (*write-ahead log*) y un **árbol B** con los elementos |
+    | **Control de admisión** | Comprueba que la petición no supera la capacidad disponible de la tabla y de la partición; en caso contrario se produce una limitación (*throttling*) |
+    | **Subsistema de administración** (*autoadmin*) | Supervisa el estado de la flota, sustituye réplicas defectuosas, divide particiones y ejecuta las operaciones del plano de control |
+
+    **Recorrido de una petición**
+
+    El siguiente ejemplo describe qué ocurre cuando la instancia EC2 de la práctica ejecuta un `PutItem` sobre la tabla `Productos`:
+
+    1. **Firma de la petición.** La AWS CLI o el SDK obtiene credenciales temporales del rol asociado a la instancia y firma la petición con el algoritmo **Signature Version 4 (SigV4)**.
+    2. **Resolución DNS.** El nombre `dynamodb.us-east-1.amazonaws.com` (o el nombre del punto de enlace de VPC, si se usa `--endpoint-url`) se resuelve a una dirección IP.
+    3. **Router de peticiones.** La petición llega a un router, que verifica la firma, evalúa las **políticas de IAM** aplicables (de identidad, de recursos, del punto de enlace, de la organización) y, si la autorización es correcta, consulta el sistema de metadatos.
+    4. **Cálculo de la partición.** Se aplica la función *hash* al valor de la clave de partición (`categoria`) para determinar la partición responsable.
+    5. **Escritura en el líder.** La petición se envía a la **réplica líder** de esa partición, que comprueba las condiciones (`ConditionExpression`), genera el registro en su *write-ahead log* y lo propaga a las demás réplicas.
+    6. **Confirmación por quórum.** Cuando **dos de las tres réplicas**, situadas en zonas de disponibilidad distintas, han persistido el registro, la escritura se considera confirmada y se responde al cliente.
+
+    La figura que encabeza este apartado representa este recorrido con la misma numeración.
+
+    **Grupos de replicación y consenso**
+
+    Cada partición de una tabla se almacena en un **grupo de replicación** compuesto por réplicas distribuidas en **varias zonas de disponibilidad** de la región. Las réplicas utilizan el protocolo de consenso **Multi-Paxos** para elegir a un **líder**:
+
+    - Solo el líder acepta **escrituras** y atiende las **lecturas fuertemente consistentes**.
+    - Las **lecturas eventualmente consistentes** pueden ser atendidas por cualquier réplica, lo que explica que puedan devolver un valor ligeramente desactualizado y que su coste sea la mitad.
+    - Si el líder falla o pierde la comunicación, las réplicas restantes eligen un nuevo líder de forma automática. Este proceso es transparente para la aplicación, que como mucho experimenta un reintento.
+
+    Este diseño es el que permite a DynamoDB ofrecer **alta disponibilidad y durabilidad sin necesidad de configurar Multi-AZ**, a diferencia de RDS, donde la réplica en espera era una opción de creación de la instancia.
+
+    **Durabilidad, disponibilidad y recuperación**
+
+    - **Durabilidad**: cada escritura confirmada se encuentra persistida en al menos dos zonas de disponibilidad. Además, los registros de escritura se archivan de forma continua en Amazon S3, lo que constituye la base de la **recuperación a un momento dado (PITR)** y de las copias de seguridad, que se realizan sin consumir capacidad de la tabla.
+    - **Disponibilidad**: el acuerdo de nivel de servicio (SLA) de DynamoDB es del **99,99 %** para tablas regionales y del **99,999 %** para tablas globales.
+    - **Sin ventanas de mantenimiento**: las actualizaciones de software, la sustitución de hardware y la división de particiones se realizan sin detener el servicio.
+
+    **Tablas globales**
+
+    En una tabla global, cada región contiene una **réplica completa** de la tabla con su propia arquitectura de particiones. Un proceso de replicación interno propaga las escrituras entre regiones: de forma asíncrona en el modo de consistencia eventual (MREC) o de forma síncrona con otra región en el modo de consistencia fuerte (MRSC).
+
+??? info "Arquitectura de los índices secundarios"
+
+    Los dos tipos de índice tienen una implementación física distinta, lo que explica sus diferentes propiedades:
+
+    - **Índice secundario global (GSI)**: se almacena en **particiones propias**, independientes de las de la tabla, porque su clave de partición es diferente. DynamoDB actualiza el índice de forma **asíncrona** después de cada escritura en la tabla; por ese motivo **solo admite lecturas eventualmente consistentes** y dispone de su propia capacidad.
+    - **Índice secundario local (LSI)**: se almacena **en la misma partición** que los elementos de la tabla a los que indexa, puesto que comparte la clave de partición. Esto permite actualizarlo de forma síncrona y ofrecer lecturas fuertemente consistentes, pero impone el límite de **10 GB por colección de elementos** e impide que la capacidad adaptativa reparta una colección entre varias particiones.
+
+??? info "Comparativa arquitectónica con Amazon RDS"
+
+    | Aspecto | Amazon RDS | Amazon DynamoDB |
+    | --- | --- | --- |
+    | Unidad de despliegue | Instancia de base de datos | Tabla |
+    | Ubicación | Subredes de una VPC (grupo de subredes) | Servicio regional fuera de la VPC |
+    | Dirección de acceso | Punto de enlace DNS que resuelve a la IP de la instancia | Punto de enlace de API regional (o punto de enlace de VPC) |
+    | Protocolo | Protocolo nativo del motor (p. ej., MySQL en el puerto 3306) | HTTPS (puerto 443) con peticiones firmadas SigV4 |
+    | Control de red | Grupos de seguridad y opción de acceso público | Puntos de enlace de VPC y condiciones en políticas |
+    | Autenticación | Usuarios del motor de base de datos (y opcionalmente IAM) | Exclusivamente IAM |
+    | Réplicas | Multi-AZ (opcional) y réplicas de lectura | Tres réplicas en varias AZ siempre; tablas globales opcionales |
+    | Escalado | Vertical (clase) y réplicas de lectura | Horizontal y automático (particiones) |
+    | Mantenimiento | Ventana de mantenimiento | Transparente |
 
 ---
 
@@ -242,3 +341,8 @@ Las restauraciones generan siempre una **tabla nueva**; no sobrescriben la exist
 - AWS. *Constraints in Amazon DynamoDB* — [Restricciones](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Constraints.html)
 - AWS. *Amazon DynamoDB endpoints and quotas* — [Cuotas y puntos de enlace](https://docs.aws.amazon.com/general/latest/gr/ddb.html)
 - AWS. *Amazon DynamoDB Service Level Agreement* — [SLA](https://aws.amazon.com/dynamodb/sla/)
+- Elhemali, M., Gallagher, N., Gordon, N., Idziorek, J., Krog, R., Lazier, C., Mo, E., Mritunjai, A., Perianayagam, S., Rath, T., Sivasubramanian, S., Sorenson, J. C., Sosothikul, S., Terry, D., Vig, A. (2022). *Amazon DynamoDB: A Scalable, Predictably Performant, and Fully Managed NoSQL Database Service*. USENIX Annual Technical Conference (ATC 22) — [Artículo](https://www.usenix.org/conference/atc22/presentation/elhemali)
+- AWS. *Partitions and data distribution in DynamoDB* — [Particiones](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html)
+- AWS. *DynamoDB burst and adaptive capacity* — [Capacidad de ráfaga y adaptativa](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/burst-adaptive-capacity.html)
+- AWS. *Resilience in Amazon DynamoDB* — [Resiliencia](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/disaster-recovery-resiliency.html)
+- AWS. *How DynamoDB global tables work* — [Funcionamiento de las tablas globales](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/V2globaltables_HowItWorks.html)

@@ -2,9 +2,36 @@
 
 ![image](imgs/DynamoDB-acceso-publico.png)
 
-En el apartado dedicado a las redes de Amazon RDS se estudió que una instancia puede configurarse como **no accesible públicamente** y protegerse mediante **grupos de seguridad** dentro de una VPC. Ese modelo de seguridad, basado principalmente en el **perímetro de red**, no es directamente aplicable a DynamoDB. Como se ha visto en el apartado de arquitectura, una tabla no reside en ninguna subred y no tiene dirección IP propia: se accede a ella a través de una **API pública** de AWS.
+En el apartado dedicado a las redes de Amazon RDS se estudió que una instancia puede configurarse como **no accesible públicamente** y protegerse mediante **grupos de seguridad** dentro de una VPC. Ese modelo de seguridad, basado principalmente en el **perímetro de red**, no es directamente aplicable a DynamoDB. Como se explica a continuación, una tabla no reside en ninguna subred y no tiene dirección IP propia: se accede a ella a través de una **API pública** de AWS.
 
 Este apartado analiza las implicaciones de esa exposición y las técnicas disponibles para securizar el acceso, con especial atención a las dos que se trabajan en las prácticas: **limitar el acceso a determinados roles** y **obligar a que el tráfico llegue a través de un punto de enlace de VPC**.
+
+---
+
+## Un servicio regional situado fuera de la VPC
+
+La primera diferencia arquitectónica con Amazon RDS es la ubicación. Una instancia RDS se despliega **dentro de las subredes de una VPC** (a través del grupo de subredes) y recibe una dirección IP privada; por eso en RDS tenía sentido configurar el acceso público, los grupos de seguridad o la zona de disponibilidad.
+
+DynamoDB, en cambio, es un **servicio regional** operado por AWS **fuera de cualquier VPC del cliente**:
+
+- Una tabla pertenece a una **cuenta** y a una **región**, no a una VPC ni a una subred.
+- AWS distribuye internamente los datos de la tabla entre **varias zonas de disponibilidad** de la región, sin que el administrador tenga que elegirlas.
+- Se accede a la tabla a través de un **punto de enlace de API regional** (por ejemplo, `dynamodb.us-east-1.amazonaws.com`), es decir, mediante peticiones HTTPS firmadas.
+- Las tablas **no tienen grupos de seguridad** ni dirección IP propia; el control de acceso se basa en la **identidad** (IAM) y, opcionalmente, en el **origen de red** de la petición.
+
+!!! note "Consecuencia práctica"
+    No es posible «meter» una tabla DynamoDB en una subred privada como se hace con una instancia EC2 o RDS. Lo que sí puede colocarse en la VPC es la **puerta de entrada** al servicio: un punto de enlace de VPC. Este concepto, trabajado en las prácticas, se desarrolla más adelante en este apartado.
+
+### Plano de control y plano de datos
+
+Las operaciones de la API de DynamoDB se dividen en dos grupos:
+
+| Plano | Finalidad | Operaciones representativas |
+| --- | --- | --- |
+| **Plano de control** (*control plane*) | Crear y administrar tablas e índices | `CreateTable`, `DescribeTable`, `UpdateTable`, `DeleteTable`, `ListTables`, `PutResourcePolicy`, `UpdateTimeToLive`, `CreateBackup` |
+| **Plano de datos** (*data plane*) | Leer y escribir elementos | `GetItem`, `PutItem`, `UpdateItem`, `DeleteItem`, `Query`, `Scan`, `BatchGetItem`, `BatchWriteItem`, `TransactWriteItems`, `ExecuteStatement` |
+
+Esta distinción es relevante en la administración diaria y, especialmente, en la seguridad. En la práctica, la política de la tabla **solo denegaba operaciones del plano de datos**, de forma que el administrador podía seguir modificando o eliminando la política desde la consola aunque ya no pudiera consultar los elementos.
 
 ---
 
@@ -311,136 +338,6 @@ Si se colocaran las dos condiciones (`aws:PrincipalArn` y `aws:SourceVpce`) en *
 
 Por tanto, para exigir las dos condiciones a la vez la política de la tabla debe contener **dos sentencias `Deny` independientes**, cada una con su propia condición, construidas a partir de los dos ejemplos anteriores.
 
-### Política del punto de enlace de VPC
-
-Además de la política de la tabla, cada punto de enlace admite su propia **política del punto de enlace**, que restringe qué peticiones pueden atravesarlo. Su valor predeterminado es *Acceso completo*. Restringirla permite, por ejemplo, impedir que desde la VPC se utilicen tablas distintas de las autorizadas, lo que dificulta la **exfiltración de datos** hacia tablas de otras cuentas:
-
-```json
-{
-  "Statement": [
-    {
-      "Sid": "SoloTablaProductos",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": [
-        "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan",
-        "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem"
-      ],
-      "Resource": [
-        "arn:aws:dynamodb:us-east-1:111122223333:table/Productos",
-        "arn:aws:dynamodb:us-east-1:111122223333:table/Productos/*"
-      ]
-    }
-  ]
-}
-```
-
-Para cambiar la política del punto de enlace:
-
-=== "Consola AWS"
-
-    1. **VPC → Puntos de enlace** (*Endpoints*), seleccionar el punto de enlace de DynamoDB.
-    2. Pestaña **Política** → **Editar política**.
-    3. Elegir **Personalizado** (*Custom*), pegar el documento JSON y pulsar **Guardar**.
-
-=== "AWS CLI"
-
-    ```bash
-    aws ec2 modify-vpc-endpoint --vpc-endpoint-id vpce-0123456789abcdef0 \
-      --policy-document file://politica-endpoint.json
-
-    aws ec2 describe-vpc-endpoints --vpc-endpoint-ids vpce-0123456789abcdef0 \
-      --query "VpcEndpoints[0].PolicyDocument" --output text
-    ```
-
-La política del punto de enlace y la política de la tabla son complementarias: la primera protege **la red** (qué puede salir de la VPC), la segunda protege **el dato** (por dónde y quién puede entrar a la tabla).
-
----
-
-## Otras técnicas de securización
-
-Además de las anteriores, AWS ofrece otros mecanismos que permiten construir una estrategia de **defensa en profundidad**.
-
-### Control de acceso detallado por elemento y atributo
-
-Las claves de condición propias de DynamoDB permiten restringir el acceso **dentro** de una tabla:
-
-- `dynamodb:LeadingKeys`: limita los elementos accesibles a aquellos cuya **clave de partición** coincide con un valor, habitualmente el identificador del usuario autenticado. Es la base de las aplicaciones móviles o web en las que cada usuario solo puede leer sus propios datos (por ejemplo, mediante **Amazon Cognito**).
-- `dynamodb:Attributes`: limita los **atributos** que pueden leerse o escribirse.
-- `dynamodb:Select` y `dynamodb:ReturnValues`: impiden que se devuelvan atributos no autorizados por otras vías.
-
-```json
-"Condition": {
-  "ForAllValues:StringEquals": {
-    "dynamodb:LeadingKeys": ["${cognito-identity.amazonaws.com:sub}"]
-  }
-}
-```
-
-### Control de acceso basado en atributos (ABAC)
-
-Disponible de forma general desde noviembre de 2024, permite autorizar en función de las **etiquetas** de la identidad y de la tabla. Por ejemplo, una política puede permitir el acceso solo cuando la etiqueta `proyecto` del rol coincide con la etiqueta `proyecto` de la tabla (`aws:ResourceTag/proyecto` = `${aws:PrincipalTag/proyecto}`). Esto evita mantener listas de ARN y escala bien en organizaciones con muchas tablas y equipos.
-
-### Perímetro de datos con AWS Organizations: SCP y RCP
-
-En organizaciones con varias cuentas se pueden establecer **barreras de protección centralizadas**:
-
-- Las **SCP** limitan lo que pueden hacer las identidades de las cuentas de la organización (por ejemplo, impedir que desactiven la protección contra eliminación o que usen DynamoDB fuera de determinadas regiones).
-- Las **RCP**, que admiten DynamoDB desde febrero de 2026, limitan quién puede acceder a los recursos de la organización. Permiten, por ejemplo, impedir que **cualquier identidad ajena a la organización** acceda a las tablas, aunque alguien añada por error una política de tabla permisiva:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "SoloIdentidadesDeLaOrganizacion",
-      "Effect": "Deny",
-      "Principal": "*",
-      "Action": "dynamodb:*",
-      "Resource": "*",
-      "Condition": {
-        "StringNotEqualsIfExists": { "aws:PrincipalOrgID": "o-a1b2c3d4e5" },
-        "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
-      }
-    }
-  ]
-}
-```
-
-Estas políticas no pueden utilizarse en el Learner Lab, pero constituyen la práctica recomendada en entornos empresariales.
-
-### Cifrado con claves administradas por el cliente
-
-Utilizar una **clave de AWS KMS administrada por el cliente** añade una capa de control independiente: la política de la clave determina qué identidades y servicios pueden usarla, toda utilización queda registrada en CloudTrail y, si la clave se deshabilita o se programa su eliminación, **la tabla deja de ser accesible**.
-
-### Exigir cifrado en tránsito
-
-Aunque los SDK utilizan HTTPS por defecto, puede imponerse mediante una denegación sobre la clave `aws:SecureTransport`:
-
-```json
-"Condition": { "Bool": { "aws:SecureTransport": "false" } }
-```
-
-### Restringir dónde pueden usarse las credenciales de una instancia
-
-Las claves de condición `aws:Ec2InstanceSourceVpc` y `aws:Ec2InstanceSourcePrivateIPv4` permiten garantizar que las credenciales de un rol de instancia EC2 **solo se utilicen desde la propia instancia** o desde su VPC. Si un atacante extrae las credenciales temporales de la instancia y trata de usarlas desde fuera, la petición se deniega.
-
-### Seguridad de red complementaria
-
-- **Grupos de seguridad** en los puntos de enlace de tipo interfaz, que admitan HTTPS solo desde los grupos de seguridad de los servidores (técnica usada en las prácticas).
-- **Reglas de salida** en los grupos de seguridad de las instancias que solo permitan el tráfico hacia la lista de prefijos de DynamoDB o hacia el grupo del punto de enlace.
-- **Subredes privadas sin ruta a Internet**: si las instancias no tienen salida a Internet (ni Internet Gateway ni NAT), el punto de enlace es la única vía posible hacia DynamoDB.
-
-### Auditoría y detección
-
-- **AWS CloudTrail** registra por defecto los eventos del plano de control (crear tablas, modificar políticas…). Los **eventos de datos** (`GetItem`, `PutItem`, etc.) deben activarse expresamente y tienen coste adicional.
-- **IAM Access Analyzer** analiza las políticas de las tablas e informa de los accesos concedidos a entidades externas a la cuenta o a la organización.
-- **AWS Config** permite evaluar de forma continua reglas como `dynamodb-pitr-enabled` o `dynamodb-table-encrypted-kms`.
-
-### Protección frente a pérdida de datos
-
-La seguridad incluye también la **disponibilidad** de la información: protección contra eliminación, recuperación a un momento dado (PITR) y copias de seguridad, ya descritas en el apartado de características.
-
 ---
 
 ## Resumen: defensa en profundidad
@@ -457,6 +354,140 @@ La seguridad incluye también la **disponibilidad** de la información: protecci
 | Organización | SCP y RCP | Errores de configuración en cuentas individuales; acceso externo |
 | Cifrado | KMS con clave del cliente; `aws:SecureTransport` | Acceso al almacenamiento; interceptación |
 | Auditoría | CloudTrail, IAM Access Analyzer, AWS Config | Accesos no detectados; desviaciones de configuración |
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Política del punto de enlace de VPC"
+
+    Además de la política de la tabla, cada punto de enlace admite su propia **política del punto de enlace**, que restringe qué peticiones pueden atravesarlo. Su valor predeterminado es *Acceso completo*. Restringirla permite, por ejemplo, impedir que desde la VPC se utilicen tablas distintas de las autorizadas, lo que dificulta la **exfiltración de datos** hacia tablas de otras cuentas:
+
+    ```json
+    {
+      "Statement": [
+        {
+          "Sid": "SoloTablaProductos",
+          "Effect": "Allow",
+          "Principal": "*",
+          "Action": [
+            "dynamodb:GetItem", "dynamodb:Query", "dynamodb:Scan",
+            "dynamodb:PutItem", "dynamodb:UpdateItem", "dynamodb:DeleteItem"
+          ],
+          "Resource": [
+            "arn:aws:dynamodb:us-east-1:111122223333:table/Productos",
+            "arn:aws:dynamodb:us-east-1:111122223333:table/Productos/*"
+          ]
+        }
+      ]
+    }
+    ```
+
+    Para cambiar la política del punto de enlace:
+
+    === "Consola AWS"
+
+        1. **VPC → Puntos de enlace** (*Endpoints*), seleccionar el punto de enlace de DynamoDB.
+        2. Pestaña **Política** → **Editar política**.
+        3. Elegir **Personalizado** (*Custom*), pegar el documento JSON y pulsar **Guardar**.
+
+    === "AWS CLI"
+
+        ```bash
+        aws ec2 modify-vpc-endpoint --vpc-endpoint-id vpce-0123456789abcdef0 \
+          --policy-document file://politica-endpoint.json
+
+        aws ec2 describe-vpc-endpoints --vpc-endpoint-ids vpce-0123456789abcdef0 \
+          --query "VpcEndpoints[0].PolicyDocument" --output text
+        ```
+
+    La política del punto de enlace y la política de la tabla son complementarias: la primera protege **la red** (qué puede salir de la VPC), la segunda protege **el dato** (por dónde y quién puede entrar a la tabla).
+
+??? info "Otras técnicas de securización"
+
+    Además de las anteriores, AWS ofrece otros mecanismos que permiten construir una estrategia de **defensa en profundidad**.
+
+    **Control de acceso detallado por elemento y atributo**
+
+    Las claves de condición propias de DynamoDB permiten restringir el acceso **dentro** de una tabla:
+
+    - `dynamodb:LeadingKeys`: limita los elementos accesibles a aquellos cuya **clave de partición** coincide con un valor, habitualmente el identificador del usuario autenticado. Es la base de las aplicaciones móviles o web en las que cada usuario solo puede leer sus propios datos (por ejemplo, mediante **Amazon Cognito**).
+    - `dynamodb:Attributes`: limita los **atributos** que pueden leerse o escribirse.
+    - `dynamodb:Select` y `dynamodb:ReturnValues`: impiden que se devuelvan atributos no autorizados por otras vías.
+
+    ```json
+    "Condition": {
+      "ForAllValues:StringEquals": {
+        "dynamodb:LeadingKeys": ["${cognito-identity.amazonaws.com:sub}"]
+      }
+    }
+    ```
+
+    **Control de acceso basado en atributos (ABAC)**
+
+    Disponible de forma general desde noviembre de 2024, permite autorizar en función de las **etiquetas** de la identidad y de la tabla. Por ejemplo, una política puede permitir el acceso solo cuando la etiqueta `proyecto` del rol coincide con la etiqueta `proyecto` de la tabla (`aws:ResourceTag/proyecto` = `${aws:PrincipalTag/proyecto}`). Esto evita mantener listas de ARN y escala bien en organizaciones con muchas tablas y equipos.
+
+    **Perímetro de datos con AWS Organizations: SCP y RCP**
+
+    En organizaciones con varias cuentas se pueden establecer **barreras de protección centralizadas**:
+
+    - Las **SCP** limitan lo que pueden hacer las identidades de las cuentas de la organización (por ejemplo, impedir que desactiven la protección contra eliminación o que usen DynamoDB fuera de determinadas regiones).
+    - Las **RCP**, que admiten DynamoDB desde febrero de 2026, limitan quién puede acceder a los recursos de la organización. Permiten, por ejemplo, impedir que **cualquier identidad ajena a la organización** acceda a las tablas, aunque alguien añada por error una política de tabla permisiva:
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "SoloIdentidadesDeLaOrganizacion",
+          "Effect": "Deny",
+          "Principal": "*",
+          "Action": "dynamodb:*",
+          "Resource": "*",
+          "Condition": {
+            "StringNotEqualsIfExists": { "aws:PrincipalOrgID": "o-a1b2c3d4e5" },
+            "BoolIfExists": { "aws:PrincipalIsAWSService": "false" }
+          }
+        }
+      ]
+    }
+    ```
+
+    Estas políticas no pueden utilizarse en el Learner Lab, pero constituyen la práctica recomendada en entornos empresariales.
+
+    **Cifrado con claves administradas por el cliente**
+
+    Utilizar una **clave de AWS KMS administrada por el cliente** añade una capa de control independiente: la política de la clave determina qué identidades y servicios pueden usarla, toda utilización queda registrada en CloudTrail y, si la clave se deshabilita o se programa su eliminación, **la tabla deja de ser accesible**.
+
+    **Exigir cifrado en tránsito**
+
+    Aunque los SDK utilizan HTTPS por defecto, puede imponerse mediante una denegación sobre la clave `aws:SecureTransport`:
+
+    ```json
+    "Condition": { "Bool": { "aws:SecureTransport": "false" } }
+    ```
+
+    **Restringir dónde pueden usarse las credenciales de una instancia**
+
+    Las claves de condición `aws:Ec2InstanceSourceVpc` y `aws:Ec2InstanceSourcePrivateIPv4` permiten garantizar que las credenciales de un rol de instancia EC2 **solo se utilicen desde la propia instancia** o desde su VPC. Si un atacante extrae las credenciales temporales de la instancia y trata de usarlas desde fuera, la petición se deniega.
+
+    **Seguridad de red complementaria**
+
+    - **Grupos de seguridad** en los puntos de enlace de tipo interfaz, que admitan HTTPS solo desde los grupos de seguridad de los servidores (técnica usada en las prácticas).
+    - **Reglas de salida** en los grupos de seguridad de las instancias que solo permitan el tráfico hacia la lista de prefijos de DynamoDB o hacia el grupo del punto de enlace.
+    - **Subredes privadas sin ruta a Internet**: si las instancias no tienen salida a Internet (ni Internet Gateway ni NAT), el punto de enlace es la única vía posible hacia DynamoDB.
+
+    **Auditoría y detección**
+
+    - **AWS CloudTrail** registra por defecto los eventos del plano de control (crear tablas, modificar políticas…). Los **eventos de datos** (`GetItem`, `PutItem`, etc.) deben activarse expresamente y tienen coste adicional.
+    - **IAM Access Analyzer** analiza las políticas de las tablas e informa de los accesos concedidos a entidades externas a la cuenta o a la organización.
+    - **AWS Config** permite evaluar de forma continua reglas como `dynamodb-pitr-enabled` o `dynamodb-table-encrypted-kms`.
+
+    **Protección frente a pérdida de datos**
+
+    La seguridad incluye también la **disponibilidad** de la información: protección contra eliminación, recuperación a un momento dado (PITR) y copias de seguridad, ya descritas en el apartado de características.
 
 ---
 
@@ -482,3 +513,5 @@ La seguridad incluye también la **disponibilidad** de la información: protecci
 - AWS Security Blog. *How to use policies to restrict where EC2 instance credentials can be used from* — [Artículo](https://aws.amazon.com/blogs/security/how-to-use-policies-to-restrict-where-ec2-instance-credentials-can-be-used-from)
 - AWS. *Logging DynamoDB operations by using AWS CloudTrail* — [CloudTrail](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/logging-using-cloudtrail.html)
 - AWS. *Security best practices for Amazon DynamoDB* — [Buenas prácticas de seguridad](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices-security.html)
+- AWS. *DynamoDB API* — [Planos de control y de datos](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.API.html)
+- AWS. *Signature Version 4 for API requests* — [Firma SigV4](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv.html)

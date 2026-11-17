@@ -81,10 +81,6 @@ Para que un administrador se conecte desde su equipo a una base de datos privada
 
 - **VPN** de sitio a sitio o de cliente, o **AWS Direct Connect**, en entornos híbridos.
 
-### Punto de enlace de VPC para la API de RDS
-
-Las operaciones de administración (crear, modificar, describir) se realizan contra la **API de RDS**, que, como la de DynamoDB, es un servicio público. Si los recursos que administran RDS no tienen salida a Internet, puede crearse un **punto de enlace de VPC de tipo interfaz** para `com.amazonaws.<región>.rds`. Este punto de enlace afecta **solo al plano de control**: las conexiones SQL a la base de datos ya se realizan siempre dentro de la VPC.
-
 ---
 
 ## 2. Control de acceso al plano de control con IAM
@@ -94,52 +90,7 @@ Las acciones de administración de RDS tienen el prefijo `rds:` (`rds:CreateDBIn
 !!! warning "IAM no protege los datos por sí solo"
     Un usuario sin ningún permiso IAM sobre RDS puede **leer y modificar los datos** si conoce un usuario y una contraseña del motor y tiene conectividad de red. Por el contrario, un usuario con `rds:*` puede **eliminar** la base de datos, **restablecer la contraseña del usuario maestro** (`ModifyDBInstance`) o **compartir una instantánea** con otra cuenta. Ambos planos deben protegerse.
 
-### Ejemplo: separación por entornos y requisitos obligatorios
-
-La siguiente política basada en identidad permite a un equipo de desarrollo gestionar las instancias etiquetadas como `entorno = desarrollo`, le impide eliminar las de producción y obliga a que cualquier instancia nueva esté cifrada y use clases pequeñas:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "ConsultarTodo",
-      "Effect": "Allow",
-      "Action": ["rds:Describe*", "rds:ListTagsForResource"],
-      "Resource": "*"
-    },
-    {
-      "Sid": "GestionarSoloDesarrollo",
-      "Effect": "Allow",
-      "Action": ["rds:RebootDBInstance", "rds:StartDBInstance", "rds:StopDBInstance", "rds:ModifyDBInstance"],
-      "Resource": "arn:aws:rds:us-east-1:111122223333:db:*",
-      "Condition": { "StringEquals": { "rds:db-tag/entorno": "desarrollo" } }
-    },
-    {
-      "Sid": "CrearSoloCifradasYPequenas",
-      "Effect": "Allow",
-      "Action": "rds:CreateDBInstance",
-      "Resource": "*",
-      "Condition": {
-        "Bool": { "rds:StorageEncrypted": "true" },
-        "StringLike": { "rds:DatabaseClass": ["db.t4g.*", "db.t3.*"] }
-      }
-    },
-    {
-      "Sid": "NuncaBorrarProduccion",
-      "Effect": "Deny",
-      "Action": ["rds:DeleteDBInstance", "rds:DeleteDBCluster"],
-      "Resource": "*",
-      "Condition": { "StringEquals": { "rds:db-tag/entorno": "produccion" } }
-    }
-  ]
-}
-```
-
-En organizaciones con varias cuentas, restricciones como «no se permiten instancias sin cifrar» o «nadie puede eliminar bases de datos de producción» se aplican mejor como **políticas de control de servicios (SCP)** de AWS Organizations, que afectan a todas las identidades de la cuenta, incluidas las administradoras.
-
-!!! info "Entorno AWS Academy"
-    En el Learner Lab no es posible crear políticas de IAM, por lo que estos ejemplos tienen carácter ilustrativo. Los mecanismos del plano de datos (red, usuarios del motor, privilegios, TLS) sí pueden aplicarse íntegramente.
+En [Para saber más](#para-saber-mas) se incluye un ejemplo de política que separa los permisos por entornos mediante etiquetas, obliga a crear las bases de datos cifradas e impide eliminar las de producción.
 
 ---
 
@@ -153,6 +104,8 @@ RDS y Aurora admiten tres mecanismos de autenticación, que pueden convivir en l
 | **Autenticación de IAM** | Token temporal firmado con credenciales de IAM   | MySQL, MariaDB, PostgreSQL y Aurora                 | Aplicaciones en AWS con roles de IAM, sin contraseñas     |
 | **Kerberos**             | Tique Kerberos de un directorio Active Directory | SQL Server, Oracle, PostgreSQL, MySQL, Db2 y Aurora | Organizaciones con identidades corporativas centralizadas |
 
+En las prácticas se utiliza la **contraseña del motor**; en producción conviene custodiarla en Secrets Manager. La autenticación de IAM, que en el Learner Lab no puede configurarse por completo, se describe en [Para saber más](#para-saber-mas).
+
 ### El usuario maestro y AWS Secrets Manager
 
 El usuario maestro tiene los máximos privilegios disponibles y **no debe utilizarse en las aplicaciones**. Su contraseña debe gestionarse preferiblemente con la integración nativa de **Secrets Manager** (opción *Administrado en AWS Secrets Manager* o parámetro `--manage-master-user-password`):
@@ -164,118 +117,14 @@ El usuario maestro tiene los máximos privilegios disponibles y **no debe utiliz
 
 Para los **usuarios de aplicación**, Secrets Manager permite igualmente almacenar las credenciales y rotarlas mediante funciones Lambda, de modo que las aplicaciones obtengan la contraseña en tiempo de ejecución en lugar de guardarla en un fichero de configuración como `.env`.
 
-### Autenticación de IAM para bases de datos
-
-![image](imgs/RDS-iam-auth.png)
-
-Con la autenticación de IAM, la aplicación **no utiliza contraseña**. En su lugar:
-
-1. La aplicación, que se ejecuta con un **rol de IAM** (por ejemplo, el perfil de instancia de una EC2), solicita al SDK un **token de autenticación**. El token se genera **localmente**, firmando la petición con las credenciales del rol (SigV4); no requiere llamar a ningún servicio.
-2. La aplicación se conecta a la base de datos usando el token como contraseña, **obligatoriamente mediante TLS**.
-3. RDS valida la firma y comprueba que la identidad tiene permiso `rds-db:connect` sobre ese usuario de base de datos.
-
-Pasos de configuración:
-
-**a) Activar la autenticación de IAM** en la instancia o el clúster:
-
-=== "Consola AWS"
-
-    1. **RDS → Bases de datos**, seleccionar la instancia (`mydb-server`) y pulsar **Modificar**.
-    2. En **Autenticación de base de datos** (*Database authentication*), elegir **Autenticación de contraseña y de IAM de la base de datos**.
-    3. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
-
-=== "AWS CLI"
-
-    ```bash
-    aws rds modify-db-instance --db-instance-identifier mydb-server \
-      --enable-iam-database-authentication --apply-immediately
-
-    aws rds describe-db-instances --db-instance-identifier mydb-server \
-      --query "DBInstances[0].[IAMDatabaseAuthenticationEnabled,DbiResourceId]"
-    ```
-
-**b) Crear el usuario en el motor** indicando que se autentica con IAM:
-
-```sql
--- MySQL / MariaDB / Aurora MySQL
-CREATE USER app_user IDENTIFIED WITH AWSAuthenticationPlugin AS 'RDS';
-GRANT SELECT, INSERT, UPDATE, DELETE ON tienda.* TO app_user;
-
--- PostgreSQL / Aurora PostgreSQL
-CREATE USER app_user;
-GRANT rds_iam TO app_user;
-GRANT CONNECT ON DATABASE tienda TO app_user;
-```
-
-**c) Conceder al rol de IAM** el permiso `rds-db:connect` sobre ese usuario. El recurso incluye el **identificador de recurso** de la instancia (`db-…`) o del clúster (`cluster-…`), que se consulta en la pestaña **Configuración** (*Configuration*) de la instancia o con `DbiResourceId` en la AWS CLI:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "rds-db:connect",
-      "Resource": "arn:aws:rds-db:us-east-1:111122223333:dbuser:db-ABCDEFGHIJKLMNOP0123456789/app_user"
-    }
-  ]
-}
-```
-
-=== "Consola AWS"
-
-    1. **IAM → Roles**, seleccionar el rol de la aplicación.
-    2. **Agregar permisos → Crear política insertada** (*Create inline policy*), pestaña **JSON**, pegar la política y pulsar **Siguiente**.
-    3. Indicar un nombre (`rds-connect-app-user`) y pulsar **Crear política**.
-
-=== "AWS CLI"
-
-    ```bash
-    aws iam put-role-policy --role-name RolAplicacion \
-      --policy-name rds-connect-app-user --policy-document file://rds-connect.json
-
-    aws iam get-role-policy --role-name RolAplicacion --policy-name rds-connect-app-user
-    ```
-
-!!! warning "Autenticación de IAM en el Learner Lab"
-    En el Learner Lab no se pueden crear roles ni modificar sus políticas, de modo que este paso no puede reproducirse: se trabaja siempre con **`LabRole`** (perfil `LabInstanceProfile`), cuyos permisos son amplios. Una política que **permite** `rds-db:connect` solo para `app_user` **no restringe** a una identidad que ya tiene permisos más amplios, porque basta con que una política lo permita. En una cuenta real, para limitarla haría falta, además, un **`Deny` explícito**. En el laboratorio, la restricción efectiva queda en el motor: qué usuarios se crean con `AWSAuthenticationPlugin` (o `rds_iam`) y qué privilegios se les conceden con `GRANT`.
-
-**d) Generar el token y conectar** desde la instancia o el equipo cliente (la consola no genera tokens):
-
-```bash
-TOKEN=$(aws rds generate-db-auth-token \
-  --hostname mydb-server.xxxx.us-east-1.rds.amazonaws.com --port 3306 \
-  --username app_user --region us-east-1)
-
-mysql -h mydb-server.xxxx.us-east-1.rds.amazonaws.com -P 3306 -u app_user \
-  --password="$TOKEN" --enable-cleartext-plugin \
-  --ssl-mode=VERIFY_IDENTITY --ssl-ca=global-bundle.pem
-```
-
-Ventajas y limitaciones:
-
-| Ventajas                                                         | Limitaciones                                                                    |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| No hay contraseñas que almacenar, rotar ni filtrar               | El token caduca a los **15 minutos** (solo afecta a nuevas conexiones)          |
-| Credenciales temporales del rol, renovadas automáticamente       | Requiere memoria adicional en la instancia (300–1 000 MiB)                      |
-| Control centralizado: retirar el permiso de IAM revoca el acceso | No admite las claves de condición de red (`aws:SourceIp`, `aws:SourceVpce`…)    |
-| Conexión siempre cifrada                                         | Las generaciones de tokens no quedan registradas en CloudTrail                  |
-|                                                                  | En PostgreSQL, un usuario con `rds_iam` ya no puede autenticarse con contraseña |
-
-AWS recomienda este mecanismo cuando el número de **conexiones nuevas por segundo** es moderado; para aplicaciones con muchas conexiones cortas, se combina con **RDS Proxy**.
-
 ### RDS Proxy como punto de control
 
-Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad. Su funcionamiento completo se estudia en el apartado [RDS Proxy](RDS-Proxy.md), a continuación de este:
+Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad. Su funcionamiento completo se describe en [RDS Proxy](RDS-Proxy.md), dentro del contenido de ampliación:
 
 - El proxy obtiene las credenciales de la base de datos de **Secrets Manager**; las aplicaciones no necesitan conocerlas.
 - Puede **exigir autenticación de IAM** a los clientes aunque la base de datos utilice contraseñas.
 - Puede **exigir TLS** en todas las conexiones de los clientes.
 - Si el grupo de seguridad de la base de datos solo admite al proxy, este se convierte en la **única puerta de entrada**.
-
-### RDS Data API (Aurora)
-
-Aurora ofrece una **API HTTPS** (*RDS Data API*) que permite ejecutar sentencias SQL sin abrir conexiones del protocolo nativo. Cada llamada se autoriza con IAM y utiliza las credenciales almacenadas en Secrets Manager, lo que resulta útil para funciones Lambda y aplicaciones sin estado.
 
 ---
 
@@ -309,27 +158,6 @@ GRANT SELECT ON tienda.* TO 'informes'@'10.0.%';
 
 SHOW GRANTS FOR 'tienda_user'@'10.0.%';
 ```
-
-### PostgreSQL y Aurora PostgreSQL
-
-```sql
--- Impedir que cualquier usuario cree objetos en el esquema public
-REVOKE CREATE ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON DATABASE tienda FROM PUBLIC;
-
--- Rol de aplicación sin capacidad de inicio de sesión
-CREATE ROLE rol_tienda_rw NOLOGIN;
-GRANT CONNECT ON DATABASE tienda TO rol_tienda_rw;
-GRANT USAGE ON SCHEMA public TO rol_tienda_rw;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO rol_tienda_rw;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public
-  GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO rol_tienda_rw;
-
--- Usuario que hereda el rol
-CREATE USER tienda_user WITH PASSWORD '********' IN ROLE rol_tienda_rw;
-```
-
-PostgreSQL ofrece además **seguridad a nivel de fila** (*Row-Level Security*), que permite que cada usuario vea únicamente las filas que le corresponden mediante políticas definidas en la propia tabla, una idea análoga a la condición `dynamodb:LeadingKeys` estudiada en DynamoDB.
 
 ---
 
@@ -434,6 +262,188 @@ En el laboratorio puede bastar con `--ssl-mode=REQUIRED`, pero en producción de
 | Autorización de datos       | `GRANT`/`REVOKE` en el motor               | Políticas de IAM y de recursos             |
 | Restringir el origen de red | Grupos de seguridad                        | Puntos de enlace de VPC + `aws:SourceVpce` |
 | Cifrado en reposo           | Opcional, elegido al crear                 | Siempre activo                             |
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Punto de enlace de VPC para la API de RDS"
+
+    Las operaciones de administración (crear, modificar, describir) se realizan contra la **API de RDS**, que, como la de DynamoDB, es un servicio público. Si los recursos que administran RDS no tienen salida a Internet, puede crearse un **punto de enlace de VPC de tipo interfaz** para `com.amazonaws.<región>.rds`. Este punto de enlace afecta **solo al plano de control**: las conexiones SQL a la base de datos ya se realizan siempre dentro de la VPC.
+
+??? info "Ejemplo de IAM: separación por entornos y requisitos obligatorios"
+
+    La siguiente política basada en identidad permite a un equipo de desarrollo gestionar las instancias etiquetadas como `entorno = desarrollo`, le impide eliminar las de producción y obliga a que cualquier instancia nueva esté cifrada y use clases pequeñas:
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Sid": "ConsultarTodo",
+          "Effect": "Allow",
+          "Action": ["rds:Describe*", "rds:ListTagsForResource"],
+          "Resource": "*"
+        },
+        {
+          "Sid": "GestionarSoloDesarrollo",
+          "Effect": "Allow",
+          "Action": ["rds:RebootDBInstance", "rds:StartDBInstance", "rds:StopDBInstance", "rds:ModifyDBInstance"],
+          "Resource": "arn:aws:rds:us-east-1:111122223333:db:*",
+          "Condition": { "StringEquals": { "rds:db-tag/entorno": "desarrollo" } }
+        },
+        {
+          "Sid": "CrearSoloCifradasYPequenas",
+          "Effect": "Allow",
+          "Action": "rds:CreateDBInstance",
+          "Resource": "*",
+          "Condition": {
+            "Bool": { "rds:StorageEncrypted": "true" },
+            "StringLike": { "rds:DatabaseClass": ["db.t4g.*", "db.t3.*"] }
+          }
+        },
+        {
+          "Sid": "NuncaBorrarProduccion",
+          "Effect": "Deny",
+          "Action": ["rds:DeleteDBInstance", "rds:DeleteDBCluster"],
+          "Resource": "*",
+          "Condition": { "StringEquals": { "rds:db-tag/entorno": "produccion" } }
+        }
+      ]
+    }
+    ```
+
+    En organizaciones con varias cuentas, restricciones como «no se permiten instancias sin cifrar» o «nadie puede eliminar bases de datos de producción» se aplican mejor como **políticas de control de servicios (SCP)** de AWS Organizations, que afectan a todas las identidades de la cuenta, incluidas las administradoras.
+
+    !!! info "Entorno AWS Academy"
+        En el Learner Lab no es posible crear políticas de IAM, por lo que estos ejemplos tienen carácter ilustrativo. Los mecanismos del plano de datos (red, usuarios del motor, privilegios, TLS) sí pueden aplicarse íntegramente.
+
+??? info "Autenticación de IAM para bases de datos"
+
+    ![image](imgs/RDS-iam-auth.png)
+
+    Con la autenticación de IAM, la aplicación **no utiliza contraseña**. En su lugar:
+
+    1. La aplicación, que se ejecuta con un **rol de IAM** (por ejemplo, el perfil de instancia de una EC2), solicita al SDK un **token de autenticación**. El token se genera **localmente**, firmando la petición con las credenciales del rol (SigV4); no requiere llamar a ningún servicio.
+    2. La aplicación se conecta a la base de datos usando el token como contraseña, **obligatoriamente mediante TLS**.
+    3. RDS valida la firma y comprueba que la identidad tiene permiso `rds-db:connect` sobre ese usuario de base de datos.
+
+    Pasos de configuración:
+
+    **a) Activar la autenticación de IAM** en la instancia o el clúster:
+
+    === "Consola AWS"
+
+        1. **Aurora and RDS → Bases de datos**, seleccionar la instancia (`mydb-server`) y pulsar **Modificar**.
+        2. En **Autenticación de base de datos** (*Database authentication*), elegir **Autenticación de contraseña y de IAM de la base de datos**.
+        3. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
+
+    === "AWS CLI"
+
+        ```bash
+        aws rds modify-db-instance --db-instance-identifier mydb-server \
+          --enable-iam-database-authentication --apply-immediately
+
+        aws rds describe-db-instances --db-instance-identifier mydb-server \
+          --query "DBInstances[0].[IAMDatabaseAuthenticationEnabled,DbiResourceId]"
+        ```
+
+    **b) Crear el usuario en el motor** indicando que se autentica con IAM:
+
+    ```sql
+    -- MySQL / MariaDB / Aurora MySQL
+    CREATE USER app_user IDENTIFIED WITH AWSAuthenticationPlugin AS 'RDS';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON tienda.* TO app_user;
+
+    -- PostgreSQL / Aurora PostgreSQL
+    CREATE USER app_user;
+    GRANT rds_iam TO app_user;
+    GRANT CONNECT ON DATABASE tienda TO app_user;
+    ```
+
+    **c) Conceder al rol de IAM** el permiso `rds-db:connect` sobre ese usuario. El recurso incluye el **identificador de recurso** de la instancia (`db-…`) o del clúster (`cluster-…`), que se consulta en la pestaña **Configuración** (*Configuration*) de la instancia o con `DbiResourceId` en la AWS CLI:
+
+    ```json
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "rds-db:connect",
+          "Resource": "arn:aws:rds-db:us-east-1:111122223333:dbuser:db-ABCDEFGHIJKLMNOP0123456789/app_user"
+        }
+      ]
+    }
+    ```
+
+    === "Consola AWS"
+
+        1. **IAM → Roles**, seleccionar el rol de la aplicación.
+        2. **Agregar permisos → Crear política insertada** (*Create inline policy*), pestaña **JSON**, pegar la política y pulsar **Siguiente**.
+        3. Indicar un nombre (`rds-connect-app-user`) y pulsar **Crear política**.
+
+    === "AWS CLI"
+
+        ```bash
+        aws iam put-role-policy --role-name RolAplicacion \
+          --policy-name rds-connect-app-user --policy-document file://rds-connect.json
+
+        aws iam get-role-policy --role-name RolAplicacion --policy-name rds-connect-app-user
+        ```
+
+    !!! warning "Autenticación de IAM en el Learner Lab"
+        En el Learner Lab no se pueden crear roles ni modificar sus políticas, de modo que este paso no puede reproducirse: se trabaja siempre con **`LabRole`** (perfil `LabInstanceProfile`), cuyos permisos son amplios. Una política que **permite** `rds-db:connect` solo para `app_user` **no restringe** a una identidad que ya tiene permisos más amplios, porque basta con que una política lo permita. En una cuenta real, para limitarla haría falta, además, un **`Deny` explícito**. En el laboratorio, la restricción efectiva queda en el motor: qué usuarios se crean con `AWSAuthenticationPlugin` (o `rds_iam`) y qué privilegios se les conceden con `GRANT`.
+
+    **d) Generar el token y conectar** desde la instancia o el equipo cliente (la consola no genera tokens):
+
+    ```bash
+    TOKEN=$(aws rds generate-db-auth-token \
+      --hostname mydb-server.xxxx.us-east-1.rds.amazonaws.com --port 3306 \
+      --username app_user --region us-east-1)
+
+    mysql -h mydb-server.xxxx.us-east-1.rds.amazonaws.com -P 3306 -u app_user \
+      --password="$TOKEN" --enable-cleartext-plugin \
+      --ssl-mode=VERIFY_IDENTITY --ssl-ca=global-bundle.pem
+    ```
+
+    Ventajas y limitaciones:
+
+    | Ventajas                                                         | Limitaciones                                                                    |
+    | ---------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+    | No hay contraseñas que almacenar, rotar ni filtrar               | El token caduca a los **15 minutos** (solo afecta a nuevas conexiones)          |
+    | Credenciales temporales del rol, renovadas automáticamente       | Requiere memoria adicional en la instancia (300–1 000 MiB)                      |
+    | Control centralizado: retirar el permiso de IAM revoca el acceso | No admite las claves de condición de red (`aws:SourceIp`, `aws:SourceVpce`…)    |
+    | Conexión siempre cifrada                                         | Las generaciones de tokens no quedan registradas en CloudTrail                  |
+    |                                                                  | En PostgreSQL, un usuario con `rds_iam` ya no puede autenticarse con contraseña |
+
+    AWS recomienda este mecanismo cuando el número de **conexiones nuevas por segundo** es moderado; para aplicaciones con muchas conexiones cortas, se combina con **RDS Proxy**.
+
+??? info "RDS Data API (Aurora)"
+
+    Aurora ofrece una **API HTTPS** (*RDS Data API*) que permite ejecutar sentencias SQL sin abrir conexiones del protocolo nativo. Cada llamada se autoriza con IAM y utiliza las credenciales almacenadas en Secrets Manager, lo que resulta útil para funciones Lambda y aplicaciones sin estado.
+
+??? info "Autorización en PostgreSQL y Aurora PostgreSQL"
+
+    ```sql
+    -- Impedir que cualquier usuario cree objetos en el esquema public
+    REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+    REVOKE ALL ON DATABASE tienda FROM PUBLIC;
+
+    -- Rol de aplicación sin capacidad de inicio de sesión
+    CREATE ROLE rol_tienda_rw NOLOGIN;
+    GRANT CONNECT ON DATABASE tienda TO rol_tienda_rw;
+    GRANT USAGE ON SCHEMA public TO rol_tienda_rw;
+    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO rol_tienda_rw;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public
+      GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO rol_tienda_rw;
+
+    -- Usuario que hereda el rol
+    CREATE USER tienda_user WITH PASSWORD '********' IN ROLE rol_tienda_rw;
+    ```
+
+    PostgreSQL ofrece además **seguridad a nivel de fila** (*Row-Level Security*), que permite que cada usuario vea únicamente las filas que le corresponden mediante políticas definidas en la propia tabla, una idea análoga a la condición `dynamodb:LeadingKeys` estudiada en DynamoDB.
 
 ---
 

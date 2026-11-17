@@ -21,12 +21,12 @@ En las unidades anteriores se trabajó con el almacenamiento de objetos, bloques
 | Criterio | Contenido | Apartados |
 | --- | --- | --- |
 | **a)** Región geográfica y replicación entre zonas o regiones, con latencia y costes eficientes y teniendo en cuenta la residencia de los datos | Regiones y zonas, residencia de los datos (RGPD, ENS), Multi-AZ, réplicas de lectura, Global Database, tablas globales | [Elección de la región](BD-Region.md), [Visión general de RDS](RDS-Introduccion.md), [Replicación y recuperación ante desastres](BD-Replicacion.md) |
-| **b)** Cifrado, con claves de cifrado específicas, mediante IaC | AWS KMS, claves administradas por el cliente, plantillas de CloudFormation y Terraform | [Infraestructura como código](BD-IaC.md), [Cifrado en reposo](RDS-Seguridad.md#5-cifrado-en-reposo) |
-| **c)** Visibilidad, acceso, seguridad, monitorización, observabilidad y auditoría, para que solo accedan los perfiles y aplicaciones autorizados | Subredes privadas, grupos de seguridad, IAM, Secrets Manager, autenticación de IAM, RDS Proxy, políticas basadas en recursos, puntos de enlace de VPC, auditoría | [Redes y conectividad](Crear-RDS-03.md), [Securización de RDS y Aurora](RDS-Seguridad.md), [RDS Proxy](RDS-Proxy.md), [Acceso y securización de DynamoDB](DynamoDB-05.md), [Supervisión en la creación](Crear-RDS-04.md) |
-| **d)** Cambios del ciclo de vida: tamaño, capacidad de cómputo o configuración | Modificación de instancias, grupos de parámetros, detener e iniciar, cambios en Aurora y DynamoDB | [Ciclo de vida](BD-CicloVida.md), [Opciones de despliegue y escalado de Aurora](Aurora-03.md) |
+| **b)** Cifrado, con claves de cifrado específicas, mediante IaC | AWS KMS, claves administradas por el cliente, plantillas de CloudFormation | [Infraestructura como código](BD-IaC.md), [Cifrado en reposo](RDS-Seguridad.md#5-cifrado-en-reposo) |
+| **c)** Visibilidad, acceso, seguridad, monitorización, observabilidad y auditoría, para que solo accedan los perfiles y aplicaciones autorizados | Subredes privadas, grupos de seguridad, IAM, Secrets Manager, políticas basadas en recursos, puntos de enlace de VPC, auditoría | [Redes y conectividad](Crear-RDS-03.md), [Securización de RDS y Aurora](RDS-Seguridad.md), [Acceso y securización de DynamoDB](DynamoDB-05.md), [Supervisión en la creación](Crear-RDS-04.md) |
+| **d)** Cambios del ciclo de vida: tamaño, capacidad de cómputo o configuración | Modificación de instancias, grupos de parámetros, detener e iniciar, cambios en Aurora y DynamoDB | [Ciclo de vida](BD-CicloVida.md) |
 | **e)** Replicación y copias de seguridad recuperables en tiempo y forma | Copias automáticas, instantáneas, restauración a un momento dado, PITR de DynamoDB, RPO y RTO | [Copias de seguridad en la creación](Crear-RDS-04.md), [Ciclo de vida](BD-CicloVida.md), [Replicación y recuperación ante desastres](BD-Replicacion.md) |
-| **f)** Monitorización del rendimiento de inserciones, actualizaciones y consultas | CloudWatch, Database Insights, registro de consultas lentas, `EXPLAIN`, alarmas, métricas de DynamoDB | [Monitorización del rendimiento](BD-Rendimiento.md), [Anexo: métricas de RDS](Supervision-RDS.md) |
-| **g)** Optimizaciones no complejas de configuración, esquema o distribución de los datos | Clase de instancia, índices, réplicas de lectura, diseño de claves e índices secundarios de DynamoDB, modo de capacidad | [Monitorización del rendimiento y optimización](BD-Rendimiento.md#3-optimizaciones-no-complejas), [Clave primaria y tipos de atributos](DynamoDB-04.md), [Características de DynamoDB](DynamoDB-02.md) |
+| **f)** Monitorización del rendimiento de inserciones, actualizaciones y consultas | CloudWatch, Database Insights, registro de consultas lentas, `EXPLAIN`, alarmas, métricas de DynamoDB | [Monitorización del rendimiento](BD-Rendimiento.md) |
+| **g)** Optimizaciones no complejas de configuración, esquema o distribución de los datos | Clase de instancia, índices, réplicas de lectura, diseño de claves e índices secundarios de DynamoDB, modo de capacidad | [Monitorización del rendimiento y optimización](BD-Rendimiento.md#3-optimizaciones-no-complejas), [Clave primaria y tipos de atributos](DynamoDB-04.md), [Características y arquitectura de DynamoDB](DynamoDB-02.md#particionado-y-distribucion-de-los-datos) |
 
 ---
 
@@ -38,6 +38,9 @@ Los apartados siguen el mismo orden que las sesiones grabadas:
 | --- | --- |
 | Visión general de Amazon RDS | [Visión general de Amazon RDS](RDS-Introduccion.md) |
 | Amazon Aurora | Bloque **Amazon Aurora** |
+
+!!! info "Núcleo y contenido opcional"
+    Las secciones del menú forman el **núcleo** de la unidad: lo que piden los criterios de evaluación y usan las prácticas. Algunas páginas terminan con un apartado **Para saber más**, con bloques plegables que amplían ese mismo tema. La sección **Ampliación (opcional)** del menú reúne temas independientes (RDS Proxy, opciones de despliegue de Aurora y la referencia de métricas de RDS). Ninguno de estos contenidos es necesario para las prácticas.
 
 !!! tip "Consola AWS y AWS CLI"
     Las operaciones sobre los recursos de AWS se muestran en dos pestañas: **Consola AWS**, con los pasos en la consola web, y **AWS CLI**, con los comandos equivalentes. Al elegir una pestaña, todas las del sitio cambian a la misma opción. Los nombres de menús y botones corresponden a la consola en **español** (entre paréntesis se indica a veces el nombre en inglés) y pueden variar ligeramente cuando AWS actualiza la interfaz.

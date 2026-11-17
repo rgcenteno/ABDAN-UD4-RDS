@@ -58,22 +58,6 @@ No pueden utilizarse como clave los tipos booleanos, nulos, mapas, listas ni con
 
 En la consola, estos tipos aparecen como **Cadena**, **Número** y **Binario** en los desplegables de *Clave de partición* y *Clave de ordenación*. En la AWS CLI se indican con las letras `S`, `N` y `B`.
 
-### El tipo condiciona el orden
-
-La elección del tipo de la **clave de ordenación** no es indiferente, porque determina cómo se ordenan los elementos y cómo se evalúan las condiciones de rango:
-
-| Tipo | Criterio de ordenación | Ejemplo |
-| --- | --- | --- |
-| `N` | Valor numérico | `2 < 9 < 10 < 100` |
-| `S` | Orden de los **bytes UTF-8** (lexicográfico, no alfabético) | `"10" < "100" < "2" < "9"`; las mayúsculas preceden a las minúsculas (`"Z" < "a"`) y las letras acentuadas se sitúan después de `"z"` |
-| `B` | Bytes interpretados como valores sin signo | `0x00 < 0x7F < 0xFF` |
-
-De esta tabla se derivan algunas recomendaciones de diseño:
-
-- Si la clave de ordenación es un número que se va a comparar con `<`, `>` o `BETWEEN`, debe declararse como `N`. Si se declara como `S`, el valor `"1099"` sería «menor» que `"749"`.
-- Las **fechas** suelen almacenarse como cadenas en formato **ISO 8601** (`2026-11-10T11:30:00Z`), cuyo orden lexicográfico coincide con el cronológico, o bien como números con el tiempo UNIX.
-- Cuando se usan cadenas con números, conviene **rellenar con ceros** a la izquierda (`P-001`, `P-002`, …, `P-010`) para que el orden sea el esperado.
-
 ---
 
 ## Tipos de datos del resto de atributos
@@ -215,6 +199,28 @@ La clave de ordenación debe reflejar **cómo se consultan los elementos dentro 
 ### Claves de los índices secundarios
 
 Las claves de los índices secundarios siguen las mismas reglas de tipo (`S`, `N`, `B`). En los GSI, desde noviembre de 2025, la clave de partición y la de ordenación pueden componerse de **hasta cuatro atributos cada una**, lo que evita construir claves concatenadas como la del ejemplo jerárquico anterior.
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "El tipo condiciona el orden"
+
+    La elección del tipo de la **clave de ordenación** no es indiferente, porque determina cómo se ordenan los elementos y cómo se evalúan las condiciones de rango:
+
+    | Tipo | Criterio de ordenación | Ejemplo |
+    | --- | --- | --- |
+    | `N` | Valor numérico | `2 < 9 < 10 < 100` |
+    | `S` | Orden de los **bytes UTF-8** (lexicográfico, no alfabético) | `"10" < "100" < "2" < "9"`; las mayúsculas preceden a las minúsculas (`"Z" < "a"`) y las letras acentuadas se sitúan después de `"z"` |
+    | `B` | Bytes interpretados como valores sin signo | `0x00 < 0x7F < 0xFF` |
+
+    De esta tabla se derivan algunas recomendaciones de diseño:
+
+    - Si la clave de ordenación es un número que se va a comparar con `<`, `>` o `BETWEEN`, debe declararse como `N`. Si se declara como `S`, el valor `"1099"` sería «menor» que `"749"`.
+    - Las **fechas** suelen almacenarse como cadenas en formato **ISO 8601** (`2026-11-10T11:30:00Z`), cuyo orden lexicográfico coincide con el cronológico, o bien como números con el tiempo UNIX.
+    - Cuando se usan cadenas con números, conviene **rellenar con ceros** a la izquierda (`P-001`, `P-002`, …, `P-010`) para que el orden sea el esperado.
 
 ---
 

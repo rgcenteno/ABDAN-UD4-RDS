@@ -1,6 +1,9 @@
 # Referencia de métricas de RDS
 
-Este anexo recoge las **métricas de Amazon CloudWatch** que publica Amazon RDS y que se consultan en la pestaña **Supervisión** (*Monitoring*) de cada instancia. Para cada métrica se indica qué mide, qué valores pueden considerarse orientativos, qué conviene revisar cuando se desvía y qué consecuencias tiene ignorarla.
+!!! info "Contenido de ampliación"
+    Esta página es **opcional**. Desarrolla contenidos que en el núcleo de la unidad solo se mencionan. No es necesaria para realizar las prácticas.
+
+Esta página recoge las **métricas de Amazon CloudWatch** que publica Amazon RDS y que se consultan en la pestaña **Supervisión** (*Monitoring*) de cada instancia. Para cada métrica se indica qué mide, qué valores pueden considerarse orientativos, qué conviene revisar cuando se desvía y qué consecuencias tiene ignorarla.
 
 Es un documento de **consulta**. El método para analizar un problema de rendimiento (medir, identificar la causa, actuar y verificar), el análisis de las consultas con Database Insights y `EXPLAIN` y la monitorización de DynamoDB se explican en el apartado [Monitorización del rendimiento y optimización](BD-Rendimiento.md).
 
@@ -13,7 +16,7 @@ La revisión periódica de estas métricas permite al administrador:
 - Optimizar los costes.
 
 !!! note "Valores orientativos"
-    Los umbrales de este anexo son **orientativos**. Cada sistema debe compararse con su propio comportamiento habitual (su *línea base*): un 60 % de CPU puede ser normal en una instancia y una anomalía en otra.
+    Los umbrales de esta página son **orientativos**. Cada sistema debe compararse con su propio comportamiento habitual (su *línea base*): un 60 % de CPU puede ser normal en una instancia y una anomalía en otra.
 
 ---
 

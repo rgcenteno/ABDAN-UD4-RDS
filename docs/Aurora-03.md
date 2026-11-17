@@ -1,5 +1,8 @@
 # Aurora: opciones de despliegue y escalado
 
+!!! info "Contenido de ampliación"
+    Esta página es **opcional**. Desarrolla contenidos que en el núcleo de la unidad solo se mencionan. No es necesaria para realizar las prácticas.
+
 ![image](imgs/Aurora-opciones.png)
 
 Sobre la arquitectura común descrita en los apartados anteriores, AWS ofrece varias **modalidades de despliegue** de Aurora que responden a necesidades distintas: cargas variables o intermitentes, presencia en varias regiones, escalado horizontal de escrituras o bases de datos distribuidas sin servidor. Conocerlas permite elegir la opción adecuada en lugar de sobredimensionar una instancia.

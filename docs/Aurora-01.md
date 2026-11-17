@@ -46,24 +46,13 @@ El volumen de clúster es un almacenamiento virtual respaldado por discos SSD co
 - **Crecimiento automático**: el volumen crece a medida que se insertan datos, hasta **128 TiB** o **256 TiB** según la versión del motor, y **se reduce** cuando se eliminan tablas o datos en las versiones que lo admiten. Solo se paga por el espacio realmente utilizado.
 - **Archivos temporales**: las ordenaciones grandes o la creación de índices utilizan almacenamiento local de la instancia, no el volumen compartido.
 
-### Quórum de escritura y de lectura
-
-La elección de 4/6 y 3/6 no es arbitraria. Para que el sistema sea coherente, cualquier conjunto de lectura debe solaparse con cualquier conjunto de escritura (3 + 4 > 6), y dos escrituras no pueden ignorarse mutuamente (4 + 4 > 6). Con dos copias por zona, la pérdida de una zona completa deja **4 copias**, suficientes para seguir escribiendo.
-
-| Situación | Copias disponibles | ¿Escritura? | ¿Datos íntegros? |
-| --- | --- | --- | --- |
-| Funcionamiento normal | 6 | Sí | Sí |
-| Fallo de un disco | 5 | Sí | Sí |
-| Caída de una zona de disponibilidad | 4 | Sí | Sí |
-| Caída de una zona + un disco adicional | 3 | No, hasta reparar | Sí (puede reconstruirse) |
-
 ---
 
 ## Instancias y réplicas de Aurora
 
 ### Instancia de escritura
 
-Es la única instancia que acepta operaciones de escritura (las variantes distribuidas Aurora PostgreSQL Limitless Database y Aurora DSQL, descritas en el apartado de despliegue, siguen un modelo distinto). Envía los registros de *redo* a las seis copias del segmento afectado y confirma la transacción al alcanzar el quórum.
+Es la única instancia que acepta operaciones de escritura (las variantes distribuidas Aurora PostgreSQL Limitless Database y Aurora DSQL, descritas en [Aurora: opciones de despliegue y escalado](Aurora-03.md), dentro del contenido de ampliación, siguen un modelo distinto). Envía los registros de *redo* a las seis copias del segmento afectado y confirma la transacción al alcanzar el quórum.
 
 ### Réplicas de Aurora
 
@@ -106,17 +95,6 @@ Aurora proporciona varios nombres DNS que abstraen a las aplicaciones de las ins
 
 ---
 
-## Modelos de facturación del almacenamiento
-
-| Configuración | Qué se factura | Recomendado cuando |
-| --- | --- | --- |
-| **Aurora Standard** | Instancias + almacenamiento + **E/S** (por millón de peticiones) | El gasto en E/S es inferior al 25 % del total |
-| **Aurora I/O-Optimized** | Instancias + almacenamiento (más caros), **sin coste por E/S** | El gasto en E/S supera el 25 % del total |
-
-Puede pasarse de Standard a I/O-Optimized una vez cada 30 días, y en sentido contrario en cualquier momento.
-
----
-
 ## Comparativa arquitectónica con RDS Multi-AZ
 
 | Aspecto | RDS for MySQL Multi-AZ | Aurora MySQL |
@@ -128,6 +106,32 @@ Puede pasarse de Standard a I/O-Optimized una vez cada 30 días, y en sentido co
 | Conmutación por error | 1–2 minutos | Normalmente < 30 segundos |
 | Copia de seguridad | Instantánea EBS (breve impacto de E/S en Single-AZ) | Continua, sin impacto |
 | Crecimiento del almacenamiento | Aprovisionado / autoescalado | Automático, pago por uso |
+
+---
+
+## Para saber más
+
+Contenido **opcional** que amplía este apartado. No es necesario para las prácticas: despliega cada bloque si te interesa.
+
+??? info "Quórum de escritura y de lectura"
+
+    La elección de 4/6 y 3/6 no es arbitraria. Para que el sistema sea coherente, cualquier conjunto de lectura debe solaparse con cualquier conjunto de escritura (3 + 4 > 6), y dos escrituras no pueden ignorarse mutuamente (4 + 4 > 6). Con dos copias por zona, la pérdida de una zona completa deja **4 copias**, suficientes para seguir escribiendo.
+
+    | Situación | Copias disponibles | ¿Escritura? | ¿Datos íntegros? |
+    | --- | --- | --- | --- |
+    | Funcionamiento normal | 6 | Sí | Sí |
+    | Fallo de un disco | 5 | Sí | Sí |
+    | Caída de una zona de disponibilidad | 4 | Sí | Sí |
+    | Caída de una zona + un disco adicional | 3 | No, hasta reparar | Sí (puede reconstruirse) |
+
+??? info "Modelos de facturación del almacenamiento"
+
+    | Configuración | Qué se factura | Recomendado cuando |
+    | --- | --- | --- |
+    | **Aurora Standard** | Instancias + almacenamiento + **E/S** (por millón de peticiones) | El gasto en E/S es inferior al 25 % del total |
+    | **Aurora I/O-Optimized** | Instancias + almacenamiento (más caros), **sin coste por E/S** | El gasto en E/S supera el 25 % del total |
+
+    Puede pasarse de Standard a I/O-Optimized una vez cada 30 días, y en sentido contrario en cualquier momento.
 
 ---
 

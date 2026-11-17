@@ -98,7 +98,7 @@ Para elegir la región y comprobar qué bases de datos hay en ella:
 === "Consola AWS"
 
     1. Seleccionar la región en el **selector de regiones** de la esquina superior derecha de la consola (por ejemplo, **Europa (España) eu-south-2**).
-    2. **RDS → Bases de datos**: se listan solo las instancias y clústeres de esa región, con su **zona de disponibilidad** (columna *Región y zona de disponibilidad*).
+    2. **Aurora and RDS → Bases de datos**: se listan solo las instancias y clústeres de esa región, con su **zona de disponibilidad** (columna *Región y zona de disponibilidad*).
     3. **DynamoDB → Tablas**: se listan solo las tablas de esa región.
     4. Las zonas de disponibilidad de la región aparecen en **EC2 → Panel → Estado del servicio → Zonas** (*Zones*).
 

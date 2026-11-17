@@ -10,15 +10,7 @@ En entornos profesionales, una base de datos no debe considerarse únicamente co
 
 ## Opciones de supervisión en el asistente de creación
 
-Toda base de datos experimenta cambios continuos en su carga de trabajo: el número de usuarios conectados, el volumen de consultas, la utilización de memoria o la actividad del almacenamiento varían a lo largo del tiempo. Sin mecanismos de supervisión resulta imposible saber si el sistema funciona correctamente o por qué se degrada su rendimiento. La monitorización permite responder a preguntas como:
-
-- ¿Está la CPU trabajando al límite de su capacidad?
-- ¿Existe falta de memoria disponible?
-- ¿Se están produciendo cuellos de botella en el almacenamiento?
-- ¿Las consultas responden dentro de los tiempos esperados?
-- ¿Existen tendencias de crecimiento que requieran ampliar recursos?
-
-Al crear la instancia, el asistente solicita tres decisiones relacionadas con la supervisión. Su uso y su interpretación se desarrollan en el apartado [Monitorización del rendimiento y optimización](BD-Rendimiento.md), y las métricas de CloudWatch se describen una a una en la [Referencia de métricas de RDS](Supervision-RDS.md).
+La carga de una base de datos cambia continuamente; sin supervisión no es posible saber si el sistema funciona correctamente ni por qué se degrada su rendimiento. Al crear la instancia, el asistente solicita tres decisiones relacionadas con la supervisión. Su uso y su interpretación se desarrollan en el apartado [Monitorización del rendimiento y optimización](BD-Rendimiento.md), y las métricas de CloudWatch se describen una a una en la [Referencia de métricas de RDS](Supervision-RDS.md).
 
 | Opción | Qué activa | Valor en la práctica evaluable |
 | --- | --- | --- |
@@ -161,13 +153,7 @@ Su disponibilidad depende del motor y de la versión utilizada, así como de las
 
 ## Cifrado de la base de datos
 
-La protección de la información almacenada constituye otro aspecto fundamental de cualquier despliegue profesional.
-
-Amazon RDS permite **cifrar los datos almacenados** mediante claves gestionadas a través de AWS Key Management Service (KMS).
-
-El cifrado protege la información almacenada frente a accesos no autorizados y contribuye al cumplimiento de requisitos normativos relacionados con la protección de datos.
-
-La configuración de mecanismos de cifrado constituye una de las actividades fundamentales contempladas dentro de la administración segura de bases de datos en la nube.
+En **Configuración adicional → Cifrado** se activa el **cifrado en reposo** de la instancia y se elige la clave de KMS: la administrada por AWS (`aws/rds`) o una administrada por el cliente. Es una decisión de creación: una instancia sin cifrar **no puede cifrarse después** sin restaurar una copia cifrada. Su alcance y el uso de claves propias se explican en [Securización y control de acceso](RDS-Seguridad.md#5-cifrado-en-reposo) y en [Infraestructura como código](BD-IaC.md).
 
 ---
 
@@ -177,7 +163,7 @@ Las cuatro páginas de este apartado recorren el asistente de creación. El proc
 
 === "Consola AWS"
 
-    1. **RDS → Bases de datos → Crear base de datos** (*Create database*), con el método **Creación estándar** (*Standard create*).
+    1. **Aurora and RDS → Bases de datos → Crear base de datos** (*Create database*), con el método **Creación estándar** (*Standard create*).
     2. **Opciones del motor**: **MariaDB** y la versión del motor.
     3. **Plantillas**: **Desarrollo y pruebas** o **Capa gratuita** (*Free tier*) en el laboratorio.
     4. **Configuración**: identificador de la instancia (`mydb-server`), nombre del usuario maestro (`admin`) y **Administrado en AWS Secrets Manager** para la contraseña ([credenciales](Crear-RDS-01.md#gestion-de-credenciales-mediante-aws-secrets-manager)).

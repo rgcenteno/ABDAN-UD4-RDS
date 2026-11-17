@@ -1,5 +1,8 @@
 # Amazon RDS Proxy
 
+!!! info "Contenido de ampliación"
+    Esta página es **opcional**. Desarrolla contenidos que en el núcleo de la unidad solo se mencionan. No es necesaria para realizar las prácticas.
+
 ![image](imgs/RDS-Proxy-arquitectura.png)
 
 En el apartado de redes se presentó brevemente **Amazon RDS Proxy** como una capa intermedia que reutiliza conexiones. Este apartado profundiza en el problema que resuelve, su funcionamiento interno (agrupación, multiplexación y fijación de conexiones), su papel en la alta disponibilidad y en la seguridad, y los parámetros que el administrador debe configurar.
@@ -142,7 +145,7 @@ El proxy necesita además un **rol de IAM** que le permita leer los secretos (`s
 
 === "Consola AWS"
 
-    1. **RDS → Proxies → Crear proxy** (*Create proxy*).
+    1. **Aurora and RDS → Proxies → Crear proxy** (*Create proxy*).
     2. **Familia de motores** (*Engine family*): **MariaDB y MySQL**. **Identificador del proxy**: `mydb-proxy`.
     3. En **Configuración del grupo de destino**, elegir la **base de datos** (`mydb-server`) y el porcentaje de **conexiones máximas**.
     4. En **Autenticación**:
@@ -151,7 +154,6 @@ El proxy necesita además un **rol de IAM** que le permita leer los secretos (`s
         - **Tipo de autenticación de cliente**: En MySQL son dos (con otros motores habrá pequeñas variaciones):
             - **Contraseña Sha2 de almacenamiento en caché (caching_sha2_password)**. Es el plugin moderno y el predeterminado desde MySQL 8.0. Usa SHA-256 y guarda en caché las credenciales ya verificadas, así que las reconexiones son rápidas. Es más seguro.
             - **Contraseña nativa de MySQL (mysql_native_password)**. Es el plugin antiguo, basado en SHA-1. Está obsoleto desde MySQL 8.0.34, viene desactivado por defecto en 8.4 y se elimina en 9.0.
-        - **Autenticación de cliente**: contraseña de la base de datos o IAM.
     5. En **Conectividad**, marcar **Requerir seguridad de la capa de transporte** (*Require TLS*), elegir las **subredes** y el **grupo de seguridad de VPC** del proxy.
     6. Pulsar **Crear proxy**. El proxy está listo cuando su estado es **Disponible** y el destino aparece como **Disponible** en la pestaña de grupos de destino.
 
@@ -161,7 +163,7 @@ El proxy necesita además un **rol de IAM** que le permita leer los secretos (`s
     aws rds create-db-proxy \
       --db-proxy-name mydb-proxy \
       --engine-family MYSQL \
-      --auth '[{"AuthScheme":"SECRETS","SecretArn":"arn:aws:secretsmanager:us-east-1:111122223333:secret:mydb-XXXX","IAMAuth":"DISABLED"}]' \
+      --auth '[{"AuthScheme":"SECRETS","SecretArn":"arn:aws:secretsmanager:us-east-1:111122223333:secret:mydb-XXXX","IAMAuth":"DISABLED","ClientPasswordAuthType":"MYSQL_CACHING_SHA2_PASSWORD"}]' \
       --role-arn arn:aws:iam::111122223333:role/LabRole \
       --vpc-subnet-ids subnet-aaaa subnet-bbbb \
       --vpc-security-group-ids sg-proxy \
