@@ -118,27 +118,33 @@ En cambio, la consola (con la opción *Ver DynamoDB JSON* desactivada) y las int
 
 ## Definición de la clave al crear una tabla
 
-### Desde la consola
+=== "Consola AWS"
 
-En **DynamoDB → Tablas → Crear tabla** se solicitan:
+    1. **DynamoDB → Tablas → Crear tabla** (*Create table*).
+    2. **Nombre de la tabla**: `Productos` (entre 3 y 255 caracteres: `A-Z`, `a-z`, `0-9`, `_`, `-`, `.`).
+    3. **Clave de partición** (*Partition key*): `categoria`, tipo **Cadena**.
+    4. **Clave de ordenación – opcional** (*Sort key*): `id_producto`, tipo **Cadena**. Si se deja vacía, la tabla tendrá clave simple.
+    5. En **Configuración de la tabla**, elegir **Personalizar configuración** y, en **Configuración de capacidad de lectura/escritura**, **Bajo demanda** (*On-demand*). Con **Configuración predeterminada** la tabla se crea también bajo demanda.
+    6. Pulsar **Crear tabla**. La tabla está lista cuando su estado pasa a **Activo**.
 
-1. **Nombre de la tabla**: entre 3 y 255 caracteres (`A-Z`, `a-z`, `0-9`, `_`, `-`, `.`).
-2. **Clave de partición**: nombre del atributo y tipo (*Cadena*, *Número* o *Binario*).
-3. **Clave de ordenación – opcional**: nombre y tipo. Si se deja vacía, la tabla tendrá clave simple.
+=== "AWS CLI"
 
-### Desde la AWS CLI
+    ```bash
+    aws dynamodb create-table \
+      --table-name Productos \
+      --attribute-definitions \
+          AttributeName=categoria,AttributeType=S \
+          AttributeName=id_producto,AttributeType=S \
+      --key-schema \
+          AttributeName=categoria,KeyType=HASH \
+          AttributeName=id_producto,KeyType=RANGE \
+      --billing-mode PAY_PER_REQUEST
 
-```bash
-aws dynamodb create-table \
-  --table-name Productos \
-  --attribute-definitions \
-      AttributeName=categoria,AttributeType=S \
-      AttributeName=id_producto,AttributeType=S \
-  --key-schema \
-      AttributeName=categoria,KeyType=HASH \
-      AttributeName=id_producto,KeyType=RANGE \
-  --billing-mode PAY_PER_REQUEST
-```
+    aws dynamodb wait table-exists --table-name Productos
+    aws dynamodb describe-table --table-name Productos --query "Table.KeySchema"
+    ```
+
+En la AWS CLI:
 
 - `--attribute-definitions` declara el **tipo** (`S`, `N` o `B`) de los atributos que actúan como clave de la tabla o de sus índices. **Solo deben declararse esos atributos**: incluir aquí atributos ordinarios como `precio` produce un error de validación.
 - `--key-schema` indica el **papel** de cada atributo: `HASH` para la clave de partición y `RANGE` para la de ordenación.
@@ -159,13 +165,26 @@ La clave de partición **siempre** debe compararse por igualdad, porque se neces
 
 Ejemplos con la tabla `Productos`:
 
-```bash
-# Periféricos cuyo código empieza por "PE-"
---key-condition-expression "categoria = :c AND begins_with(id_producto, :p)"
+=== "Consola AWS"
 
-# Portátiles con código entre P-001 y P-005
---key-condition-expression "categoria = :c AND id_producto BETWEEN :desde AND :hasta"
-```
+    1. **DynamoDB → Explorar elementos** (*Explore items*), seleccionar la tabla `Productos`.
+    2. Elegir **Consulta** (*Query*) en lugar de **Examinar** (*Scan*).
+    3. En **categoria (Clave de partición)**, escribir el valor exacto (`Perifericos`).
+    4. En **id_producto (Clave de ordenación)**, elegir el operador (**Empieza por** con `PE-`, o **Entre** con `P-001` y `P-005`) y pulsar **Ejecutar**.
+
+=== "AWS CLI"
+
+    ```bash
+    # Periféricos cuyo código empieza por "PE-"
+    aws dynamodb query --table-name Productos \
+      --key-condition-expression "categoria = :c AND begins_with(id_producto, :p)" \
+      --expression-attribute-values '{":c":{"S":"Perifericos"},":p":{"S":"PE-"}}'
+
+    # Portátiles con código entre P-001 y P-005
+    aws dynamodb query --table-name Productos \
+      --key-condition-expression "categoria = :c AND id_producto BETWEEN :desde AND :hasta" \
+      --expression-attribute-values '{":c":{"S":"Portatiles"},":desde":{"S":"P-001"},":hasta":{"S":"P-005"}}'
+    ```
 
 ---
 

@@ -89,23 +89,38 @@ Ejemplo de SCP que limita el uso de RDS y DynamoDB a dos regiones europeas:
 
 La región no es una opción del asistente de creación de la base de datos, sino del **contexto** en el que se trabaja:
 
-- En la **consola**, la región activa se selecciona en el desplegable de la esquina superior derecha. La base de datos se crea en la región que esté seleccionada en ese momento, y **solo se ve en esa región**. Una base de datos que «ha desaparecido» de la consola suele estar en otra región.
-- En la **AWS CLI**, la región se toma de la configuración (`aws configure set region eu-south-2`), de la variable de entorno `AWS_REGION` o del parámetro `--region` de cada comando.
+- La base de datos se crea en la región activa en ese momento y **solo se ve en esa región**. Una base de datos que «ha desaparecido» de la consola suele estar en otra región.
 - La región forma parte del **punto de enlace** de la base de datos (`mi-base-datos.xxxx.eu-south-2.rds.amazonaws.com`) y de los **ARN** de sus recursos (`arn:aws:rds:eu-south-2:…`).
 - Los recursos relacionados (VPC, subredes, grupos de seguridad, claves de KMS) también son **regionales**: deben existir en la misma región que la base de datos.
 
-```bash
-# Región configurada por defecto
-aws configure get region
+Para elegir la región y comprobar qué bases de datos hay en ella:
 
-# Listar las instancias RDS de una región concreta
-aws rds describe-db-instances --region eu-south-2 \
-  --query "DBInstances[].[DBInstanceIdentifier,AvailabilityZone]" --output table
+=== "Consola AWS"
 
-# Zonas de disponibilidad de la región
-aws ec2 describe-availability-zones --region eu-south-2 \
-  --query "AvailabilityZones[].ZoneName"
-```
+    1. Seleccionar la región en el **selector de regiones** de la esquina superior derecha de la consola (por ejemplo, **Europa (España) eu-south-2**).
+    2. **RDS → Bases de datos**: se listan solo las instancias y clústeres de esa región, con su **zona de disponibilidad** (columna *Región y zona de disponibilidad*).
+    3. **DynamoDB → Tablas**: se listan solo las tablas de esa región.
+    4. Las zonas de disponibilidad de la región aparecen en **EC2 → Panel → Estado del servicio → Zonas** (*Zones*).
+
+=== "AWS CLI"
+
+    La región se toma de la configuración (`aws configure set region eu-south-2`), de la variable de entorno `AWS_REGION` o del parámetro `--region` de cada comando.
+
+    ```bash
+    # Región configurada por defecto
+    aws configure get region
+
+    # Listar las instancias RDS de una región concreta
+    aws rds describe-db-instances --region eu-south-2 \
+      --query "DBInstances[].[DBInstanceIdentifier,AvailabilityZone]" --output table
+
+    # Listar las tablas DynamoDB de esa región
+    aws dynamodb list-tables --region eu-south-2
+
+    # Zonas de disponibilidad de la región
+    aws ec2 describe-availability-zones --region eu-south-2 \
+      --query "AvailabilityZones[].ZoneName"
+    ```
 
 ---
 

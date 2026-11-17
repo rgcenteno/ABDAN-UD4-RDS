@@ -218,28 +218,38 @@ Observaciones sobre la plantilla:
 - `DeletionPolicy` protege los datos ante la eliminación de la pila: la instancia deja una instantánea final y la tabla se conserva.
 - El sangrado de YAML es significativo: un error de espacios invalida la plantilla.
 
-### Despliegue con la AWS CLI
+### Despliegue de la pila
 
-```bash
-# Validar la sintaxis
-aws cloudformation validate-template --template-body file://bd.yaml
+=== "Consola AWS"
 
-# Crear o actualizar la pila
-aws cloudformation deploy \
-  --stack-name mi-pila-bd \
-  --template-file bd.yaml \
-  --parameter-overrides \
-      SubredesBD=subnet-0aaa,subnet-0bbb \
-      GrupoSeguridadBD=sg-0ccc
+    1. **CloudFormation → Pilas → Crear pila → Con recursos nuevos (estándar)** (*With new resources (standard)*).
+    2. **Elegir una plantilla existente → Cargar un archivo de plantilla**, seleccionar `bd.yaml` y pulsar **Siguiente**. La consola valida la sintaxis al cargarla.
+    3. **Nombre de la pila**: `mi-pila-bd`. En **Parámetros**, elegir las subredes de `SubredesBD` y el grupo de seguridad de `GrupoSeguridadBD`. **Siguiente**.
+    4. En **Configurar opciones de pila**, dejar los valores predeterminados (en el Learner Lab no se indica ningún rol de servicio) y pulsar **Siguiente**.
+    5. Revisar y pulsar **Enviar** (*Submit*). La pestaña **Eventos** muestra el progreso y los errores; al terminar, el estado es `CREATE_COMPLETE` y la pestaña **Salidas** (*Outputs*) contiene los valores exportados.
 
-# Consultar las salidas
-aws cloudformation describe-stacks --stack-name mi-pila-bd \
-  --query "Stacks[0].Outputs" --output table
+=== "AWS CLI"
 
-# Ver el progreso o los errores
-aws cloudformation describe-stack-events --stack-name mi-pila-bd \
-  --query "StackEvents[].[LogicalResourceId,ResourceStatus,ResourceStatusReason]" --output table
-```
+    ```bash
+    # Validar la sintaxis
+    aws cloudformation validate-template --template-body file://bd.yaml
+
+    # Crear o actualizar la pila
+    aws cloudformation deploy \
+      --stack-name mi-pila-bd \
+      --template-file bd.yaml \
+      --parameter-overrides \
+          SubredesBD=subnet-0aaa,subnet-0bbb \
+          GrupoSeguridadBD=sg-0ccc
+
+    # Consultar las salidas
+    aws cloudformation describe-stacks --stack-name mi-pila-bd \
+      --query "Stacks[0].Outputs" --output table
+
+    # Ver el progreso o los errores
+    aws cloudformation describe-stack-events --stack-name mi-pila-bd \
+      --query "StackEvents[].[LogicalResourceId,ResourceStatus,ResourceStatusReason]" --output table
+    ```
 
 !!! info "Parámetros del despliegue"
     Los valores de `--parameter-overrides` deben sustituirse por los del propio entorno:
@@ -249,13 +259,36 @@ aws cloudformation describe-stack-events --stack-name mi-pila-bd \
 
     Los identificadores reales pueden consultarse en la consola de VPC o con `aws ec2 describe-subnets` y `aws ec2 describe-security-groups`.
 
-Para modificar la infraestructura (por ejemplo, cambiar la clase de la instancia) **se edita la plantilla** y se vuelve a ejecutar `deploy`. CloudFormation crea un conjunto de cambios, calcula la diferencia y aplica solo lo necesario. Con `--no-execute-changeset` se puede revisar el conjunto de cambios antes de ejecutarlo.
+Para modificar la infraestructura (por ejemplo, cambiar la clase de la instancia) **se edita la plantilla** y se actualiza la pila. CloudFormation crea un conjunto de cambios, calcula la diferencia y aplica solo lo necesario.
+
+=== "Consola AWS"
+
+    1. **CloudFormation → Pilas**, seleccionar `mi-pila-bd` y pulsar **Actualizar** (*Update*).
+    2. **Reemplazar la plantilla existente → Cargar un archivo de plantilla**, seleccionar la nueva versión de `bd.yaml` y avanzar con **Siguiente**.
+    3. En la página de revisión, la **vista previa de cambios** muestra qué recursos se modifican o reemplazan. Pulsar **Enviar**.
+
+=== "AWS CLI"
+
+    ```bash
+    # Se vuelve a ejecutar deploy; con --no-execute-changeset solo se crea el conjunto de cambios para revisarlo
+    aws cloudformation deploy --stack-name mi-pila-bd --template-file bd.yaml \
+      --parameter-overrides SubredesBD=subnet-0aaa,subnet-0bbb GrupoSeguridadBD=sg-0ccc \
+      --no-execute-changeset
+    ```
 
 Para eliminar todos los recursos:
 
-```bash
-aws cloudformation delete-stack --stack-name mi-pila-bd
-```
+=== "Consola AWS"
+
+    1. **CloudFormation → Pilas**, seleccionar `mi-pila-bd`.
+    2. Pulsar **Eliminar** (*Delete*) y confirmar. La pila pasa a `DELETE_IN_PROGRESS` y desaparece de la lista al terminar.
+
+=== "AWS CLI"
+
+    ```bash
+    aws cloudformation delete-stack --stack-name mi-pila-bd
+    aws cloudformation wait stack-delete-complete --stack-name mi-pila-bd
+    ```
 
 Si la protección contra eliminación está activada, la eliminación de la pila fallará hasta que se cambie el parámetro a `"false"` y se actualice la pila: es precisamente el comportamiento que se busca en producción.
 

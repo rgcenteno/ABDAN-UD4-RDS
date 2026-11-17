@@ -17,7 +17,7 @@ aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.3.0/24 --availability-
 aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.4.0/24 --availability-zone us-east-1b
 
 # Grupo de subredes de base de datos
-aws rds create-db-subnet-group --db-subnet-group-name tienda-subredes \
+aws rds create-db-subnet-group --db-subnet-group-name mydb-subredes \
   --db-subnet-group-description "Subredes privadas BD" \
   --subnet-ids <subnet-a> <subnet-b>
 
@@ -41,7 +41,7 @@ aws rds create-db-instance \
   --allocated-storage 20 --max-allocated-storage 100 --storage-type gp3 \
   --storage-encrypted \
   --master-username admin --manage-master-user-password \
-  --db-subnet-group-name tienda-subredes \
+  --db-subnet-group-name mydb-subredes \
   --vpc-security-group-ids <sg-bd> \
   --no-publicly-accessible \
   --backup-retention-period 7
@@ -93,22 +93,22 @@ aws rds describe-events --source-identifier mydb-server \
 ### Grupos de parámetros
 
 ```bash
-aws rds create-db-parameter-group --db-parameter-group-name tienda-mysql84 \
-  --db-parameter-group-family mysql8.4 --description "Parametros de la tienda"
+aws rds create-db-parameter-group --db-parameter-group-name mydb-mysql84 \
+  --db-parameter-group-family mysql8.4 --description "Parametros de mydb"
 
-aws rds modify-db-parameter-group --db-parameter-group-name tienda-mysql84 \
+aws rds modify-db-parameter-group --db-parameter-group-name mydb-mysql84 \
   --parameters "ParameterName=require_secure_transport,ParameterValue=ON,ApplyMethod=immediate" \
                "ParameterName=slow_query_log,ParameterValue=1,ApplyMethod=immediate"
 
 aws rds modify-db-instance --db-instance-identifier mydb-server \
-  --db-parameter-group-name tienda-mysql84 --apply-immediately
+  --db-parameter-group-name mydb-mysql84 --apply-immediately
 ```
 
 ### Copias de seguridad y restauración
 
 ```bash
 aws rds create-db-snapshot --db-instance-identifier mydb-server \
-  --db-snapshot-identifier tienda-antes-cambio
+  --db-snapshot-identifier mydb-antes-cambio
 
 aws rds describe-db-snapshots --db-instance-identifier mydb-server \
   --query "DBSnapshots[].[DBSnapshotIdentifier,SnapshotCreateTime,Status]" --output table
@@ -122,18 +122,18 @@ aws rds restore-db-instance-to-point-in-time \
   --source-db-instance-identifier mydb-server \
   --target-db-instance-identifier mydb-restaurada \
   --restore-time 2026-11-10T09:45:00Z \
-  --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd>
+  --db-subnet-group-name mydb-subredes --vpc-security-group-ids <sg-bd>
 
 # Restaurar desde una instantánea
 aws rds restore-db-instance-from-db-snapshot \
   --db-instance-identifier mydb-desde-snap \
-  --db-snapshot-identifier tienda-antes-cambio \
-  --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd>
+  --db-snapshot-identifier mydb-antes-cambio \
+  --db-subnet-group-name mydb-subredes --vpc-security-group-ids <sg-bd>
 
 # Copiar una instantánea a otra región
 aws rds copy-db-snapshot --region us-west-2 --source-region us-east-1 \
-  --source-db-snapshot-identifier arn:aws:rds:us-east-1:<cuenta>:snapshot:tienda-antes-cambio \
-  --target-db-snapshot-identifier tienda-copia-oeste --kms-key-id <clave-en-us-west-2>
+  --source-db-snapshot-identifier arn:aws:rds:us-east-1:<cuenta>:snapshot:mydb-antes-cambio \
+  --target-db-snapshot-identifier mydb-copia-oeste --kms-key-id <clave-en-us-west-2>
 ```
 
 ### Eliminar
@@ -142,7 +142,7 @@ aws rds copy-db-snapshot --region us-west-2 --source-region us-east-1 \
 aws rds modify-db-instance --db-instance-identifier mydb-server \
   --no-deletion-protection --apply-immediately
 aws rds delete-db-instance --db-instance-identifier mydb-server \
-  --final-db-snapshot-identifier tienda-final          # o --skip-final-snapshot en laboratorios
+  --final-db-snapshot-identifier mydb-final          # o --skip-final-snapshot en laboratorios
 ```
 
 ### Registros
@@ -161,7 +161,7 @@ aws rds download-db-log-file-portion --db-instance-identifier mydb-server \
 # Clúster (almacenamiento) + instancia de escritura
 aws rds create-db-cluster --db-cluster-identifier mydb-aurora \
   --engine aurora-mysql --master-username admin --manage-master-user-password \
-  --db-subnet-group-name tienda-subredes --vpc-security-group-ids <sg-bd> \
+  --db-subnet-group-name mydb-subredes --vpc-security-group-ids <sg-bd> \
   --storage-encrypted
 
 aws rds create-db-instance --db-instance-identifier mydb-aurora-1 \
@@ -186,15 +186,15 @@ aws rds failover-db-cluster --db-cluster-identifier mydb-aurora
 ## RDS Proxy
 
 ```bash
-aws rds create-db-proxy --db-proxy-name tienda-proxy --engine-family MYSQL \
+aws rds create-db-proxy --db-proxy-name mydb-proxy --engine-family MYSQL \
   --auth '[{"AuthScheme":"SECRETS","SecretArn":"<arn-secreto>","IAMAuth":"DISABLED"}]' \
   --role-arn <arn-rol-proxy> --vpc-subnet-ids <subnet-a> <subnet-b> \
   --vpc-security-group-ids <sg-proxy> --require-tls
 
-aws rds register-db-proxy-targets --db-proxy-name tienda-proxy \
+aws rds register-db-proxy-targets --db-proxy-name mydb-proxy \
   --db-instance-identifiers mydb-server
 
-aws rds describe-db-proxies --db-proxy-name tienda-proxy \
+aws rds describe-db-proxies --db-proxy-name mydb-proxy \
   --query "DBProxies[0].[Status,Endpoint]" --output table
 ```
 

@@ -171,6 +171,63 @@ La configuración de mecanismos de cifrado constituye una de las actividades fun
 
 ---
 
+## Resumen del procedimiento
+
+Las cuatro páginas de este apartado recorren el asistente de creación. El procedimiento completo, con su equivalente en la AWS CLI, es el siguiente:
+
+=== "Consola AWS"
+
+    1. **RDS → Bases de datos → Crear base de datos** (*Create database*), con el método **Creación estándar** (*Standard create*).
+    2. **Opciones del motor**: **MariaDB** y la versión del motor.
+    3. **Plantillas**: **Desarrollo y pruebas** o **Capa gratuita** (*Free tier*) en el laboratorio.
+    4. **Configuración**: identificador de la instancia (`mydb-server`), nombre del usuario maestro (`admin`) y **Administrado en AWS Secrets Manager** para la contraseña ([credenciales](Crear-RDS-01.md#gestion-de-credenciales-mediante-aws-secrets-manager)).
+    5. **Configuración de la instancia**: clase `db.t3.micro` o `db.t4g.micro` ([familias de instancias](Crear-RDS-02.md#familias-de-instancias)).
+    6. **Almacenamiento**: **SSD de uso general (gp3)**, 20 GiB y, en **Configuración adicional de almacenamiento**, el **escalado automático** con un máximo de 100 GiB.
+    7. **Disponibilidad y durabilidad**: **Instancia de base de datos Single-AZ** en el laboratorio; **Multi-AZ** en producción.
+    8. **Conectividad**: **No conectarse a un recurso informático EC2**, la VPC, el **grupo de subredes de base de datos**, **Acceso público: No** y el **grupo de seguridad de VPC** de la base de datos ([redes y conectividad](Crear-RDS-03.md)).
+    9. **Autenticación de base de datos**: **Autenticación con contraseña**.
+    10. **Supervisión**: Database Insights estándar y las **exportaciones de registros** que se necesiten.
+    11. **Configuración adicional**: **nombre de base de datos inicial**, grupo de parámetros y de opciones, **copias de seguridad** (retención de 7 días), **cifrado** con la clave `aws/rds` o una propia, **mantenimiento** y **protección contra eliminación**.
+    12. Revisar los **costes mensuales estimados** y pulsar **Crear base de datos**. La instancia está lista cuando su estado es **Disponible**.
+
+=== "AWS CLI"
+
+    ```bash
+    # Versiones de MariaDB disponibles en la región
+    aws rds describe-db-engine-versions --engine mariadb \
+      --query "DBEngineVersions[].EngineVersion" --output text
+
+    # Grupo de subredes privadas en dos zonas de disponibilidad
+    aws rds create-db-subnet-group --db-subnet-group-name mydb-subredes \
+      --db-subnet-group-description "Subredes privadas BD" \
+      --subnet-ids subnet-0aaa subnet-0bbb
+
+    aws rds create-db-instance \
+      --db-instance-identifier mydb-server \
+      --engine mariadb \
+      --db-instance-class db.t3.micro \
+      --master-username admin --manage-master-user-password \
+      --allocated-storage 20 --max-allocated-storage 100 --storage-type gp3 \
+      --no-multi-az \
+      --db-subnet-group-name mydb-subredes \
+      --vpc-security-group-ids sg-0ccc \
+      --no-publicly-accessible \
+      --db-name tienda \
+      --backup-retention-period 7 \
+      --storage-encrypted \
+      --enable-cloudwatch-logs-exports error slowquery \
+      --deletion-protection
+
+    aws rds wait db-instance-available --db-instance-identifier mydb-server
+
+    aws rds describe-db-instances --db-instance-identifier mydb-server \
+      --query "DBInstances[0].[DBInstanceStatus,Endpoint.Address,MasterUserSecret.SecretArn]"
+    ```
+
+    Sin `--engine-version`, se utiliza la versión predeterminada de MariaDB en la región. Con `--deletion-protection` la instancia no podrá eliminarse hasta desactivar la protección (`modify-db-instance --no-deletion-protection`).
+
+---
+
 ## Conclusiones
 
 La fase de monitorización, protección y mantenimiento representa la última etapa del despliegue inicial de una instancia MariaDB en Amazon RDS, pero marca el comienzo de su ciclo de vida operativo.

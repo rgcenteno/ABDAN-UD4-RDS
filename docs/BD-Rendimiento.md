@@ -46,16 +46,29 @@ El registro de consultas lentas guarda las sentencias que superan un tiempo de e
 | MySQL / MariaDB | `slow_query_log = 1`, `long_query_time = 1` (segundos), `log_output = FILE` |
 | PostgreSQL | `log_min_duration_statement = 1000` (milisegundos) |
 
-```bash
-aws rds modify-db-parameter-group --db-parameter-group-name tienda-mysql84 \
-  --parameters "ParameterName=slow_query_log,ParameterValue=1,ApplyMethod=immediate" \
-               "ParameterName=long_query_time,ParameterValue=1,ApplyMethod=immediate"
+=== "Consola AWS"
 
-aws rds modify-db-instance --db-instance-identifier tienda-db-server \
-  --cloudwatch-logs-export-configuration '{"EnableLogTypes":["slowquery"]}'
-```
+    1. **RDS → Grupos de parámetros**, seleccionar el grupo personalizado de la instancia (`mydb-mysql84`, véase [Ciclo de vida](BD-CicloVida.md)) → **Editar**.
+    2. Asignar `slow_query_log = 1` y `long_query_time = 1` y pulsar **Guardar cambios**.
+    3. **RDS → Bases de datos → `mydb-server` → Modificar**. En **Configuración adicional → Exportaciones de registros** (*Log exports*), marcar **Registro de consultas lentas** (*Slow query log*).
+    4. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
 
-Una vez en CloudWatch Logs, **Logs Insights** permite consultar los registros. Por ejemplo, las consultas lentas más frecuentes de la última hora:
+=== "AWS CLI"
+
+    ```bash
+    aws rds modify-db-parameter-group --db-parameter-group-name mydb-mysql84 \
+      --parameters "ParameterName=slow_query_log,ParameterValue=1,ApplyMethod=immediate" \
+                   "ParameterName=long_query_time,ParameterValue=1,ApplyMethod=immediate"
+
+    aws rds modify-db-instance --db-instance-identifier mydb-server \
+      --cloudwatch-logs-export-configuration '{"EnableLogTypes":["slowquery"]}' \
+      --apply-immediately
+
+    aws rds describe-db-instances --db-instance-identifier mydb-server \
+      --query "DBInstances[0].EnabledCloudwatchLogsExports"
+    ```
+
+Una vez en CloudWatch Logs (grupo de registros `/aws/rds/instance/mydb-server/slowquery`), **Logs Insights** permite consultar los registros. Por ejemplo, las 20 consultas lentas más recientes de la última hora:
 
 ```text
 fields @timestamp, @message
@@ -63,6 +76,24 @@ fields @timestamp, @message
 | sort @timestamp desc
 | limit 20
 ```
+
+=== "Consola AWS"
+
+    1. **CloudWatch → Registros → Logs Insights**.
+    2. Seleccionar el grupo de registros `/aws/rds/instance/mydb-server/slowquery` y el intervalo (**1 h**).
+    3. Pegar la consulta y pulsar **Ejecutar consulta** (*Run query*).
+
+=== "AWS CLI"
+
+    ```bash
+    QID=$(aws logs start-query \
+      --log-group-name /aws/rds/instance/mydb-server/slowquery \
+      --start-time $(date -d '-1 hour' +%s) --end-time $(date +%s) \
+      --query-string 'fields @timestamp, @message | filter @message like /Query_time/ | sort @timestamp desc | limit 20' \
+      --query queryId --output text)
+
+    aws logs get-query-results --query-id "$QID"
+    ```
 
 ### Estadísticas de sentencias en el motor
 
@@ -130,14 +161,27 @@ El número de filas examinadas se reduce drásticamente. `EXPLAIN ANALYZE` (MySQ
 
 ### Alarmas
 
-```bash
-aws cloudwatch put-metric-alarm --alarm-name tienda-db-cpu-alta \
-  --namespace AWS/RDS --metric-name CPUUtilization \
-  --dimensions Name=DBInstanceIdentifier,Value=tienda-db-server \
-  --statistic Average --period 300 --evaluation-periods 3 \
-  --threshold 80 --comparison-operator GreaterThanThreshold \
-  --alarm-actions arn:aws:sns:us-east-1:111122223333:avisos-bd
-```
+=== "Consola AWS"
+
+    1. **CloudWatch → Alarmas → Todas las alarmas → Crear alarma** (*Create alarm*).
+    2. **Seleccionar métrica → RDS → Por instancia de base de datos**, marcar `CPUUtilization` de `mydb-server` y pulsar **Seleccionar métrica**.
+    3. **Estadística**: Promedio; **Periodo**: 5 minutos. **Condiciones**: *Mayor que* `80`. En **Configuración adicional**, **Puntos de datos para la alarma**: 3 de 3.
+    4. En **Notificación**, elegir el tema de SNS `avisos-bd` (o crear uno nuevo con una dirección de correo).
+    5. Nombre de la alarma: `mydb-cpu-alta`. **Siguiente → Crear alarma**.
+
+=== "AWS CLI"
+
+    ```bash
+    aws cloudwatch put-metric-alarm --alarm-name mydb-cpu-alta \
+      --namespace AWS/RDS --metric-name CPUUtilization \
+      --dimensions Name=DBInstanceIdentifier,Value=mydb-server \
+      --statistic Average --period 300 --evaluation-periods 3 \
+      --threshold 80 --comparison-operator GreaterThanThreshold \
+      --alarm-actions arn:aws:sns:us-east-1:111122223333:avisos-bd
+
+    aws cloudwatch describe-alarms --alarm-names mydb-cpu-alta \
+      --query "MetricAlarms[0].StateValue"
+    ```
 
 La alarma se activa cuando la CPU media supera el 80 % durante tres periodos consecutivos de cinco minutos y envía una notificación a un tema de Amazon SNS.
 

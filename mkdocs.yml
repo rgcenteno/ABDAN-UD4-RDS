@@ -8,6 +8,7 @@ theme:
     - navigation.expand
     - content.code.copy
     - content.code.annotate
+    - content.tabs.link
 
   palette:
     - scheme: default
@@ -23,6 +24,7 @@ theme:
 markdown_extensions:
 
   - admonition
+  - pymdownx.details
   - attr_list
   - md_in_html
 
@@ -47,7 +49,7 @@ nav:
   - Amazon RDS y Aurora:
       - Visión general de Amazon RDS: "RDS-Introduccion.md"
       - Elección de la región y residencia de los datos: "BD-Region.md"
-      - Creación de sistema RDS:
+      - Creación de sistema RDS MariaDB:
           - Configuración inicial, credenciales: "Crear-RDS-01.md"
           - Capacidad de cómputo, almacenamiento y alta disponibilidad: "Crear-RDS-02.md"
           - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"

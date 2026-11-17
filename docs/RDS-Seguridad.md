@@ -57,14 +57,27 @@ Referenciar un grupo de seguridad tiene una ventaja importante: si se añaden o 
 Para que un administrador se conecte desde su equipo a una base de datos privada existen alternativas que no requieren abrir la base de datos a Internet:
 
 - **Instancia de salto (bastión)** en una subred pública, como la EC2 utilizada en las prácticas para importar el script SQL.
-- **Reenvío de puertos con AWS Systems Manager Session Manager**, que crea un túnel cifrado hasta la base de datos a través de una instancia gestionada **sin abrir ningún puerto de entrada** ni gestionar claves SSH:
+- **Reenvío de puertos con AWS Systems Manager Session Manager**, que crea un túnel cifrado hasta la base de datos a través de una instancia gestionada **sin abrir ningún puerto de entrada** ni gestionar claves SSH.
 
-```bash
-aws ssm start-session --target i-0123456789abcdef0 \
-  --document-name AWS-StartPortForwardingSessionToRemoteHost \
-  --parameters '{"host":["mibd.xxxx.us-east-1.rds.amazonaws.com"],"portNumber":["3306"],"localPortNumber":["13306"]}'
-# Después, desde el equipo local: mysql -h 127.0.0.1 -P 13306 -u admin -p
-```
+    En AWS, abrir el túnel:
+
+    === "Consola AWS"
+
+        La consola **no permite** el reenvío de puertos: **Systems Manager → Administrador de sesiones → Iniciar sesión** (*Session Manager → Start session*) solo abre un terminal en la instancia. El túnel se crea con la AWS CLI (con el *Session Manager plugin* instalado en el equipo local).
+
+    === "AWS CLI"
+
+        ```bash
+        aws ssm start-session --target i-0123456789abcdef0 \
+          --document-name AWS-StartPortForwardingSessionToRemoteHost \
+          --parameters '{"host":["mydb-server.xxxx.us-east-1.rds.amazonaws.com"],"portNumber":["3306"],"localPortNumber":["13306"]}'
+        ```
+
+    En el equipo local, con el túnel abierto:
+
+    ```bash
+    mysql -h 127.0.0.1 -P 13306 -u admin -p
+    ```
 
 - **VPN** de sitio a sitio o de cliente, o **AWS Direct Connect**, en entornos híbridos.
 
@@ -163,7 +176,23 @@ Con la autenticación de IAM, la aplicación **no utiliza contraseña**. En su l
 
 Pasos de configuración:
 
-**a) Activar la autenticación de IAM** en la instancia o el clúster (opción *Autenticación de contraseña y de IAM de la base de datos* o `--enable-iam-database-authentication`).
+**a) Activar la autenticación de IAM** en la instancia o el clúster:
+
+=== "Consola AWS"
+
+    1. **RDS → Bases de datos**, seleccionar la instancia (`mydb-server`) y pulsar **Modificar**.
+    2. En **Autenticación de base de datos** (*Database authentication*), elegir **Autenticación de contraseña y de IAM de la base de datos**.
+    3. **Continuar → Aplicar inmediatamente → Modificar instancia de base de datos**.
+
+=== "AWS CLI"
+
+    ```bash
+    aws rds modify-db-instance --db-instance-identifier mydb-server \
+      --enable-iam-database-authentication --apply-immediately
+
+    aws rds describe-db-instances --db-instance-identifier mydb-server \
+      --query "DBInstances[0].[IAMDatabaseAuthenticationEnabled,DbiResourceId]"
+    ```
 
 **b) Crear el usuario en el motor** indicando que se autentica con IAM:
 
@@ -178,7 +207,7 @@ GRANT rds_iam TO app_user;
 GRANT CONNECT ON DATABASE tienda TO app_user;
 ```
 
-**c) Conceder al rol de IAM** el permiso `rds-db:connect` sobre ese usuario. El recurso incluye el **identificador de recurso** de la instancia (`db-…`) o del clúster (`cluster-…`), que se consulta en la pestaña *Configuración*:
+**c) Conceder al rol de IAM** el permiso `rds-db:connect` sobre ese usuario. El recurso incluye el **identificador de recurso** de la instancia (`db-…`) o del clúster (`cluster-…`), que se consulta en la pestaña **Configuración** (*Configuration*) de la instancia o con `DbiResourceId` en la AWS CLI:
 
 ```json
 {
@@ -193,14 +222,32 @@ GRANT CONNECT ON DATABASE tienda TO app_user;
 }
 ```
 
-**d) Generar el token y conectar**:
+=== "Consola AWS"
+
+    1. **IAM → Roles**, seleccionar el rol de la aplicación.
+    2. **Agregar permisos → Crear política insertada** (*Create inline policy*), pestaña **JSON**, pegar la política y pulsar **Siguiente**.
+    3. Indicar un nombre (`rds-connect-app-user`) y pulsar **Crear política**.
+
+=== "AWS CLI"
+
+    ```bash
+    aws iam put-role-policy --role-name RolAplicacion \
+      --policy-name rds-connect-app-user --policy-document file://rds-connect.json
+
+    aws iam get-role-policy --role-name RolAplicacion --policy-name rds-connect-app-user
+    ```
+
+!!! warning "Autenticación de IAM en el Learner Lab"
+    En el Learner Lab no se pueden crear roles ni modificar sus políticas, de modo que este paso no puede reproducirse: se trabaja siempre con **`LabRole`** (perfil `LabInstanceProfile`), cuyos permisos son amplios. Una política que **permite** `rds-db:connect` solo para `app_user` **no restringe** a una identidad que ya tiene permisos más amplios, porque basta con que una política lo permita. En una cuenta real, para limitarla haría falta, además, un **`Deny` explícito**. En el laboratorio, la restricción efectiva queda en el motor: qué usuarios se crean con `AWSAuthenticationPlugin` (o `rds_iam`) y qué privilegios se les conceden con `GRANT`.
+
+**d) Generar el token y conectar** desde la instancia o el equipo cliente (la consola no genera tokens):
 
 ```bash
 TOKEN=$(aws rds generate-db-auth-token \
-  --hostname mibd.xxxx.us-east-1.rds.amazonaws.com --port 3306 \
+  --hostname mydb-server.xxxx.us-east-1.rds.amazonaws.com --port 3306 \
   --username app_user --region us-east-1)
 
-mysql -h mibd.xxxx.us-east-1.rds.amazonaws.com -P 3306 -u app_user \
+mysql -h mydb-server.xxxx.us-east-1.rds.amazonaws.com -P 3306 -u app_user \
   --password="$TOKEN" --enable-cleartext-plugin \
   --ssl-mode=VERIFY_IDENTITY --ssl-ca=global-bundle.pem
 ```
@@ -310,7 +357,7 @@ Oracle y SQL Server admiten, además, **cifrado transparente de datos (TDE)** a 
 
 ## 6. Cifrado en tránsito
 
-Las conexiones entre las aplicaciones y la base de datos deben cifrarse con **TLS** y, preferiblemente, **verificar la identidad del servidor**. RDS firma los certificados de cada instancia con su propia autoridad de certificación (por ejemplo, `rds-ca-rsa2048-g1`), y AWS publica el paquete de certificados raíz `global-bundle.pem` que los clientes deben utilizar para la verificación, como se hizo en la práctica evaluable.
+Las conexiones entre las aplicaciones y la base de datos deben cifrarse con **TLS** y, preferiblemente, **verificar la identidad del servidor**. RDS firma los certificados de cada instancia con su propia autoridad de certificación (por ejemplo, `rds-ca-rsa2048-g1`), y AWS publica el paquete de certificados raíz `global-bundle.pem` que los clientes deben utilizar para la verificación, como se hizo en la [práctica evaluable](practica-rds-dynamodb-sesiones.md#paso-8-importacion-de-la-base-de-datos-tienda-en-amazon-rds).
 
 ### Exigir TLS en el servidor
 

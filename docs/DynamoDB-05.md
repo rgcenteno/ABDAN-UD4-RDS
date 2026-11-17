@@ -110,7 +110,7 @@ Obsérvese que el recurso `table/Productos/index/*` es necesario para poder ejec
 
 ## Políticas basadas en recursos en la tabla
 
-Desde marzo de 2024, DynamoDB permite asociar **políticas basadas en recursos** a tablas, índices y *streams*. La política de una tabla se aplica también a sus índices. Se gestionan desde la consola en **DynamoDB → Tablas → *tabla* → pestaña Permisos → Política de la tabla basada en recursos**, o con las operaciones `PutResourcePolicy`, `GetResourcePolicy` y `DeleteResourcePolicy`. Su tamaño máximo es de **20 KB**.
+Desde marzo de 2024, DynamoDB permite asociar **políticas basadas en recursos** a tablas, índices y *streams*. La política de una tabla se aplica también a sus índices. Se gestionan desde la pestaña **Permisos** de la tabla en la consola, o con las operaciones `PutResourcePolicy`, `GetResourcePolicy` y `DeleteResourcePolicy` (véanse las pestañas del ejemplo siguiente). Su tamaño máximo es de **20 KB**.
 
 Estas políticas presentan dos ventajas fundamentales frente a las basadas en identidad:
 
@@ -153,6 +153,25 @@ Supóngase que la tabla `Productos` solo debe ser accesible por el rol de la apl
   ]
 }
 ```
+
+Para asociar la política a la tabla:
+
+=== "Consola AWS"
+
+    1. **DynamoDB → Tablas**, seleccionar `Productos`.
+    2. Pestaña **Permisos** (*Permissions*); en **Política basada en recursos para la tabla**, pulsar **Crear política de tabla** (o **Editar** si ya existe una).
+    3. Pegar el documento JSON en el editor y pulsar **Crear política** (o **Guardar cambios**). Si la política concediera acceso público, el bloqueo del acceso público la rechaza con un error (véase más abajo).
+
+=== "AWS CLI"
+
+    ```bash
+    aws dynamodb put-resource-policy \
+      --resource-arn arn:aws:dynamodb:us-east-1:111122223333:table/Productos \
+      --policy file://politica-productos.json
+
+    aws dynamodb get-resource-policy \
+      --resource-arn arn:aws:dynamodb:us-east-1:111122223333:table/Productos
+    ```
 
 Análisis de la política:
 
@@ -221,7 +240,7 @@ DynamoDB admite dos tipos de punto de enlace.
 Ambos tipos pueden coexistir en la misma VPC: un diseño habitual consiste en usar el punto de enlace **Gateway** para las aplicaciones de la VPC y el de tipo **Interface** solo para los clientes locales.
 
 !!! note "¿Por qué se usa un punto de enlace de tipo interfaz en las prácticas?"
-    Como se indica en la práctica evaluable, en un entorno real sin requisitos híbridos lo más adecuado sería un punto de enlace de tipo **Gateway**, por ser gratuito y transparente para la aplicación. En las prácticas se utiliza el de tipo **Interface** porque hace **visible** cuándo se usa el punto de enlace (al configurar `--endpoint-url`) y cuándo no, lo que facilita comprobar el efecto de las políticas.
+    Como se indica en la [práctica evaluable](practica-rds-dynamodb-sesiones.md), en un entorno real sin requisitos híbridos lo más adecuado sería un punto de enlace de tipo **Gateway**, por ser gratuito y transparente para la aplicación. En las prácticas se utiliza el de tipo **Interface** porque hace **visible** cuándo se usa el punto de enlace (al configurar `--endpoint-url`) y cuándo no, lo que facilita comprobar el efecto de las políticas.
 
 ### El punto de enlace por sí solo no impide el acceso público
 
@@ -270,8 +289,8 @@ Esta condición funciona tanto con puntos de enlace de tipo Gateway como de tipo
 
 Consecuencias que deben tenerse en cuenta al aplicar esta política:
 
-- La **consola web** y **CloudShell** dejan de poder consultar los elementos, porque sus peticiones no llegan por el punto de enlace (así se comprobó en la tarea 6 de la práctica). Las operaciones de administración siguen funcionando porque no se han denegado.
-- Una aplicación que **olvide** configurar el punto de enlace recibirá un error `AccessDeniedException … with an explicit deny in a resource-based policy`, como el que se muestra en el paso 12 de la práctica evaluable.
+- La **consola web** y **CloudShell** dejan de poder consultar los elementos, porque sus peticiones no llegan por el punto de enlace (así se comprobó en la tarea 6 de la [práctica de DynamoDB](Practica-DynamoDB.md)). Las operaciones de administración siguen funcionando porque no se han denegado.
+- Una aplicación que **olvide** configurar el punto de enlace recibirá un error `AccessDeniedException … with an explicit deny in a resource-based policy`, como el que se muestra en el [paso 12 de la práctica evaluable](practica-rds-dynamodb-sesiones.md#paso-12-obligar-a-que-la-conexion-a-dynamodb-se-haga-desde-el-endpoint).
 - Si otros servicios de AWS deben acceder a la tabla en nombre del cliente (por ejemplo, en tablas globales o integraciones), es necesario revisar la documentación de buenas prácticas y prever excepciones.
 
 ### Combinar condiciones: quién **y** desde dónde
@@ -315,6 +334,24 @@ Además de la política de la tabla, cada punto de enlace admite su propia **pol
   ]
 }
 ```
+
+Para cambiar la política del punto de enlace:
+
+=== "Consola AWS"
+
+    1. **VPC → Puntos de enlace** (*Endpoints*), seleccionar el punto de enlace de DynamoDB.
+    2. Pestaña **Política** → **Editar política**.
+    3. Elegir **Personalizado** (*Custom*), pegar el documento JSON y pulsar **Guardar**.
+
+=== "AWS CLI"
+
+    ```bash
+    aws ec2 modify-vpc-endpoint --vpc-endpoint-id vpce-0123456789abcdef0 \
+      --policy-document file://politica-endpoint.json
+
+    aws ec2 describe-vpc-endpoints --vpc-endpoint-ids vpce-0123456789abcdef0 \
+      --query "VpcEndpoints[0].PolicyDocument" --output text
+    ```
 
 La política del punto de enlace y la política de la tabla son complementarias: la primera protege **la red** (qué puede salir de la VPC), la segunda protege **el dato** (por dónde y quién puede entrar a la tabla).
 

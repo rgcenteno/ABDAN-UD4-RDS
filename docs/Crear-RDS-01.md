@@ -4,9 +4,13 @@
 
 Amazon Relational Database Service (Amazon RDS) es el servicio gestionado de bases de datos relacionales de AWS. Su objetivo es simplificar las tareas habituales de administración, eliminando la necesidad de gestionar directamente servidores, almacenamiento, actualizaciones del sistema operativo o mecanismos de alta disponibilidad.
 
-Durante la creación de una instancia MariaDB, AWS solicita una serie de configuraciones que condicionarán aspectos fundamentales del servicio, como el rendimiento, la seguridad, la disponibilidad, la escalabilidad o el coste económico. Comprender el impacto de estas decisiones resulta esencial para diseñar infraestructuras de datos que respondan adecuadamente a los requisitos funcionales y no funcionales de una organización.
+Durante la creación de una instancia, AWS solicita una serie de configuraciones que condicionarán aspectos fundamentales del servicio, como el rendimiento, la seguridad, la disponibilidad, la escalabilidad o el coste económico. Comprender el impacto de estas decisiones resulta esencial para diseñar infraestructuras de datos que respondan adecuadamente a los requisitos funcionales y no funcionales de una organización.
 
 La administración de bases de datos en la nube implica precisamente la selección y configuración de estos componentes, prestando especial atención a factores relacionados con el acceso, el cifrado, la monitorización, la replicación y la recuperación de la información.
+
+!!! info
+
+    Para este tutorial desplegaremos una instancia RDS MariaDB. El uso de un motor diferente puede suponer pequeñas diferencias en las opciones que nos proporcionará la consola AWS.
 
 ---
 
