@@ -1,11 +1,8 @@
 # Amazon RDS Proxy
 
-!!! info "Contenido de ampliación"
-    Esta página es **opcional**. Desarrolla contenidos que en el núcleo de la unidad solo se mencionan. No es necesaria para realizar las prácticas.
-
 ![image](imgs/RDS-Proxy-arquitectura.png)
 
-En el apartado de redes se presentó brevemente **Amazon RDS Proxy** como una capa intermedia que reutiliza conexiones. Este apartado profundiza en el problema que resuelve, su funcionamiento interno (agrupación, multiplexación y fijación de conexiones), su papel en la alta disponibilidad y en la seguridad, y los parámetros que el administrador debe configurar.
+En el apartado de redes se presentó brevemente **Amazon RDS Proxy** como una capa intermedia que reutiliza conexiones. Este apartado explica el problema que resuelve, su funcionamiento (agrupación, multiplexación y fijación de conexiones) y su papel en la alta disponibilidad y en la seguridad. También se indica en qué escenarios conviene utilizarlo. Los parámetros de configuración, la creación del proxy y su supervisión se recogen en el apartado final **Para saber más**.
 
 ---
 
@@ -104,7 +101,7 @@ Por defecto, el punto de enlace del proxy envía todo el tráfico a la instancia
 
 ## RDS Proxy y la seguridad
 
-Además de su función de rendimiento, RDS Proxy es una pieza de seguridad, como se adelantó en el apartado [Securización y control de acceso](RDS-Seguridad.md#rds-proxy-como-punto-de-control):
+Además de su función de rendimiento, RDS Proxy es una pieza de seguridad, como se adelantó en el apartado anterior, [Securización y control de acceso](RDS-Seguridad.md#rds-proxy-como-punto-de-control):
 
 | Capacidad                             | Descripción                                                                                                                                                                  |
 | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -128,78 +125,6 @@ El proxy necesita además un **rol de IAM** que le permita leer los secretos (`s
 
 ---
 
-## Parámetros de configuración principales
-
-| Parámetro                                                      | Valor predeterminado     | Significado                                                                                                                                                          |
-| -------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Conexiones máximas** (`MaxConnectionsPercent`)               | 100 %                    | Porcentaje de `max_connections` de la base de datos que el proxy puede utilizar. Conviene reducirlo si otras aplicaciones o administradores se conectan directamente |
-| **Conexiones inactivas máximas** (`MaxIdleConnectionsPercent`) | Proporcional al anterior | Conexiones que el proxy mantiene abiertas sin uso para atender picos                                                                                                 |
-| **Tiempo de espera de préstamo** (`ConnectionBorrowTimeout`)   | 120 segundos             | Tiempo que una petición espera en cola una conexión libre antes de fallar                                                                                            |
-| **Tiempo de inactividad del cliente** (`IdleClientTimeout`)    | 30 minutos               | Tiempo tras el que el proxy cierra una conexión de cliente sin actividad                                                                                             |
-| **Consulta de inicialización** (`InitQuery`)                   | Vacía                    | Sentencias `SET` que se ejecutan al abrir cada conexión con la base de datos                                                                                         |
-| **Filtros de fijación de sesión**                              | Ninguno                  | Excepciones a la fijación (solo MySQL y MariaDB)                                                                                                                     |
-| **Exigir TLS**                                                 | Desactivado              | Rechaza conexiones de clientes sin cifrar                                                                                                                            |
-| **Autenticación IAM**                                          | Desactivada              | Exige tokens de IAM a los clientes                                                                                                                                   |
-
-### Creación del proxy
-
-=== "Consola AWS"
-
-    1. **Aurora and RDS → Proxies → Crear proxy** (*Create proxy*).
-    2. **Familia de motores** (*Engine family*): **MariaDB y MySQL**. **Identificador del proxy**: `mydb-proxy`.
-    3. En **Configuración del grupo de destino**, elegir la **base de datos** (`mydb-server`) y el porcentaje de **conexiones máximas**.
-    4. En **Autenticación**:
-        - **Rol de IAM**: el proxy necesita un rol para leer el secreto. En el Learner Lab no se pueden crear roles, por lo que se elige el rol existente **`LabRole`** (si el laboratorio lo permite).
-        - **Secretos de Secrets Manager**: el secreto con las credenciales de la base de datos.
-        - **Tipo de autenticación de cliente**: En MySQL son dos (con otros motores habrá pequeñas variaciones):
-            - **Contraseña Sha2 de almacenamiento en caché (caching_sha2_password)**. Es el plugin moderno y el predeterminado desde MySQL 8.0. Usa SHA-256 y guarda en caché las credenciales ya verificadas, así que las reconexiones son rápidas. Es más seguro.
-            - **Contraseña nativa de MySQL (mysql_native_password)**. Es el plugin antiguo, basado en SHA-1. Está obsoleto desde MySQL 8.0.34, viene desactivado por defecto en 8.4 y se elimina en 9.0.
-    5. En **Conectividad**, marcar **Requerir seguridad de la capa de transporte** (*Require TLS*), elegir las **subredes** y el **grupo de seguridad de VPC** del proxy.
-    6. Pulsar **Crear proxy**. El proxy está listo cuando su estado es **Disponible** y el destino aparece como **Disponible** en la pestaña de grupos de destino.
-
-=== "AWS CLI"
-
-    ```bash
-    aws rds create-db-proxy \
-      --db-proxy-name mydb-proxy \
-      --engine-family MYSQL \
-      --auth '[{"AuthScheme":"SECRETS","SecretArn":"arn:aws:secretsmanager:us-east-1:111122223333:secret:mydb-XXXX","IAMAuth":"DISABLED","ClientPasswordAuthType":"MYSQL_CACHING_SHA2_PASSWORD"}]' \
-      --role-arn arn:aws:iam::111122223333:role/LabRole \
-      --vpc-subnet-ids subnet-aaaa subnet-bbbb \
-      --vpc-security-group-ids sg-proxy \
-      --require-tls
-    
-    aws rds register-db-proxy-targets \
-      --db-proxy-name mydb-proxy \
-      --db-instance-identifiers mydb-server
-    
-    # Estado del proxy y de sus destinos
-    aws rds describe-db-proxies --db-proxy-name mydb-proxy \
-      --query "DBProxies[0].[Status,Endpoint]"
-    aws rds describe-db-proxy-targets --db-proxy-name mydb-proxy \
-      --query "Targets[].[RdsResourceId,TargetHealth.State]"
-    ```
-
-Una vez disponible, la aplicación solo cambia el nombre del servidor. En la [práctica evaluable](practica-rds-dynamodb-sesiones.md#paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales), la variable con el punto de enlace de RDS pasaría a contener `mydb-proxy.proxy-xxxx.us-east-1.rds.amazonaws.com`.
-
----
-
-## Supervisión
-
-RDS Proxy publica métricas en CloudWatch que permiten comprobar si está cumpliendo su función:
-
-| Métrica                                     | Qué indica                                                         |
-| ------------------------------------------- | ------------------------------------------------------------------ |
-| `ClientConnections`                         | Conexiones de clientes abiertas con el proxy                       |
-| `DatabaseConnections`                       | Conexiones reales del proxy con la base de datos                   |
-| `DatabaseConnectionsCurrentlySessionPinned` | Conexiones fijadas: si es alta, la multiplexación no es efectiva   |
-| `DatabaseConnectionsBorrowLatency`          | Tiempo que tardan las peticiones en obtener una conexión del grupo |
-| `QueryRequests`                             | Consultas recibidas por el proxy                                   |
-
-Una relación elevada entre `ClientConnections` y `DatabaseConnections` indica que la multiplexación funciona; si ambas cifras son similares, conviene revisar las causas de fijación.
-
----
-
 ## Cuándo utilizar RDS Proxy
 
 | Escenario                                                                                     | ¿RDS Proxy?                      |
@@ -214,6 +139,80 @@ Una relación elevada entre `ClientConnections` y `DatabaseConnections` indica q
 
 !!! note "Coste"
     RDS Proxy se factura por hora en función de la **capacidad de la base de datos de destino** (vCPU de las instancias o ACU en Aurora Serverless), con independencia del número de conexiones. Cada punto de enlace adicional implica además un punto de enlace de AWS PrivateLink con su propio coste. En entornos formativos conviene eliminarlo al terminar las prácticas.
+
+---
+
+## Para saber más
+
+Los bloques siguientes no son necesarios para las prácticas. Recogen la configuración detallada del proxy, su creación paso a paso y las métricas para supervisarlo.
+
+??? info "Parámetros de configuración principales"
+
+    | Parámetro                                                      | Valor predeterminado     | Significado                                                                                                                                                          |
+    | -------------------------------------------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | **Conexiones máximas** (`MaxConnectionsPercent`)               | 100 %                    | Porcentaje de `max_connections` de la base de datos que el proxy puede utilizar. Conviene reducirlo si otras aplicaciones o administradores se conectan directamente |
+    | **Conexiones inactivas máximas** (`MaxIdleConnectionsPercent`) | Proporcional al anterior | Conexiones que el proxy mantiene abiertas sin uso para atender picos                                                                                                 |
+    | **Tiempo de espera de préstamo** (`ConnectionBorrowTimeout`)   | 120 segundos             | Tiempo que una petición espera en cola una conexión libre antes de fallar                                                                                            |
+    | **Tiempo de inactividad del cliente** (`IdleClientTimeout`)    | 30 minutos               | Tiempo tras el que el proxy cierra una conexión de cliente sin actividad                                                                                             |
+    | **Consulta de inicialización** (`InitQuery`)                   | Vacía                    | Sentencias `SET` que se ejecutan al abrir cada conexión con la base de datos                                                                                         |
+    | **Filtros de fijación de sesión**                              | Ninguno                  | Excepciones a la fijación (solo MySQL y MariaDB)                                                                                                                     |
+    | **Exigir TLS**                                                 | Desactivado              | Rechaza conexiones de clientes sin cifrar                                                                                                                            |
+    | **Autenticación IAM**                                          | Desactivada              | Exige tokens de IAM a los clientes                                                                                                                                   |
+
+??? info "Creación del proxy"
+
+    === "Consola AWS"
+
+        1. **Aurora and RDS → Proxies → Crear proxy** (*Create proxy*).
+        2. **Familia de motores** (*Engine family*): **MariaDB y MySQL**. **Identificador del proxy**: `mydb-proxy`.
+        3. En **Configuración del grupo de destino**, elegir la **base de datos** (`mydb-server`) y el porcentaje de **conexiones máximas**.
+        4. En **Autenticación**:
+            - **Rol de IAM**: el proxy necesita un rol para leer el secreto. En el Learner Lab no se pueden crear roles, por lo que se elige el rol existente **`LabRole`** (si el laboratorio lo permite).
+            - **Secretos de Secrets Manager**: el secreto con las credenciales de la base de datos.
+            - **Tipo de autenticación de cliente**: En MySQL son dos (con otros motores habrá pequeñas variaciones):
+                - **Contraseña Sha2 de almacenamiento en caché (caching_sha2_password)**. Es el plugin moderno y el predeterminado desde MySQL 8.0. Usa SHA-256 y guarda en caché las credenciales ya verificadas, así que las reconexiones son rápidas. Es más seguro.
+                - **Contraseña nativa de MySQL (mysql_native_password)**. Es el plugin antiguo, basado en SHA-1. Está obsoleto desde MySQL 8.0.34, viene desactivado por defecto en 8.4 y se elimina en 9.0.
+        5. En **Conectividad**, marcar **Requerir seguridad de la capa de transporte** (*Require TLS*), elegir las **subredes** y el **grupo de seguridad de VPC** del proxy.
+        6. Pulsar **Crear proxy**. El proxy está listo cuando su estado es **Disponible** y el destino aparece como **Disponible** en la pestaña de grupos de destino.
+
+    === "AWS CLI"
+
+        ```bash
+        aws rds create-db-proxy \
+          --db-proxy-name mydb-proxy \
+          --engine-family MYSQL \
+          --auth '[{"AuthScheme":"SECRETS","SecretArn":"arn:aws:secretsmanager:us-east-1:111122223333:secret:mydb-XXXX","IAMAuth":"DISABLED","ClientPasswordAuthType":"MYSQL_CACHING_SHA2_PASSWORD"}]' \
+          --role-arn arn:aws:iam::111122223333:role/LabRole \
+          --vpc-subnet-ids subnet-aaaa subnet-bbbb \
+          --vpc-security-group-ids sg-proxy \
+          --require-tls
+
+        aws rds register-db-proxy-targets \
+          --db-proxy-name mydb-proxy \
+          --db-instance-identifiers mydb-server
+
+        # Estado del proxy y de sus destinos
+        aws rds describe-db-proxies --db-proxy-name mydb-proxy \
+          --query "DBProxies[0].[Status,Endpoint]"
+        aws rds describe-db-proxy-targets --db-proxy-name mydb-proxy \
+          --query "Targets[].[RdsResourceId,TargetHealth.State]"
+        ```
+
+    Una vez disponible, la aplicación solo cambia el nombre del servidor. En la [práctica evaluable](practica-rds-dynamodb-sesiones.md#paso-9-conexion-de-la-aplicacion-con-amazon-rds-sesiones-locales), la variable con el punto de enlace de RDS pasaría a contener `mydb-proxy.proxy-xxxx.us-east-1.rds.amazonaws.com`.
+
+??? info "Supervisión del proxy"
+
+    RDS Proxy publica métricas en CloudWatch que permiten comprobar si está cumpliendo su función:
+
+    | Métrica                                     | Qué indica                                                         |
+    | ------------------------------------------- | ------------------------------------------------------------------ |
+    | `ClientConnections`                         | Conexiones de clientes abiertas con el proxy                       |
+    | `DatabaseConnections`                       | Conexiones reales del proxy con la base de datos                   |
+    | `DatabaseConnectionsCurrentlySessionPinned` | Conexiones fijadas: si es alta, la multiplexación no es efectiva   |
+    | `DatabaseConnectionsBorrowLatency`          | Tiempo que tardan las peticiones en obtener una conexión del grupo |
+    | `QueryRequests`                             | Consultas recibidas por el proxy                                   |
+
+    Una relación elevada entre `ClientConnections` y `DatabaseConnections` indica que la multiplexación funciona; si ambas cifras son similares, conviene revisar las causas de fijación.
 
 ---
 

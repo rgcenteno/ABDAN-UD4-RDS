@@ -55,6 +55,7 @@ nav:
           - Redes, conectividad y seguridad de acceso: "Crear-RDS-03.md"
           - Monitorización, copias de seguridad, mantenimiento y protección de los datos: "Crear-RDS-04.md"
       - Securización y control de acceso: "RDS-Seguridad.md"
+      - RDS Proxy: "RDS-Proxy.md"
       - Amazon Aurora:
           - Arquitectura: "Aurora-01.md"
           - Aurora MySQL y Aurora PostgreSQL: "Aurora-02.md"
@@ -74,7 +75,6 @@ nav:
   - Chuleta de comandos: "Chuleta.md"
 
   - "Ampliación (opcional)":
-      - RDS Proxy: "RDS-Proxy.md"
       - "Aurora: opciones de despliegue y escalado": "Aurora-03.md"
       - Referencia de métricas de RDS: "Supervision-RDS.md"
 

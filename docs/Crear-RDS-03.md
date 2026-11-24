@@ -98,7 +98,7 @@ La utilización adecuada de grupos de seguridad constituye **una de las medidas 
 
 ![image](imgs/RDS-proxy.jpg)
 
-El asistente ofrece crear un **RDS Proxy**: una capa intermedia que mantiene un conjunto de conexiones reutilizables con la base de datos y las reparte entre las aplicaciones. Aporta escalabilidad y conmutaciones por error más rápidas, a cambio de coste y complejidad adicionales, por lo que se reserva para aplicaciones con muchas conexiones concurrentes. En la práctica evaluable no se activa. Su funcionamiento se describe en [RDS Proxy](RDS-Proxy.md), dentro del contenido de ampliación.
+El asistente ofrece crear un **RDS Proxy**: una capa intermedia que mantiene un conjunto de conexiones reutilizables con la base de datos y las reparte entre las aplicaciones. Aporta escalabilidad y conmutaciones por error más rápidas, a cambio de coste y complejidad adicionales, por lo que se reserva para aplicaciones con muchas conexiones concurrentes. En la práctica evaluable no se activa. Su funcionamiento se estudia en el apartado [RDS Proxy](RDS-Proxy.md), a continuación de la securización.
 
 ---
 

@@ -119,7 +119,7 @@ Para los **usuarios de aplicación**, Secrets Manager permite igualmente almacen
 
 ### RDS Proxy como punto de control
 
-Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad. Su funcionamiento completo se describe en [RDS Proxy](RDS-Proxy.md), dentro del contenido de ampliación:
+Además de agrupar conexiones (como se vio en el apartado de redes), RDS Proxy aporta seguridad. Su funcionamiento se estudia en el apartado siguiente, [RDS Proxy](RDS-Proxy.md):
 
 - El proxy obtiene las credenciales de la base de datos de **Secrets Manager**; las aplicaciones no necesitan conocerlas.
 - Puede **exigir autenticación de IAM** a los clientes aunque la base de datos utilice contraseñas.
