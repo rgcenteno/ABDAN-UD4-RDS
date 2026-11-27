@@ -67,9 +67,9 @@ nav:
       - Acceso y securización: "DynamoDB-05.md"
 
   - Administración de bases de datos:
-      - Infraestructura como código: "BD-IaC.md"
       - Replicación y recuperación ante desastres: "BD-Replicacion.md"
       - "Ciclo de vida: modificaciones, copias y recuperación": "BD-CicloVida.md"
+      - Infraestructura como código: "BD-IaC.md"      
       - Monitorización del rendimiento y optimización: "BD-Rendimiento.md"
 
   - Chuleta de comandos: "Chuleta.md"
