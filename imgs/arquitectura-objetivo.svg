@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 670" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+    <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#00695c"/></marker>
+  </defs>
+  <rect width="1000" height="670" fill="#ffffff"/>
+  <text x="500" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="#222">Arquitectura objetivo de la práctica (región us-east-1)</text>
+
+  <!-- Internet -->
+  <rect x="40" y="60" width="140" height="50" rx="25" fill="#eceff1" stroke="#546e7a" stroke-width="2"/>
+  <text x="110" y="91" text-anchor="middle" font-size="14" font-weight="bold" fill="#263238">Internet</text>
+
+  <!-- VPC -->
+  <rect x="30" y="140" width="740" height="515" rx="8" fill="#f1f8e9" stroke="#2e7d32" stroke-width="2.5"/>
+  <text x="180" y="163" font-size="15" font-weight="bold" fill="#1b5e20">LabVPC · 10.0.0.0/16</text>
+
+  <!-- IGW -->
+  <rect x="55" y="125" width="110" height="30" rx="5" fill="#7b1fa2"/>
+  <text x="110" y="145" text-anchor="middle" font-size="12" fill="#fff" font-weight="bold">Internet Gateway</text>
+  <line x1="110" y1="110" x2="110" y2="123" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+
+  <!-- Public subnet -->
+  <rect x="50" y="180" width="700" height="140" rx="6" fill="#e8f5e9" stroke="#43a047" stroke-width="1.5"/>
+  <text x="330" y="200" font-size="13" font-weight="bold" fill="#1b5e20">PublicSubnet · 10.0.1.0/24 · us-east-1a</text>
+
+  <rect x="80" y="215" width="230" height="90" rx="8" fill="#fff3e0" stroke="#ef6c00" stroke-width="2"/>
+  <text x="195" y="243" text-anchor="middle" font-size="14" font-weight="bold" fill="#e65100">EC2 · ServidorWeb</text>
+  <text x="195" y="263" text-anchor="middle" font-size="11" fill="#333">Amazon Linux · t3.micro</text>
+  <text x="195" y="280" text-anchor="middle" font-size="11" fill="#333">Apache + PHP 8.4 · LabRole</text>
+  <text x="195" y="297" text-anchor="middle" font-size="11" fill="#333">SG: servidor-web-sg</text>
+
+  <rect x="520" y="235" width="190" height="55" rx="8" fill="#ede7f6" stroke="#5e35b1" stroke-width="2"/>
+  <text x="615" y="260" text-anchor="middle" font-size="14" font-weight="bold" fill="#311b92">NAT Gateway</text>
+  <text x="615" y="278" text-anchor="middle" font-size="11" fill="#311b92">(Elastic IP)</text>
+
+  <!-- Private subnets / DB subnet group -->
+  <rect x="50" y="345" width="700" height="290" rx="6" fill="#ffffff" stroke="#1565c0" stroke-width="1.5" stroke-dasharray="7,4"/>
+
+  <rect x="65" y="380" width="215" height="215" rx="6" fill="#e3f2fd" stroke="#1e88e5"/>
+  <text x="78" y="400" font-size="12" font-weight="bold" fill="#0d47a1">PrivateSubnet</text>
+  <text x="78" y="416" font-size="11" fill="#0d47a1">10.0.2.0/24 · us-east-1a</text>
+
+  <rect x="292" y="380" width="215" height="215" rx="6" fill="#e3f2fd" stroke="#1e88e5"/>
+  <text x="399" y="400" text-anchor="middle" font-size="12" font-weight="bold" fill="#0d47a1">PrivateSubnet2</text>
+  <text x="399" y="416" text-anchor="middle" font-size="11" fill="#0d47a1">10.0.3.0/24 · us-east-1b</text>
+  <text x="399" y="500" text-anchor="middle" font-size="11" fill="#607d8b">(disponible para</text>
+  <text x="399" y="515" text-anchor="middle" font-size="11" fill="#607d8b">ubicar la instancia RDS)</text>
+
+  <rect x="519" y="380" width="215" height="215" rx="6" fill="#e3f2fd" stroke="#1e88e5"/>
+  <text x="725" y="400" text-anchor="end" font-size="12" font-weight="bold" fill="#0d47a1">PrivateSubnet3</text>
+  <text x="725" y="416" text-anchor="end" font-size="11" fill="#0d47a1">10.0.4.0/24 · us-east-1c</text>
+
+  <text x="400" y="625" text-anchor="middle" font-size="13" font-weight="bold" fill="#0d47a1">Grupo de subredes de BD: labvpc-subgroup</text>
+
+  <!-- RDS -->
+  <rect x="90" y="450" width="165" height="110" rx="8" fill="#e8eaf6" stroke="#283593" stroke-width="2"/>
+  <text x="172" y="478" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a237e">RDS MySQL</text>
+  <text x="172" y="497" text-anchor="middle" font-size="11" fill="#1a237e">tienda-db-server</text>
+  <text x="172" y="514" text-anchor="middle" font-size="11" fill="#1a237e">db.t3.micro · 20 GiB</text>
+  <text x="172" y="531" text-anchor="middle" font-size="11" fill="#1a237e">Sin acceso público</text>
+  <text x="172" y="548" text-anchor="middle" font-size="11" fill="#1a237e">SG: rds-mysql-sg</text>
+
+  <!-- VPC endpoint -->
+  <rect x="535" y="440" width="185" height="110" rx="8" fill="#e0f2f1" stroke="#00897b" stroke-width="2"/>
+  <text x="627" y="465" text-anchor="middle" font-size="13" font-weight="bold" fill="#004d40">VPC endpoint</text>
+  <text x="627" y="482" text-anchor="middle" font-size="11" fill="#004d40">(interfaz · PrivateLink)</text>
+  <text x="627" y="500" text-anchor="middle" font-size="10" fill="#004d40">com.amazonaws.us-east-1.dynamodb</text>
+  <text x="627" y="517" text-anchor="middle" font-size="11" fill="#004d40">ENI vpce-xxxx</text>
+  <text x="627" y="535" text-anchor="middle" font-size="11" fill="#004d40">SG: dynamodb-endpoint-sg</text>
+
+  <!-- DynamoDB outside VPC -->
+  <rect x="805" y="435" width="170" height="120" rx="10" fill="#e0f2f1" stroke="#00695c" stroke-width="2"/>
+  <text x="890" y="465" text-anchor="middle" font-size="15" font-weight="bold" fill="#004d40">Amazon</text>
+  <text x="890" y="485" text-anchor="middle" font-size="15" font-weight="bold" fill="#004d40">DynamoDB</text>
+  <text x="890" y="508" text-anchor="middle" font-size="11" fill="#004d40">Tabla: sessions</text>
+  <text x="890" y="525" text-anchor="middle" font-size="11" fill="#004d40">(servicio regional,</text>
+  <text x="890" y="540" text-anchor="middle" font-size="11" fill="#004d40">fuera de la VPC)</text>
+
+  <!-- Arrows -->
+  <line x1="110" y1="155" x2="140" y2="212" stroke="#333" stroke-width="2" marker-end="url(#a)"/>
+  <text x="130" y="178" font-size="10" fill="#333">HTTP 80 / SSH 22</text>
+
+  <line x1="245" y1="305" x2="245" y2="446" stroke="#283593" stroke-width="2" marker-end="url(#a)"/>
+  <text x="238" y="335" text-anchor="end" font-size="11" fill="#283593" font-weight="bold">TCP 3306</text>
+
+  <path d="M290,305 V 362 H 570 V 436" fill="none" stroke="#00695c" stroke-width="2" marker-end="url(#g)"/>
+  <text x="300" y="357" font-size="11" fill="#00695c" font-weight="bold">Sesiones · HTTPS 443 (LabRole) · dynamo.endpoint</text>
+  <line x1="720" y1="495" x2="802" y2="495" stroke="#00695c" stroke-width="2" marker-end="url(#g)"/>
+
+  <line x1="700" y1="345" x2="700" y2="294" stroke="#5e35b1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#a)"/>
+  <text x="694" y="330" text-anchor="end" font-size="10" fill="#5e35b1">0.0.0.0/0 → NAT</text>
+</svg>
